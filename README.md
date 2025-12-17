@@ -1,4 +1,5 @@
 <h1 align="center">DPDFNet: Boosting DeepFilterNet2 via Dual-Path RNN</h1>
+<br></br>
 
 <p align="center">
   <a href="https://your-project-url.com">
@@ -30,12 +31,13 @@ This repo includes:
 
 Supported model names (TFLite files):
 
-| Model        | Size | Intended Use                |
-|---------------|------|-----------------------------|
-| baseline.tflite     | Tiny | Fastest / lowest resource usage |
-| dpdfnet2.tflite     | Small | Real-time / embedded devices |
-| dpdfnet4.tflite     | Medium | Balanced performance         |
-| dpdfnet8.tflite     | Large | Best enhancement quality     |
+| Model           | Params [M] | MACs [G] | TFLite Size [MB] | Intended Use                    |
+| --------------- | :--------: | :------: | :--------------: | ------------------------------- |
+| baseline.tflite |    2.31    |   0.36   |        8.5       | Fastest / lowest resource usage |
+| dpdfnet2.tflite |    2.49    |   1.35   |       10.7       | Real-time / embedded devices    |
+| dpdfnet4.tflite |    2.84    |   2.36   |       12.9       | Balanced performance            |
+| dpdfnet8.tflite |    3.54    |   4.37   |       17.2       | Best enhancement quality        |
+
 
 
 ## Quick start
