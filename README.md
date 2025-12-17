@@ -14,11 +14,12 @@
 </p>
 
 <p align="center">
-  <sub><em><strong>--- This is the official repository for the DPDFNet paper ---</strong></em></sub>
+  <sub><em><strong>--- Official implementation for the DPDFNet paper (2025) ---</strong></em></sub>
 </p>
 
 ## Abstract
-We present DPDFNet, a causal single-channel speech enhancement model that extends DeepFilterNet2 architecture with dual-path blocks in the encoder, strengthening long-range temporal and cross-band modeling while preserving the original enhancement framework. In addition, we demonstrate that adding a loss component to mitigate over-attenuation in the enhanced speech, combined with a fine-tuning phase tailored for “always-on” applications, leads to substantial improvements in overall model performance. To compare our proposed architecture with a variety of causal open-source models, we created a new evaluation set comprising long, low-SNR recordings in 12 languages across everyday noise scenarios, better reflecting real-world conditions than commonly used benchmarks. On this evaluation set, DPDFNet delivers superior performance to other causal open-source models, including some that are substantially larger and more computationally demanding. We also propose an holistic metric named PRISM, a composite, scale-normalized aggregate of intrusive and non-intrusive metrics, which demonstrates clear scalability with the number of dual-path blocks. We further demonstrate on-device feasibility by deploying DPDFNet on Ceva-NeuPro™-Nano edge NPUs. Results indicate that DPDFNet-4, our second-largest model, achieves real-time performance on NPN32 and runs even faster on NPN64, confirming that state-of-the-art quality can be sustained within strict embedded power and latency constraints.
+We present DPDFNet, a causal single-channel speech enhancement model that extends the DeepFilterNet2 architecture with dual-path blocks in the encoder, strengthening long-range temporal and cross-band modeling while preserving the original enhancement framework. In addition, we demonstrate that adding a loss component to mitigate over-attenuation in the enhanced speech, combined with a fine-tuning phase tailored for “always-on” applications, leads to substantial improvements in overall model performance. To compare our proposed architecture with a variety of causal open-source models, we created a new evaluation set comprising long, low-SNR recordings in 12 languages across everyday noise scenarios, better reflecting real-world conditions than commonly used benchmarks. On this evaluation set, DPDFNet delivers superior performance to other causal open-source models, including some that are substantially larger and more computationally demanding. We also propose a holistic metric named PRISM, a composite, scale-normalized aggregate of intrusive and non-intrusive metrics, which demonstrates clear scalability with the number of dual-path blocks. We further demonstrate on-device feasibility by deploying DPDFNet on Ceva-NeuPro™-Nano edge NPUs. Results indicate that DPDFNet-4, our second-largest model, achieves real-time performance on NPN32 and runs even faster on NPN64, confirming that state-of-the-art quality can be sustained within strict embedded power and latency constraints.
+
 
 ---
 
@@ -29,7 +30,16 @@ This repo includes:
 - A **real-time microphone demo** with live spectrograms and A/B playback (`real_time_demo.py`)
 - Pre-exported **TFLite models** expected under: `model_zoo/tflite/*.tflite`
 
-Supported model names (TFLite files):
+### TFLite models
+
+Place the `.tflite` files under:
+```
+model_zoo/tflite/
+```
+
+Use model names **without** the `.tflite` suffix in scripts (e.g., `dpdfnet4`, not `dpdfnet4.tflite`).
+
+Supported model files:
 
 | Model           | Params [M] | MACs [G] | TFLite Size [MB] | Intended Use                    |
 | --------------- | :--------: | :------: | :--------------: | ------------------------------- |
@@ -38,18 +48,41 @@ Supported model names (TFLite files):
 | dpdfnet4.tflite |    2.84    |   2.36   |       12.9       | Balanced performance            |
 | dpdfnet8.tflite |    3.54    |   4.37   |       17.2       | Best enhancement quality        |
 
+### Download models
 
+Models are available on Hugging Face: https://huggingface.co/Ceva-IP/DPDFNet
+
+Example download into the expected folder:
+```bash
+pip install -U "huggingface_hub[cli]"
+mkdir -p model_zoo/tflite
+
+huggingface-cli download Ceva-IP/DPDFNet \
+  baseline.tflite dpdfnet2.tflite dpdfnet4.tflite dpdfnet8.tflite \
+  --local-dir model_zoo/tflite \
+  --local-dir-use-symlinks False
+```
+
+---
 
 ## Quick start
 
+### Install (full: offline + real-time demo)
 ```bash
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+### Install (lightweight: offline enhancement only)
+If you only need `enhance.py` and want to avoid heavy GUI/audio/demo dependencies:
+```bash
+pip install numpy scipy librosa soundfile tqdm tflite-runtime
+```
 
 Both scripts look for models under `./model_zoo/tflite` by default.
+
+---
 
 
 ## Offline Enhancement
@@ -57,16 +90,13 @@ Both scripts look for models under `./model_zoo/tflite` by default.
 Enhance all `*.wav` files in a folder (**non-recursive**) and write enhanced WAVs to an output folder:
 
 ```bash
-python enhance.py \
-  --noisy_dir /path/to/noisy_wavs \
-  --enhanced_dir /path/to/output \
-  --model_name dpdfnet8
+python enhance.py   --noisy_dir /path/to/noisy_wavs   --enhanced_dir /path/to/output   --model_name dpdfnet8
 ```
 
 What the script does:
 - Loads audio (any sample rate), converts to **mono**, resamples to **16 kHz** for the model.
 - Runs the model **frame-by-frame in streaming mode**.
-- Reconstructs audio with iSTFT, resamples back to the original sample rate, and saves **mono PCM_16 WAV** outputs.
+- Resamples back to the original sample rate, and saves **mono PCM_16 WAV** outputs.
 
 Output filenames are created as:
 ```
