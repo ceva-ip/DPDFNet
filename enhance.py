@@ -73,7 +73,7 @@ def preprocessing(waveform: np.ndarray, cfg: STFTConfig) -> np.ndarray:
         hop_length=cfg.hop_size,
         win_length=cfg.win_len,
         window=cfg.win,
-        center=False,
+        center=True,
         pad_mode="reflect",
     )  # [F, T] complex64
 
@@ -100,6 +100,11 @@ def postprocessing(spec_e: np.ndarray, cfg: STFTConfig) -> np.ndarray:
     ).astype(np.float32)
 
     waveform_e = waveform_e / cfg.wnorm
+
+    # Keep the legacy alignment compensation behavior, scaled by win_len.
+    waveform_e = np.concatenate(
+        [waveform_e[cfg.win_len * 2 :], np.zeros(cfg.win_len * 2, dtype=np.float32)]
+    )
 
     return waveform_e
 
