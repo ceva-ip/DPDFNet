@@ -26,7 +26,7 @@ MODEL_CONFIG = {
     "dpdfnet8":  {"sr": 16000, "win_len": 320},
 
     # 48 kHz models - TBD
-    # "dpdfnet2_48khz_hr": {"sr": 48000, "win_len": 960},
+    "dpdfnet2_48khz_hr": {"sr": 48000, "win_len": 960},
 }
 
 
