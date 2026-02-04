@@ -6,20 +6,45 @@ import sounddevice as sd
 import queue
 import tensorflow as tf
 
-# NEW: PyQtGraph instead of Matplotlib
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtWidgets, QtCore, QtGui
+
+# =======================
+# MODEL → AUDIO PARAMS
+# =======================
+def get_audio_params_from_model_name(model_name: str):
+    """
+    Returns (sample_rate, window_size, hop_size) for a given model name.
+    """
+
+    # 16 kHz family (exact names)
+    family_16k = {
+        "baseline",
+        "dpdfnet2",
+        "dpdfnet4",
+        "dpdfnet8",
+    }
+
+    # 48 kHz family
+    family_48k = {
+        "dpdfnet2_48khz_hr",
+    }
+    
+    if model_name in family_16k:
+        return 16000, 320, 160
+    elif model_name in family_48k:
+        return 48000, 960, 480
+    else:
+        raise ValueError(f"Unknown model name: {model_name}")
 
 # =======================
 # CONFIG
 # =======================
 TFLITE_DIR = Path('./model_zoo/tflite')
-MODEL_NAME = 'dpdfnet2' # baseline | dpdfnet2 | dpdfnet4 | dpdfnet8
-SAMPLE_RATE = 16000
-HOP_SIZE = 160          # audio block size (also STFT hop for model)
+MODEL_NAME = 'dpdfnet2' # baseline | dpdfnet2 | dpdfnet4 | dpdfnet8 | dpdfnet2_48khz_hr
+SAMPLE_RATE, N_FFT, HOP_SIZE = get_audio_params_from_model_name(MODEL_NAME)
 BUFFER_SECONDS = 5.0
-N_FFT = 320             # STFT FFT size for the model
-HOP_FFT = 160           # STFT hop size for the model
+HOP_FFT = HOP_SIZE
 
 PLAYBACK_ENABLED = True
 
@@ -30,7 +55,7 @@ SAMPLES_PER_BUFFER = int(BUFFER_SECONDS * SAMPLE_RATE)
 # =======================
 SPEC_N_FFT = 1024                      # larger FFT for better freq resolution (plot only)
 SPEC_HOP = HOP_FFT                     # hop for spectrogram (can change if desired)
-SPEC_MAX_FREQ = SAMPLE_RATE / 2.0      # show full 0–8000 Hz
+SPEC_MAX_FREQ = SAMPLE_RATE / 2.0      # show full 0–Nyquist
 
 # =======================
 # PLAYBACK MODE
