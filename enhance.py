@@ -6,11 +6,12 @@ import sys
 import numpy as np
 import soundfile as sf
 import librosa
-from tflite_runtime.interpreter import Interpreter
+import tensorflow as tf
 from tqdm import tqdm
 from banner import print_banner
 
 TFLITE_DIR = Path('./model_zoo/tflite')
+Interpreter = tf.lite.Interpreter
 
 # -----------------------------------------------------------------------------
 # Model registry
