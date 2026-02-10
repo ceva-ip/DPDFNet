@@ -890,9 +890,9 @@ def correct_state_dict(sd: dict) -> dict:
 
 
 if __name__ == '__main__':
-    waveform_16k, sr = soundfile.read("/data/netapp2/git-repos/danielr/OTHERS/noisy_16khz_example.wav")
-    reference_path = "/data/netapp2/git-repos/danielr/OTHERS/noisy_16khz_example_denoised.wav"
-    output_path = "/data/netapp2/git-repos/danielr/OTHERS/noisy_16khz_example_denoised_flat_state.wav"
+    waveform_16k, sr = soundfile.read("./noisy_16khz.wav")
+    reference_path = "./enhanced_ref_16khz.wav"
+    output_path = "./enhanced_flat_buffer_16khz.wav"
     model = DPDFNet(
         conv_kernel_inp=(3, 3),  # (t, f)
         conv_ch=64,
@@ -910,7 +910,7 @@ if __name__ == '__main__':
     print(model)
 
     # load PT weights
-    state_dict = torch.load('../model_zoo/checkpoints/dpdfnet2.pth', weights_only=True, map_location='cpu')
+    state_dict = torch.load('./model_zoo/checkpoints/dpdfnet2.pth', weights_only=True, map_location='cpu')
     stream_state_dict = correct_state_dict(state_dict)
     model.load_state_dict(stream_state_dict, strict=True)
     model.eval()
