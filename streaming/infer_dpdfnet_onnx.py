@@ -15,6 +15,14 @@ from banner import print_banner
 from streaming.dpdfnet import DPDFNet
 from streaming.dpdfnet_48khz_hr import DPDFNet48HR
 
+MODEL_NAME_TO_DPRNN_NUM_BLOCKS = {
+    "baseline": 0,
+    "dpdfnet2": 2,
+    "dpdfnet4": 4,
+    "dpdfnet8": 8,
+    "dpdfnet2_48khz_hr": 2,
+}
+
 
 def build_dpdfnet(dprnn_num_blocks: int) -> DPDFNet:
     model = DPDFNet(
@@ -72,6 +80,16 @@ def infer_model_type_from_onnx_name(onnx_path: Path) -> str:
     raise ValueError(
         f"Could not infer model type from ONNX filename: {onnx_path.name}. "
         "Use --model-type to set it explicitly."
+    )
+
+
+def infer_dprnn_num_blocks_from_onnx_name(onnx_path: Path) -> int:
+    model_name = onnx_path.stem.lower().replace("-", "_")
+    if model_name in MODEL_NAME_TO_DPRNN_NUM_BLOCKS:
+        return MODEL_NAME_TO_DPRNN_NUM_BLOCKS[model_name]
+    raise ValueError(
+        f"Could not infer DPRNN blocks from ONNX filename: {onnx_path.name}. "
+        f"Expected one of: {sorted(MODEL_NAME_TO_DPRNN_NUM_BLOCKS)}"
     )
 
 
@@ -192,12 +210,6 @@ def parse_args() -> argparse.Namespace:
         help="Model frontend used for STFT/iSTFT and initial state. Default: auto (from ONNX filename).",
     )
     parser.add_argument(
-        "--dprnn-num-blocks",
-        type=int,
-        default=2,
-        help="Must match export-time model config.",
-    )
-    parser.add_argument(
         "--providers",
         nargs="+",
         default=["CPUExecutionProvider"],
@@ -274,13 +286,15 @@ def main() -> None:
     else:
         model_type = normalize_model_type(args.model_type)
 
-    model, expected_sr = build_model(model_type=model_type, dprnn_num_blocks=args.dprnn_num_blocks)
+    dprnn_num_blocks = infer_dprnn_num_blocks_from_onnx_name(onnx_path)
+    model, expected_sr = build_model(model_type=model_type, dprnn_num_blocks=dprnn_num_blocks)
     session = build_session(onnx_path, providers_priority=args.providers)
 
     print(f"[INFO] ONNX Runtime version: {ort.__version__}")
     print(f"[INFO] Host CPU cores (os.cpu_count): {os.cpu_count()}")
     print(f"[INFO] Active providers: {session.get_providers()}")
     print(f"[INFO] Model type: {model_type}")
+    print(f"[INFO] DPRNN blocks: {dprnn_num_blocks}")
     print(f"[INFO] Model SR: {expected_sr} Hz")
     print(f"Input : {noisy_dir}")
     print(f"Output: {enhanced_dir}")
