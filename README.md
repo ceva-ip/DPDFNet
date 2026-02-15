@@ -16,6 +16,10 @@
  <sub><em><strong>--- Official project for the DPDFNet paper ---</strong></em></sub>
 </p>
 
+<p align="center">
+  <img src="figures/dpdfnet2_48khz_hr_gif.gif" width="688" alt="Noisy→Enhanced spectrogram slideshow" />
+</p>
+
 ## Why DPDFNet
 
 - Better long-context modeling than DeepFilterNet2 via dual-path blocks in the encoder.
