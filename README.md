@@ -115,11 +115,9 @@ How it works:
 
 To change model, edit `MODEL_NAME` near the top of `real_time_demo.py`.
 
-## Benchmarks And Model Profile
+## Model Profile
 
-### Model profile
-
-#### 16 kHz models
+### 16 kHz models
 
 | Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
 | --- | :---: | :---: | :---: | :---: | --- |
@@ -128,7 +126,7 @@ To change model, edit `MODEL_NAME` near the top of `real_time_demo.py`.
 | dpdfnet4 | 2.84 | 2.36 | 12.9 | 11.2 | Balanced performance |
 | dpdfnet8 | 3.54 | 4.37 | 17.2 | 14.1 | Best enhancement quality |
 
-#### 48 kHz model
+### 48 kHz model
 
 | Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
 | --- | :---: | :---: | :---: | :---: | --- |
