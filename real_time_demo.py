@@ -1,664 +1,453 @@
+import queue
 import time
 from pathlib import Path
 
 import numpy as np
-import sounddevice as sd
-import queue
-import tensorflow as tf
-
+import onnxruntime as ort
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtWidgets, QtCore, QtGui
+import sounddevice as sd
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
+
 
 # =======================
-# MODEL → AUDIO PARAMS
+# CONFIG (GLOBAL STYLE)
 # =======================
-def get_audio_params_from_model_name(model_name: str):
-    """
-    Returns (sample_rate, window_size, hop_size) for a given model name.
-    """
+ONNX_DIR = Path("./model_zoo/onnx")
+MODEL_NAME = "dpdfnet2"  # baseline | dpdfnet2 | dpdfnet4 | dpdfnet8 | dpdfnet2_48khz_hr
+ONNX_PATH = ONNX_DIR / f"{MODEL_NAME}.onnx"
 
-    # 16 kHz family (exact names)
-    family_16k = {
-        "baseline",
-        "dpdfnet2",
-        "dpdfnet4",
-        "dpdfnet8",
-    }
-
-    # 48 kHz family
-    family_48k = {
-        "dpdfnet2_48khz_hr",
-    }
-    
-    if model_name in family_16k:
-        return 16000, 320, 160
-    elif model_name in family_48k:
-        return 48000, 960, 480
-    else:
-        raise ValueError(f"Unknown model name: {model_name}")
-
-# =======================
-# CONFIG
-# =======================
-TFLITE_DIR = Path('./model_zoo/tflite')
-MODEL_NAME = 'dpdfnet2' # baseline | dpdfnet2 | dpdfnet4 | dpdfnet8 | dpdfnet2_48khz_hr
-SAMPLE_RATE, N_FFT, HOP_SIZE = get_audio_params_from_model_name(MODEL_NAME)
+PROVIDERS_PRIORITY = ["CPUExecutionProvider"]
 BUFFER_SECONDS = 5.0
-HOP_FFT = HOP_SIZE
+PLAYBACK_MIX = 0.0
+ONNX_MS_EMA_ALPHA = 0.02
 
-PLAYBACK_ENABLED = True
+MODEL_AUDIO_PARAMS_BY_NAME = {
+    "baseline": (16000, 320, 160),
+    "dpdfnet2": (16000, 320, 160),
+    "dpdfnet4": (16000, 320, 160),
+    "dpdfnet8": (16000, 320, 160),
+    "dpdfnet2_48khz_hr": (48000, 960, 480),
+}
 
-SAMPLES_PER_BUFFER = int(BUFFER_SECONDS * SAMPLE_RATE)
+def infer_audio_params_from_model_name(model_name: str) -> tuple[int, int, int]:
+    try:
+        return MODEL_AUDIO_PARAMS_BY_NAME[model_name]
+    except KeyError as exc:
+        raise ValueError(
+            f"Unsupported MODEL_NAME='{model_name}'. "
+            f"Expected one of: {sorted(MODEL_AUDIO_PARAMS_BY_NAME)}"
+        ) from exc
 
-# =======================
-# SPECTROGRAM (PLOTTING) CONFIG
-# =======================
-SPEC_N_FFT = 1024                      # larger FFT for better freq resolution (plot only)
-SPEC_HOP = HOP_FFT                     # hop for spectrogram (can change if desired)
-SPEC_MAX_FREQ = SAMPLE_RATE / 2.0      # show full 0–Nyquist
 
-# =======================
-# PLAYBACK MODE
-# =======================
-# "enhanced" → play model output
-# "noisy"    → play raw mic input
-PLAYBACK_MODE = "noisy"
-btn_noisy = None
-btn_enh = None
+def load_initial_state(state_path: Path) -> np.ndarray:
+    suffix = state_path.suffix.lower()
+    if suffix == ".npz":
+        with np.load(state_path) as data:
+            if "init_state" not in data:
+                raise ValueError(f"Missing 'init_state' key in state file: {state_path}")
+            state = data["init_state"]
+    elif suffix == ".npy":
+        state = np.load(state_path)
+    else:
+        raise ValueError(f"Unsupported state file: {state_path}. Use .npz or .npy.")
+    return np.ascontiguousarray(state.astype(np.float32, copy=False))
 
-# =======================
-# SPECTROGRAM STATE (FAST LIVE VIEW)
-# =======================
-SPEC_COLS = int(BUFFER_SECONDS * SAMPLE_RATE / HOP_SIZE)
 
-spec_noisy = np.zeros((SPEC_N_FFT // 2 + 1, SPEC_COLS), dtype=np.float32)
-spec_enh   = np.zeros_like(spec_noisy)
+def validate_state_shape(session: ort.InferenceSession, state: np.ndarray) -> None:
+    expected = session.get_inputs()[1].shape
+    if len(expected) != state.ndim:
+        raise ValueError(f"Initial state rank mismatch: expected={expected}, actual={state.shape}")
+    for exp_dim, act_dim in zip(expected, state.shape):
+        if isinstance(exp_dim, int) and exp_dim != act_dim:
+            raise ValueError(f"Initial state shape mismatch: expected={expected}, actual={state.shape}")
 
-# dB versions of the spectrograms (for fast incremental updates)
-DB_MIN, DB_MAX = -80.0, 0.0
-eps = 1e-10
-db_spec_noisy = 20 * np.log10(spec_noisy + eps)
-db_spec_enh   = db_spec_noisy.copy()
 
-spec_window = np.hanning(SPEC_N_FFT).astype(np.float32)
-
-# rolling time-domain buffers for proper 1024-sample FFTs
-spec_td_noisy = np.zeros(SPEC_N_FFT, dtype=np.float32)
-spec_td_enh   = np.zeros(SPEC_N_FFT, dtype=np.float32)
-
-spec_queue = queue.Queue(maxsize=500)  # for (noisy_mag, enh_mag)
-
-# =======================
-# DSP HELPERS
-# =======================
-def vorbis_window(window_len: int):
+def vorbis_window(window_len: int) -> np.ndarray:
     window_size_h = window_len / 2
     indices = np.arange(window_len)
     sin = np.sin(0.5 * np.pi * (indices + 0.5) / window_size_h)
     window = np.sin(0.5 * np.pi * sin * sin)
-    return window
+    return window.astype(np.float32)
 
 
 def get_wnorm(window_len: int, frame_size: int) -> float:
-    # window_len - #samples of the window
-    # frame_size - hop size
     return 1.0 / (window_len**2 / (2 * frame_size))
 
 
 class STFTStreamingPreprocess:
-    """
-    Streaming STFT-style preprocessor (NumPy version).
-    """
-
-    def __init__(self, win_len, hop_size, window, wnorm, **kwargs):
+    def __init__(self, win_len: int, hop_size: int, window: np.ndarray, wnorm: float):
         self.win_len = int(win_len)
         self.hop_size = int(hop_size)
-
-        window = np.asarray(window, dtype=np.float32)
-        if window.shape[0] != self.win_len:
-            raise ValueError(f"window length mismatch: {window.shape[0]} vs {self.win_len}")
-        self.window = window  # [WIN_LEN]
-
-        wnorm = np.asarray(wnorm, dtype=np.float32)
-        self.wnorm = wnorm  # scalar or [F]
-
-        # Internal time-domain buffer, holds last win_len samples
+        self.window = np.asarray(window, dtype=np.float32)
+        self.wnorm = np.asarray(wnorm, dtype=np.float32)
         self.buffer = np.zeros(self.win_len, dtype=np.float32)
 
-    def reset_state(self):
-        """Reset internal time-domain buffer to zeros."""
-        self.buffer[...] = 0.0
-
-    def call(self, inputs):
-        """
-        inputs:
-            [HOP_SIZE] or [1, HOP_SIZE]
-
-        returns:
-            STFT frame: [1, 1, F, 2]  (B=1, T=1, freq, real/imag)
-        """
+    def call(self, inputs: np.ndarray) -> np.ndarray:
         x = np.asarray(inputs, dtype=np.float32)
+        if x.ndim != 1 or x.shape[0] != self.hop_size:
+            raise ValueError(f"Expected [{self.hop_size}] samples, got {x.shape}")
 
-        # Normalize to [HOP_SIZE]
-        if x.ndim == 1:
-            if x.shape[0] != self.hop_size:
-                raise ValueError(
-                    f"Expected {self.hop_size} samples, got {x.shape[0]}"
-                )
-            new_samples = x
-        elif x.ndim == 2:
-            if x.shape[0] != 1:
-                raise ValueError("Streaming STFT currently supports batch size 1 only")
-            if x.shape[1] != self.hop_size:
-                raise ValueError(
-                    f"Expected last dim {self.hop_size}, got {x.shape[1]}"
-                )
-            new_samples = x[0]
-        else:
-            raise ValueError(f"Expected rank 1 or 2, got rank {x.ndim}")
-
-        # ----- Update internal buffer: drop oldest hop, append new hop -----
-        buf = self.buffer
-        shifted = np.concatenate([buf[self.hop_size:], new_samples], axis=0)
+        shifted = np.concatenate([self.buffer[self.hop_size:], x], axis=0)
         self.buffer = shifted
-
-        # ----- One STFT frame from the current buffer -----
-        frame = shifted * self.window          # [WIN_LEN]
-        frame = frame[None, :]                 # [1, WIN_LEN]
-
-        # [1, F] complex
-        spec = np.fft.rfft(frame, axis=-1)
-
-        # apply wnorm (scalar or [F])
-        wnorm = self.wnorm.astype(spec.real.dtype, copy=False)
-        if wnorm.ndim == 0:
-            spec = spec * wnorm
-        elif wnorm.ndim == 1:
-            if wnorm.shape[0] != spec.shape[-1]:
-                raise ValueError(
-                    f"wnorm length {wnorm.shape[0]} does not match "
-                    f"number of freq bins {spec.shape[-1]}"
-                )
-            spec = spec * wnorm[None, :]
-        else:
-            raise ValueError("wnorm must be scalar or 1D [F]")
-
-        real = spec.real
-        imag = spec.imag
-        out = np.stack([real, imag], axis=-1)  # [1, F, 2]
-        out = out[:, None, :, :]               # [1, 1, F, 2]
-        return out
+        frame = shifted * self.window
+        spec = np.fft.rfft(frame[None, :], axis=-1)
+        spec = spec * self.wnorm.astype(spec.real.dtype, copy=False)
+        out = np.stack([spec.real, spec.imag], axis=-1)
+        return out[:, None, :, :].astype(np.float32, copy=False)
 
     __call__ = call
 
 
 class ISTFTStreamingPostprocess:
-    """
-    Streaming iSTFT-style postprocessor (NumPy version).
-    """
-
-    def __init__(self, win_len, hop_size, window, wnorm, **kwargs):
+    def __init__(self, win_len: int, hop_size: int, window: np.ndarray, wnorm: float):
         self.win_len = int(win_len)
         self.hop_size = int(hop_size)
-
-        window = np.asarray(window, dtype=np.float32)
-        if window.shape[0] != self.win_len:
-            raise ValueError(f"window length mismatch: {window.shape[0]} vs {self.win_len}")
-        self.window = window  # [WIN_LEN]
-
-        wnorm = np.asarray(wnorm, dtype=np.float32)
-        if wnorm.shape != ():
-            raise ValueError("Streaming ISTFT expects scalar wnorm")
-        self.wnorm = float(wnorm)
-
-        # Internal OLA buffer
+        self.window = np.asarray(window, dtype=np.float32)
+        self.wnorm = float(np.asarray(wnorm, dtype=np.float32))
         self.ola_buffer = np.zeros(self.win_len, dtype=np.float32)
 
-    def reset_state(self):
-        """Reset OLA buffer to zeros (for new utterance/stream)."""
-        self.ola_buffer[...] = 0.0
-
-    def call(self, inputs):
-        """
-        inputs: single frame spec, shape:
-            - [F, 2] or
-            - [1, 1, F, 2] or
-            - [1, F, 2]
-
-        returns:
-            [hop_size] samples for this step.
-        """
+    def call(self, inputs: np.ndarray) -> np.ndarray:
         x = np.asarray(inputs, dtype=np.float32)
-
-        # Normalize shapes to [F, 2]
         if x.ndim == 4:
-            if x.shape[0] != 1 or x.shape[1] != 1:
-                raise ValueError("Expected [1, 1, F, 2] for rank-4 input")
             x = x[0, 0]
         elif x.ndim == 3:
-            if x.shape[0] != 1:
-                raise ValueError("Expected [1, F, 2] for rank-3 input")
             x = x[0]
-        elif x.ndim == 2:
-            pass
-        else:
-            raise ValueError(
-                f"Expected [F, 2] or [1, 1, F, 2] or [1, F, 2], got shape {x.shape}"
-            )
-
         if x.ndim != 2 or x.shape[-1] != 2:
-            raise ValueError(f"Expected [F, 2] after squeeze, got {x.shape}")
+            raise ValueError(f"Expected [F,2] style tensor, got {x.shape}")
 
-        real = x[..., 0]
-        imag = x[..., 1]
-
-        # [F] complex
-        spec = np.asarray(real + 1j * imag, dtype=np.complex64)
-        spec = spec[None, :]  # [1, F]
-
-        # Time-domain frame, length win_len
-        frame = np.fft.irfft(spec, n=self.win_len, axis=-1)[0]
-        frame = frame.astype(np.float32, copy=False)
-        frame = frame * self.window
-        frame = frame / self.wnorm
-
-        # ----- Overlap-add using internal buffer -----
-        buf = self.ola_buffer
+        spec = (x[..., 0] + 1j * x[..., 1]).astype(np.complex64, copy=False)[None, :]
+        frame = np.fft.irfft(spec, n=self.win_len, axis=-1)[0].astype(np.float32, copy=False)
+        frame = (frame * self.window) / self.wnorm
 
         shifted = np.concatenate(
-            [buf[self.hop_size:], np.zeros(self.hop_size, dtype=buf.dtype)],
-            axis=0,
+            [self.ola_buffer[self.hop_size:], np.zeros(self.hop_size, dtype=np.float32)], axis=0
         )
-
         new_buf = shifted + frame
-
-        out = new_buf[:self.hop_size].copy()  # [hop_size]
-
+        out = new_buf[:self.hop_size].copy()
         self.ola_buffer = new_buf
-
         return out
-
-    def flush_tail(self):
-        """
-        After the last frame, call this once to get the remaining samples
-        (the tail that hasn't been emitted yet).
-        """
-        tail = self.ola_buffer[self.hop_size:].copy()
-        self.reset_state()
-        return tail
 
     __call__ = call
 
 
-# Instantiate streaming STFT/iSTFT for the model
-WINDOW = vorbis_window(N_FFT)
-WNORM = get_wnorm(N_FFT, HOP_FFT)
-stft = STFTStreamingPreprocess(N_FFT, HOP_FFT, WINDOW, WNORM)
-istft = ISTFTStreamingPostprocess(N_FFT, HOP_FFT, WINDOW, WNORM)
+def align_signal_length(x: np.ndarray, target_len: int) -> np.ndarray:
+    x = np.asarray(x, dtype=np.float32).reshape(-1)
+    if x.shape[0] == target_len:
+        return x
+    if x.shape[0] > target_len:
+        return x[:target_len]
+    out = np.zeros(target_len, dtype=np.float32)
+    out[:x.shape[0]] = x
+    return out
 
 
-# =======================
-# TFLite MODEL
-# =======================
-interpreter = tf.lite.Interpreter(model_path=str(TFLITE_DIR / (MODEL_NAME + '.tflite')))
-interpreter.allocate_tensors()
-input_details = interpreter.get_input_details()
-output_details = interpreter.get_output_details()
+def main() -> None:
+    # Must be set before creating ImageItem/plots so spectrogram arrays
+    # shaped [freq, time] map to y=freq and x=time.
+    pg.setConfigOptions(antialias=True, imageAxisOrder="row-major")
 
+    onnx_path = ONNX_PATH.expanduser().resolve()
+    if not onnx_path.is_file():
+        raise FileNotFoundError(f"ONNX file not found: {onnx_path}")
 
-def enhance_frame(noisy_frame: np.ndarray) -> np.ndarray:
-    noisy_spec = stft(noisy_frame).astype(np.float32)
-    noisy_spec = np.ascontiguousarray(noisy_spec, dtype=np.float32)
-    interpreter.set_tensor(input_details[0]["index"], noisy_spec)
+    state_path = onnx_path.with_name(f"{onnx_path.stem}_state.npz")
+    if not state_path.is_file():
+        state_path_npy = onnx_path.with_name(f"{onnx_path.stem}_state.npy")
+        if state_path_npy.is_file():
+            state_path = state_path_npy
+    if not state_path.is_file():
+        raise FileNotFoundError(f"State file not found: {state_path}")
 
-    tic = time.perf_counter_ns()
-    interpreter.invoke()
-    toc = time.perf_counter_ns()
-    elapsed_ms = (toc - tic) / 1e6  # ns → ms
-    print(f"{elapsed_ms:.3f} ms per frame")
+    available = set(ort.get_available_providers())
+    providers = [p for p in PROVIDERS_PRIORITY if p in available]
+    if not providers:
+        raise RuntimeError(
+            f"No requested providers available. requested={PROVIDERS_PRIORITY}, available={sorted(available)}"
+        )
 
-    enh_spec = interpreter.get_tensor(output_details[0]["index"])
-    enh_frame = istft(enh_spec).astype(np.float32)
-    return enh_frame
+    sess_opts = ort.SessionOptions()
+    sess_opts.intra_op_num_threads = 1
+    sess_opts.inter_op_num_threads = 1
+    session = ort.InferenceSession(str(onnx_path), sess_options=sess_opts, providers=providers)
 
+    init_state = load_initial_state(state_path)
+    validate_state_shape(session, init_state)
 
-# =======================
-# GLOBAL STATE
-# =======================
-audio_queue = queue.Queue(maxsize=100)
+    sample_rate, n_fft, hop_size = infer_audio_params_from_model_name(MODEL_NAME)
+    buffer_seconds = float(BUFFER_SECONDS)
+    playback_mix = float(np.clip(PLAYBACK_MIX, 0.0, 1.0))
+    samples_per_buffer = int(buffer_seconds * sample_rate)
 
-noisy_buffer = np.zeros(SAMPLES_PER_BUFFER, dtype=np.float32)
-enhanced_buffer = np.zeros(SAMPLES_PER_BUFFER, dtype=np.float32)
+    spec_n_fft = 1024
+    spec_max_freq = sample_rate / 2.0
+    spec_cols = int(buffer_seconds * sample_rate / hop_size)
+    spec_window = np.hanning(spec_n_fft).astype(np.float32)
+    db_min, db_max = -80.0, 0.0
+    eps = 1e-10
 
-# PyQtGraph / Qt globals
-app = None
-win = None
-plot_timer = None
-img_noisy = None
-img_enh = None
+    spec_noisy = np.zeros((spec_n_fft // 2 + 1, spec_cols), dtype=np.float32)
+    spec_enh = np.zeros_like(spec_noisy)
+    db_spec_noisy = 20 * np.log10(spec_noisy + eps)
+    db_spec_enh = db_spec_noisy.copy()
+    spec_td_noisy = np.zeros(spec_n_fft, dtype=np.float32)
+    spec_td_enh = np.zeros(spec_n_fft, dtype=np.float32)
+    spec_queue: queue.Queue[tuple[np.ndarray, np.ndarray]] = queue.Queue(maxsize=500)
+    audio_queue: queue.Queue[tuple[np.ndarray, np.ndarray]] = queue.Queue(maxsize=100)
+    noisy_buffer = np.zeros(samples_per_buffer, dtype=np.float32)
+    enhanced_buffer = np.zeros(samples_per_buffer, dtype=np.float32)
 
-# Colormap & dB range for spectrogram
-try:
-    _cmap = pg.colormap.get("magma")
-    CMAP_LUT = _cmap.getLookupTable(0.0, 1.0, 256)
-except Exception:
-    CMAP_LUT = None  # fallback to default if colormap not available
+    agc_enabled = True
+    agc_target_rms = 0.12
+    agc_rms_floor = 1e-3
+    agc_min_gain = 0.25
+    agc_max_gain = 8.0
+    agc_attack_sec = 0.03
+    agc_release_sec = 0.30
+    agc_gain = 1.0
 
+    window = vorbis_window(n_fft)
+    wnorm = get_wnorm(n_fft, hop_size)
+    stft = STFTStreamingPreprocess(n_fft, hop_size, window, wnorm)
+    istft = ISTFTStreamingPostprocess(n_fft, hop_size, window, wnorm)
+    runtime_state = init_state.copy()
+    onnx_ms_ema = float("nan")
 
-# =======================
-# AUDIO CALLBACK
-# =======================
-def buffer_to_mag(buf: np.ndarray) -> np.ndarray:
-    """
-    Convert a rolling 1024-sample buffer to a windowed FFT magnitude.
-    buf must be length SPEC_N_FFT.
-    """
-    frame = buf.astype(np.float32, copy=True)
-    frame *= spec_window
-    spec = np.fft.rfft(frame)
-    return np.abs(spec).astype(np.float32)
+    in_spec_name = session.get_inputs()[0].name
+    in_state_name = session.get_inputs()[1].name
+    out_spec_name = session.get_outputs()[0].name
+    out_state_name = session.get_outputs()[1].name
 
+    def buffer_to_mag(buf: np.ndarray) -> np.ndarray:
+        frame = buf.astype(np.float32, copy=True) * spec_window
+        return np.abs(np.fft.rfft(frame)).astype(np.float32)
 
-def audio_callback(indata, outdata, frames, time_info, status):
-    global spec_td_noisy, spec_td_enh, PLAYBACK_MODE
+    def apply_output_agc(x: np.ndarray, frames: int) -> np.ndarray:
+        nonlocal agc_gain
+        x = np.asarray(x, dtype=np.float32)
+        if (not agc_enabled) or x.size == 0:
+            return np.clip(x, -1.0, 1.0)
+        rms = float(np.sqrt(np.mean(x * x) + 1e-12))
+        desired_gain = float(np.clip(agc_target_rms / max(rms, agc_rms_floor), agc_min_gain, agc_max_gain))
+        attack_samples = max(1.0, agc_attack_sec * sample_rate)
+        release_samples = max(1.0, agc_release_sec * sample_rate)
+        attack_coeff = float(np.exp(-frames / attack_samples))
+        release_coeff = float(np.exp(-frames / release_samples))
+        coeff = attack_coeff if desired_gain < agc_gain else release_coeff
+        agc_gain = coeff * agc_gain + (1.0 - coeff) * desired_gain
+        return np.clip(x * agc_gain, -1.0, 1.0)
 
-    if status:
-        print(status)
+    def enhance_frame(noisy_frame: np.ndarray) -> np.ndarray:
+        nonlocal runtime_state, onnx_ms_ema
+        noisy_spec = np.ascontiguousarray(stft(noisy_frame), dtype=np.float32)
+        t0 = time.perf_counter()
+        spec_e, state_out = session.run(
+            [out_spec_name, out_state_name],
+            {in_spec_name: noisy_spec, in_state_name: runtime_state},
+        )
+        frame_ms = (time.perf_counter() - t0) * 1000.0
+        if np.isnan(onnx_ms_ema):
+            onnx_ms_ema = frame_ms
+        else:
+            onnx_ms_ema = (1.0 - ONNX_MS_EMA_ALPHA) * onnx_ms_ema + ONNX_MS_EMA_ALPHA * frame_ms
+        runtime_state = np.ascontiguousarray(state_out.astype(np.float32, copy=False))
+        return istft(spec_e).astype(np.float32, copy=False)
 
-    noisy = indata[:, 0].astype(np.float32).copy()
-    enhanced = enhance_frame(noisy)
+    def update_mix_label() -> None:
+        if mix_value_label is not None:
+            mix_value_label.setText(f"{playback_mix:.1f}")
 
-    if enhanced.shape != noisy.shape:
-        enhanced = np.resize(enhanced, noisy.shape)
+    def set_playback_mix(value: float) -> None:
+        nonlocal playback_mix
+        playback_mix = float(np.clip(value, 0.0, 1.0))
+        update_mix_label()
 
-    if PLAYBACK_MODE == "enhanced":
-        outdata[:, 0] = enhanced
-    else:
-        outdata[:, 0] = noisy
+    def on_mix_slider_changed(value: int) -> None:
+        set_playback_mix(value / 10.0)
 
-    # --- update rolling 1024-sample buffers for spectrogram ---
-    L = len(noisy)  # should be HOP_SIZE
-    if L > SPEC_N_FFT:
-        noisy = noisy[-SPEC_N_FFT:]
-        enhanced = enhanced[-SPEC_N_FFT:]
-        L = SPEC_N_FFT
+    def update_agc_button_text() -> None:
+        agc_button.setText(f"AGC: {'ON' if agc_enabled else 'OFF'}")
 
-    # shift left by L, append new samples
-    spec_td_noisy = np.roll(spec_td_noisy, -L)
-    spec_td_enh   = np.roll(spec_td_enh, -L)
-    spec_td_noisy[-L:] = noisy
-    spec_td_enh[-L:]   = enhanced
-
-    # now compute magnitudes from the full 1024-sample windows
-    noisy_mag = buffer_to_mag(spec_td_noisy)
-    enh_mag   = buffer_to_mag(spec_td_enh)
+    def on_agc_button_toggled(checked: bool) -> None:
+        nonlocal agc_enabled
+        agc_enabled = bool(checked)
+        update_agc_button_text()
 
     try:
-        spec_queue.put_nowait((noisy_mag, enh_mag))
-    except queue.Full:
-        pass
+        cmap = pg.colormap.get("magma")
+        cmap_lut = cmap.getLookupTable(0.0, 1.0, 256)
+    except Exception:
+        cmap_lut = None
 
-    # still push full audio into audio_queue if you need it
-    try:
-        audio_queue.put_nowait((noisy.copy(), enhanced.copy()))
-    except queue.Full:
-        pass
-
-
-# =======================
-# SPECTROGRAM UTILS
-# =======================
-def frame_to_mag(x: np.ndarray) -> np.ndarray:
-    """Convert a small block to a zero-padded, windowed FFT magnitude."""
-    x = np.asarray(x, dtype=np.float32).reshape(-1)
-    frame = np.zeros(SPEC_N_FFT, dtype=np.float32)
-    L = min(len(x), SPEC_N_FFT)
-    frame[:L] = x[:L]
-    frame *= spec_window
-    spec = np.fft.rfft(frame)
-    return np.abs(spec).astype(np.float32)
-
-
-def compute_spectrogram(x: np.ndarray, n_fft: int = SPEC_N_FFT, hop: int = SPEC_HOP):
-    x = np.asarray(x, dtype=np.float32).reshape(-1)
-
-    if len(x) < n_fft:
-        S = np.zeros((n_fft // 2 + 1, 1), dtype=np.float32)
-        times = np.array([0.0], dtype=np.float32)
-        return S, times
-
-    n_frames = 1 + (len(x) - n_fft) // hop
-    window = np.hanning(n_fft).astype(np.float32)
-
-    S = np.empty((n_fft // 2 + 1, n_frames), dtype=np.float32)
-    for i in range(n_frames):
-        start = i * hop
-        frame = x[start:start + n_fft] * window
-        spec = np.fft.rfft(frame)
-        S[:, i] = np.abs(spec)
-
-    times = np.arange(n_frames) * hop / SAMPLE_RATE
-    return S, times
-
-
-# =======================
-# GUI (PyQtGraph) SETUP
-# =======================
-def update_button_styles():
-    """Update button styles to reflect current PLAYBACK_MODE."""
-    if btn_noisy is None or btn_enh is None:
-        return
-
-    active_style = (
-        "QPushButton {"
-        "background-color: #4CAF50; "
-        "color: white; "
-        "font-weight: bold; "
-        "border-radius: 6px; "
-        "padding: 6px 12px;"
-        "}"
-    )
-    inactive_style = (
-        "QPushButton {"
-        "background-color: #DDDDDD; "
-        "color: black; "
-        "border-radius: 6px; "
-        "padding: 6px 12px;"
-        "}"
-    )
-
-    if PLAYBACK_MODE == "noisy":
-        btn_noisy.setStyleSheet(active_style)
-        btn_enh.setStyleSheet(inactive_style)
-    else:
-        btn_noisy.setStyleSheet(inactive_style)
-        btn_enh.setStyleSheet(active_style)
-
-
-def set_noisy():
-    global PLAYBACK_MODE
-    PLAYBACK_MODE = "noisy"
-    print("Playback mode: NOISY")
-    update_button_styles()
-
-
-def set_enhanced():
-    global PLAYBACK_MODE
-    PLAYBACK_MODE = "enhanced"
-    print("Playback mode: ENHANCED")
-    update_button_styles()
-
-
-def init_gui():
-    """Create PyQtGraph window with two live spectrograms + buttons."""
-    global app, win, img_noisy, img_enh, btn_noisy, btn_enh
-
-    # Create QApplication if needed
     app = QtWidgets.QApplication.instance()
     if app is None:
         app = QtWidgets.QApplication([])
 
     win = QtWidgets.QWidget()
-    win.setWindowTitle("DPDFNet: Real-Time Enhancement Demo")
-
+    win.setWindowTitle("DPDFNet ONNX: Real-Time Enhancement Demo")
     main_layout = QtWidgets.QVBoxLayout()
     win.setLayout(main_layout)
-
-    # Graphics layout for plots
     glw = pg.GraphicsLayoutWidget()
     main_layout.addWidget(glw)
 
-    # Initial spectrogram image (current dB buffer)
-    db_init = db_spec_noisy
-
-    # Noisy plot
     p1 = glw.addPlot(row=0, col=0)
     p1.setTitle("Noisy")
     p1.setLabel("left", "Frequency", units="Hz")
     p1.setLabel("bottom", "Time", units="s")
-
     img_noisy = pg.ImageItem()
     p1.addItem(img_noisy)
 
-    # Enhanced plot
     glw.nextRow()
     p2 = glw.addPlot(row=1, col=0)
     p2.setTitle("Enhanced")
     p2.setLabel("left", "Frequency", units="Hz")
     p2.setLabel("bottom", "Time", units="s")
-
     img_enh = pg.ImageItem()
     p2.addItem(img_enh)
 
-    # Map array indices to physical axes
-    # shape: (freq_bins, SPEC_COLS) => width = SPEC_COLS, height = freq_bins
-    freq_bins = SPEC_N_FFT // 2 + 1
-    img_noisy.setImage(db_init, autoLevels=False)
-    img_enh.setImage(db_init, autoLevels=False)
-
-    # scale to [0, BUFFER_SECONDS] and [0, SPEC_MAX_FREQ]
-    dx = BUFFER_SECONDS / SPEC_COLS
-    dy = SPEC_MAX_FREQ / freq_bins
-    img_noisy.resetTransform()
-    img_enh.resetTransform()
-    transform_noisy = QtGui.QTransform()
-    transform_noisy.scale(dx, dy)
-    img_noisy.setTransform(transform_noisy)
-
-    transform_enh = QtGui.QTransform()
-    transform_enh.scale(dx, dy)
-    img_enh.setTransform(transform_enh)
-
-    if CMAP_LUT is not None:
-        img_noisy.setLookupTable(CMAP_LUT)
-        img_enh.setLookupTable(CMAP_LUT)
-
-    img_noisy.setLevels((DB_MIN, DB_MAX))
-    img_enh.setLevels((DB_MIN, DB_MAX))
-
-    p1.setLimits(xMin=0, xMax=BUFFER_SECONDS, yMin=0, yMax=SPEC_MAX_FREQ)
-    p2.setLimits(xMin=0, xMax=BUFFER_SECONDS, yMin=0, yMax=SPEC_MAX_FREQ)
-    p1.setRange(xRange=(0, BUFFER_SECONDS), yRange=(0, SPEC_MAX_FREQ))
-    p2.setRange(xRange=(0, BUFFER_SECONDS), yRange=(0, SPEC_MAX_FREQ))
-
-    # Buttons for playback mode
-    btn_layout = QtWidgets.QHBoxLayout()
-    main_layout.addLayout(btn_layout)
-
-    btn_noisy_local = QtWidgets.QPushButton("Noisy")
-    btn_enh_local = QtWidgets.QPushButton("Enhanced")
-
-    btn_layout.addStretch(1)
-    btn_layout.addWidget(btn_noisy_local)
-    btn_layout.addWidget(btn_enh_local)
-    btn_layout.addStretch(1)
-
-    btn_noisy_local.clicked.connect(set_noisy)
-    btn_enh_local.clicked.connect(set_enhanced)
-
-    # assign globals
-    btn_noisy = btn_noisy_local
-    btn_enh = btn_enh_local
-
-    update_button_styles()
-
-    return win
-
-
-def update_plot():
-    """Drain the spectrogram queue and update the PyQtGraph images."""
-    global spec_noisy, spec_enh, db_spec_noisy, db_spec_enh, img_noisy, img_enh
-
-    if img_noisy is None or img_enh is None:
-        return
-
-    eps = 1e-10
-
-    try:
-        updated = False
-        while True:
-            noisy_mag, enh_mag = spec_queue.get_nowait()
-
-            # Roll magnitude buffers
-            spec_noisy = np.roll(spec_noisy, -1, axis=1)
-            spec_enh   = np.roll(spec_enh,   -1, axis=1)
-
-            # Roll dB buffers
-            db_spec_noisy = np.roll(db_spec_noisy, -1, axis=1)
-            db_spec_enh   = np.roll(db_spec_enh,   -1, axis=1)
-
-            # Insert new magnitudes
-            spec_noisy[:, -1] = noisy_mag
-            spec_enh[:, -1]   = enh_mag
-
-            # Insert new dB values only for the last column
-            db_spec_noisy[:, -1] = 20 * np.log10(noisy_mag + eps)
-            db_spec_enh[:, -1]   = 20 * np.log10(enh_mag   + eps)
-
-            updated = True
-
-    except queue.Empty:
-        pass
-
-    if not updated:
-        return
-
-    # Just push the dB images; no full log10 over the whole buffer
     img_noisy.setImage(db_spec_noisy, autoLevels=False)
-    img_enh.setImage(db_spec_enh, autoLevels=False)
-    img_noisy.setLevels((DB_MIN, DB_MAX))
-    img_enh.setLevels((DB_MIN, DB_MAX))
+    img_enh.setImage(db_spec_noisy, autoLevels=False)
 
+    freq_bins = spec_n_fft // 2 + 1
+    dx = buffer_seconds / spec_cols
+    dy = spec_max_freq / freq_bins
+    t_noisy = QtGui.QTransform()
+    t_noisy.scale(dx, dy)
+    img_noisy.setTransform(t_noisy)
+    t_enh = QtGui.QTransform()
+    t_enh.scale(dx, dy)
+    img_enh.setTransform(t_enh)
+    if cmap_lut is not None:
+        img_noisy.setLookupTable(cmap_lut)
+        img_enh.setLookupTable(cmap_lut)
+    img_noisy.setLevels((db_min, db_max))
+    img_enh.setLevels((db_min, db_max))
+    p1.setRange(xRange=(0, buffer_seconds), yRange=(0, spec_max_freq))
+    p2.setRange(xRange=(0, buffer_seconds), yRange=(0, spec_max_freq))
 
+    mix_layout = QtWidgets.QHBoxLayout()
+    main_layout.addLayout(mix_layout)
+    mix_title = QtWidgets.QLabel("Playback Mix (Noisy -> Enhanced)")
+    lbl_noisy = QtWidgets.QLabel("Noisy")
+    lbl_enh = QtWidgets.QLabel("Enhanced")
 
-# =======================
-# MAIN
-# =======================
-def main():
-    global plot_timer
+    mix_slider_local = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+    mix_slider_local.setRange(0, 10)  # 0.0 ... 1.0 in 0.1 steps
+    mix_slider_local.setSingleStep(1)
+    mix_slider_local.setPageStep(1)
+    mix_slider_local.setTickInterval(1)
+    mix_slider_local.setTickPosition(QtWidgets.QSlider.TicksBelow)
+    mix_slider_local.setValue(int(round(playback_mix * 10)))
 
-    # Ensure spectrogram time runs along +X (freq along +Y)
-    pg.setConfigOptions(antialias=True, imageAxisOrder="row-major")
+    mix_value_label = QtWidgets.QLabel(f"{playback_mix:.1f}")
+    mix_value_label.setAlignment(QtCore.Qt.AlignCenter)
+    mix_value_label.setMinimumWidth(36)
+    mix_layout.addWidget(mix_title)
+    mix_layout.addWidget(lbl_noisy)
+    mix_layout.addWidget(mix_slider_local, 1)
+    mix_layout.addWidget(lbl_enh)
+    mix_layout.addWidget(mix_value_label)
+    mix_slider_local.valueChanged.connect(on_mix_slider_changed)
 
-    window = init_gui()
+    agc_layout = QtWidgets.QHBoxLayout()
+    main_layout.addLayout(agc_layout)
+    agc_title = QtWidgets.QLabel("Output AGC")
+    agc_button = QtWidgets.QPushButton()
+    agc_button.setCheckable(True)
+    agc_button.setChecked(agc_enabled)
+    agc_button.toggled.connect(on_agc_button_toggled)
+    update_agc_button_text()
+    agc_layout.addWidget(agc_title)
+    agc_layout.addStretch(1)
+    agc_layout.addWidget(agc_button)
 
-    # Create the audio stream (context manager will close it when GUI exits)
+    perf_layout = QtWidgets.QHBoxLayout()
+    main_layout.addLayout(perf_layout)
+    perf_title = QtWidgets.QLabel("ONNX Inference (EMA)")
+    perf_value_label = QtWidgets.QLabel("-- ms/frame")
+    perf_value_label.setAlignment(QtCore.Qt.AlignCenter)
+    perf_value_label.setMinimumWidth(120)
+    perf_layout.addWidget(perf_title)
+    perf_layout.addStretch(1)
+    perf_layout.addWidget(perf_value_label)
+
+    def audio_callback(indata, outdata, frames, time_info, status):
+        nonlocal spec_td_noisy, spec_td_enh, noisy_buffer, enhanced_buffer
+        # Suppress sounddevice callback status spam (e.g., underflow/overflow).
+
+        noisy = align_signal_length(indata[:, 0], frames)
+        enhanced = align_signal_length(enhance_frame(noisy), frames)
+        mixed = (1.0 - playback_mix) * noisy + playback_mix * enhanced
+        outdata[:, 0] = apply_output_agc(mixed, frames)
+
+        noisy_buffer = np.roll(noisy_buffer, -frames)
+        noisy_buffer[-frames:] = noisy
+        enhanced_buffer = np.roll(enhanced_buffer, -frames)
+        enhanced_buffer[-frames:] = enhanced
+
+        l = min(len(noisy), spec_n_fft)
+        spec_td_noisy = np.roll(spec_td_noisy, -l)
+        spec_td_enh = np.roll(spec_td_enh, -l)
+        spec_td_noisy[-l:] = noisy[-l:]
+        spec_td_enh[-l:] = enhanced[-l:]
+
+        noisy_mag = buffer_to_mag(spec_td_noisy)
+        enh_mag = buffer_to_mag(spec_td_enh)
+        try:
+            spec_queue.put_nowait((noisy_mag, enh_mag))
+        except queue.Full:
+            pass
+        try:
+            audio_queue.put_nowait((noisy.copy(), enhanced.copy()))
+        except queue.Full:
+            pass
+
+    def update_plot():
+        nonlocal spec_noisy, spec_enh, db_spec_noisy, db_spec_enh, onnx_ms_ema
+        updated = False
+        try:
+            while True:
+                noisy_mag, enh_mag = spec_queue.get_nowait()
+                spec_noisy = np.roll(spec_noisy, -1, axis=1)
+                spec_enh = np.roll(spec_enh, -1, axis=1)
+                db_spec_noisy = np.roll(db_spec_noisy, -1, axis=1)
+                db_spec_enh = np.roll(db_spec_enh, -1, axis=1)
+                spec_noisy[:, -1] = noisy_mag
+                spec_enh[:, -1] = enh_mag
+                db_spec_noisy[:, -1] = 20 * np.log10(noisy_mag + eps)
+                db_spec_enh[:, -1] = 20 * np.log10(enh_mag + eps)
+                updated = True
+        except queue.Empty:
+            pass
+
+        if updated:
+            img_noisy.setImage(db_spec_noisy, autoLevels=False)
+            img_enh.setImage(db_spec_enh, autoLevels=False)
+            img_noisy.setLevels((db_min, db_max))
+            img_enh.setLevels((db_min, db_max))
+        if np.isnan(onnx_ms_ema):
+            perf_value_label.setText("-- ms/frame")
+        else:
+            perf_value_label.setText(f"{onnx_ms_ema:.3f} ms/frame")
+
+    print(f"[INFO] ONNX Runtime: {ort.__version__}")
+    print(f"[INFO] ONNX model: {onnx_path}")
+    print(f"[INFO] State file: {state_path} shape={tuple(init_state.shape)}")
+    print(f"[INFO] Providers: {session.get_providers()}")
+    print(f"[INFO] Audio params: sr={sample_rate}, n_fft={n_fft}, hop={hop_size}")
+    print("Streaming... speak into the mic. Close the window to stop.")
+
+    timer = QtCore.QTimer()
+    timer.timeout.connect(update_plot)
+    timer.start(30)
+
     with sd.Stream(
-        samplerate=SAMPLE_RATE,
-        blocksize=HOP_SIZE,
+        samplerate=sample_rate,
+        blocksize=hop_size,
         dtype="float32",
         channels=1,
         callback=audio_callback,
     ):
-        print("Streaming... speak into the mic. Close the window to stop.")
-
-        # Timer to refresh the plots
-        plot_timer = QtCore.QTimer()
-        plot_timer.timeout.connect(update_plot)
-        plot_timer.start(30)  # ~33 FPS, lighter on CPU
-
-        window.show()
-        # Start Qt event loop (blocks until window is closed)
+        win.show()
         qt_app = QtWidgets.QApplication.instance()
         if hasattr(qt_app, "exec"):
             qt_app.exec()
