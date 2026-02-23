@@ -16,29 +16,27 @@ ONNX_DIR = Path("./model_zoo/onnx")
 MODEL_NAME = "dpdfnet2"  # baseline | dpdfnet2 | dpdfnet4 | dpdfnet8 | dpdfnet2_48khz_hr
 ONNX_PATH = ONNX_DIR / f"{MODEL_NAME}.onnx"
 
-# If None, auto-resolve to <onnx_stem>_state.npz (fallback <onnx_stem>_state.npy)
-STATE_PATH = None
-
 PROVIDERS_PRIORITY = ["CPUExecutionProvider"]
 BUFFER_SECONDS = 5.0
 PLAYBACK_MIX = 0.0
 ONNX_MS_EMA_ALPHA = 0.02
 
+MODEL_AUDIO_PARAMS_BY_NAME = {
+    "baseline": (16000, 320, 160),
+    "dpdfnet2": (16000, 320, 160),
+    "dpdfnet4": (16000, 320, 160),
+    "dpdfnet8": (16000, 320, 160),
+    "dpdfnet2_48khz_hr": (48000, 960, 480),
+}
 
-def infer_audio_params_from_onnx(session: ort.InferenceSession, onnx_path: Path) -> tuple[int, int, int]:
-    spec_shape = session.get_inputs()[0].shape
-    freq_bins = spec_shape[-2] if len(spec_shape) >= 2 else None
-
-    if isinstance(freq_bins, int):
-        if freq_bins == 161:
-            return 16000, 320, 160
-        if freq_bins == 481:
-            return 48000, 960, 480
-
-    name = onnx_path.stem.lower().replace("-", "_")
-    if "48khz" in name or "48k" in name or "48hr" in name:
-        return 48000, 960, 480
-    return 16000, 320, 160
+def infer_audio_params_from_model_name(model_name: str) -> tuple[int, int, int]:
+    try:
+        return MODEL_AUDIO_PARAMS_BY_NAME[model_name]
+    except KeyError as exc:
+        raise ValueError(
+            f"Unsupported MODEL_NAME='{model_name}'. "
+            f"Expected one of: {sorted(MODEL_AUDIO_PARAMS_BY_NAME)}"
+        ) from exc
 
 
 def load_initial_state(state_path: Path) -> np.ndarray:
@@ -152,12 +150,8 @@ def main() -> None:
     if not onnx_path.is_file():
         raise FileNotFoundError(f"ONNX file not found: {onnx_path}")
 
-    state_path = (
-        STATE_PATH.expanduser().resolve()
-        if STATE_PATH is not None
-        else onnx_path.with_name(f"{onnx_path.stem}_state.npz")
-    )
-    if not state_path.is_file() and STATE_PATH is None:
+    state_path = onnx_path.with_name(f"{onnx_path.stem}_state.npz")
+    if not state_path.is_file():
         state_path_npy = onnx_path.with_name(f"{onnx_path.stem}_state.npy")
         if state_path_npy.is_file():
             state_path = state_path_npy
@@ -179,7 +173,7 @@ def main() -> None:
     init_state = load_initial_state(state_path)
     validate_state_shape(session, init_state)
 
-    sample_rate, n_fft, hop_size = infer_audio_params_from_onnx(session, onnx_path)
+    sample_rate, n_fft, hop_size = infer_audio_params_from_model_name(MODEL_NAME)
     buffer_seconds = float(BUFFER_SECONDS)
     playback_mix = float(np.clip(PLAYBACK_MIX, 0.0, 1.0))
     samples_per_buffer = int(buffer_seconds * sample_rate)
