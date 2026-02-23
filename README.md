@@ -1,3 +1,4 @@
+
 <h1 align="center">DPDFNet: Boosting DeepFilterNet2 via Dual-Path RNN</h1>
 <br></br>
 
@@ -32,28 +33,61 @@
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2) Run offline enhancement
+### 2) Download models
+
+Model files are not bundled in this repository.\
+Download PyTorch checkpoints, TFLite, and ONNX models from Hugging Face:
+
+```bash
+pip install -U "huggingface_hub[cli]"
+
+# create target dirs
+mkdir -p model_zoo/{checkpoints,onnx,tflite}
+
+# PyTorch checkpoints (HF path: checkpoints/* -> local: model_zoo/checkpoints/*)
+hf download Ceva-IP/DPDFNet \
+  --include "checkpoints/*.pth" \
+  --local-dir model_zoo \
+
+# ONNX models (&states) (HF path: onnx/* -> local: model_zoo/onnx/*)
+hf download Ceva-IP/DPDFNet \
+  --include "onnx/*.onnx" \
+  --local-dir model_zoo \
+
+hf download Ceva-IP/DPDFNet \
+  --include "onnx/*.npz" \
+  --local-dir model_zoo \
+
+# TFLite models (HF path: *.tflite at repo root -> local: model_zoo/tflite/*)
+hf download Ceva-IP/DPDFNet \
+  --include "*.tflite" \
+  --local-dir model_zoo/tflite \
+```
+
+### 3) Run offline enhancement
 
 Put one or more `*.wav` files in `./noisy_wavs`, then choose one:
 
-`Option A: TFLite` using [enhance.py](enhance.py)
+#### Option A: `TFLite`
 
 ```bash
-python -m enhance --noisy_dir ./noisy_wavs --enhanced_dir ./enhanced_wavs --model_name dpdfnet4
+python -m tflite_model.infer_dpdfnet_tflite \
+	--noisy_dir ./noisy_wavs \
+	--enhanced_dir ./enhanced_wavs \
+	--model_name dpdfnet4
 ```
 
-`Option B: ONNX` using [infer_dpdfnet_onnx.py](streaming/infer_dpdfnet_onnx.py)
+#### Option B: `ONNX`
 
 ```bash
-python -m streaming.infer_dpdfnet_onnx \
-  --onnx model_zoo/onnx/dpdfnet4.onnx \
+python -m onnx_model.infer_dpdfnet_onnx \
   --noisy_dir ./noisy_wavs \
-  --enhanced_dir ./enhanced_wavs_onnx \
-  --providers CPUExecutionProvider
+	--enhanced_dir ./enhanced_wavs \
+	--model_name dpdfnet4
 ```
 
 Enhanced files are written as:
@@ -62,42 +96,14 @@ Enhanced files are written as:
 <original_stem>_<model_name>.wav
 ```
 
-> Notes:
-> Model files are not bundled in this repository.\
-> Download PyTorch checkpoints, TFLite, and ONNX models from Hugging Face:
->
-> ```bash
-> pip install -U "huggingface_hub[cli]"
-> 
-> # create target dirs
-> mkdir -p model_zoo/{checkpoints,onnx,tflite}
-> 
-> # PyTorch checkpoints (HF path: checkpoints/* -> local: model_zoo/checkpoints/*)
-> hf download Ceva-IP/DPDFNet \
->   --include "checkpoints/*.pth" \
->   --local-dir model_zoo \
->   --local-dir-use-symlinks False
-> 
-> # ONNX models (HF path: onnx/* -> local: model_zoo/onnx/*)
-> hf download Ceva-IP/DPDFNet \
->   --include "onnx/*.onnx" \
->   --local-dir model_zoo \
->   --local-dir-use-symlinks False
-> 
-> # TFLite models (HF path: *.tflite at repo root -> local: model_zoo/tflite/*)
-> hf download Ceva-IP/DPDFNet \
->   --include "*.tflite" \
->   --local-dir model_zoo/tflite \
->   --local-dir-use-symlinks False
-> ```
-
-## Audio Samples And Demo
+## Audio Samples & Demo
 
 - Project page with examples: https://ceva-ip.github.io/DPDFNet/
+- Gradio application: https://huggingface.co/spaces/Ceva-IP/DPDFNetDemo
 - Hugging Face model hub: https://huggingface.co/Ceva-IP/DPDFNet
 - Evaluation dataset used in the paper: https://huggingface.co/datasets/Ceva-IP/DPDFNet_EvalSet
 
-## Real-Time Demo (Microphone)
+## Real-Time Demo
 
 ![Real-time DPDFNet demo screenshot](figures/live_demo.png)
 
@@ -109,9 +115,10 @@ python -m real_time_demo
 
 How it works:
 - Captures microphone audio in streaming hops.
-- Enhances each hop frame-by-frame with TFLite.
+- Enhances each hop frame-by-frame with ONNX.
 - Displays live noisy vs enhanced spectrograms.
-- Lets you switch playback between raw and enhanced streams.
+- Allows you to control the noise‑reduction level during playback: `0` for the raw stream and `1` for the fully enhanced stream.
+- Enables the use of AGC during playback.
 
 To change model, edit `MODEL_NAME` near the top of `real_time_demo.py`.
 
@@ -132,36 +139,6 @@ To change model, edit `MODEL_NAME` near the top of `real_time_demo.py`.
 | --- | :---: | :---: | :---: | :---: | --- |
 | dpdfnet2_48khz_hr | 2.58 | 2.42 | 11.6 | 10.3 | High-resolution 48 kHz audio |
 
-## ONNX Models
-
-### Run ONNX inference (folder of WAV files)
-
-```bash
-python -m streaming.infer_dpdfnet_onnx \
-  --onnx model_zoo/onnx/dpdfnet4.onnx \
-  --noisy_dir ./noisy_wavs \
-  --enhanced_dir ./enhanced_onnx \
-  --providers CPUExecutionProvider
-```
-
-The script prints per-file:
-- total inference time
-- average frame time (ms)
-- real-time factor (RTF)
-
-### Export ONNX models from PyTorch checkpoints
-
-For 16 kHz family:
-
-```bash
-python -m streaming.export_dpdfnet_to_onnx
-```
-
-For 48 kHz high-resolution model:
-
-```bash
-python -m streaming.export_dpdfnet_48khz_hr_to_onnx
-```
 
 ## Troubleshooting / FAQ
 
@@ -176,10 +153,6 @@ python -m streaming.export_dpdfnet_48khz_hr_to_onnx
 - Both offline scripts scan only the exact folder given by `--noisy_dir` (non-recursive).
 - Ensure input files use `.wav` extension.
 
-`Q: Which command should I use for offline enhancement?`
-- TFLite path: `python -m enhance --noisy_dir ... --enhanced_dir ... --model_name ...`
-- ONNX path: `python -m streaming.infer_dpdfnet_onnx --onnx ... --noisy_dir ... --enhanced_dir ...`
-
 `Q: Real-time demo has audio device errors`
 - Check microphone permissions and default input/output device settings.
 - Install host audio dependencies for `sounddevice` (PortAudio packages on your OS).
@@ -188,17 +161,13 @@ python -m streaming.export_dpdfnet_48khz_hr_to_onnx
 - Ensure Qt dependencies from `requirements.txt` installed successfully.
 - On headless servers, run offline enhancement instead.
 
-`Q: ONNX inference fails with provider errors`
-- Start with `--providers CPUExecutionProvider`.
-- If using GPU providers, verify your ONNX Runtime build and driver stack support them.
-
 `Q: I get import/module errors when running commands`
 - Run from repo root and use module form exactly as documented (`python -m ...`).
 - Activate your virtual environment before running commands.
 
 `Q: CPU is too slow for my target`
 - Try smaller models (`baseline`, `dpdfnet2`).
-- Benchmark ONNX runtime using `python -m streaming.infer_dpdfnet_onnx ...` and compare RTF.
+- Benchmark ONNX runtime using `python -m onnx_model.infer_dpdfnet_onnx ...` and compare RTF.
 
 ## Evaluation Metrics
 
