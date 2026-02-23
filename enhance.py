@@ -259,7 +259,7 @@ def main():
     )
 
     args = parser.parse_args()
-    print_banner(version="1.0.0")
+    print_banner(version=None)
     noisy_dir = Path(args.noisy_dir)
     enhanced_dir = Path(args.enhanced_dir)
     model_name = args.model_name

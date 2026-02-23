@@ -208,13 +208,6 @@ def postprocess_spec(spec_e: np.ndarray, cfg: StftConfig) -> np.ndarray:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run concise DPDFNet ONNX streaming inference.")
     parser.add_argument(
-        "--model_name",
-        type=str,
-        default="dpdfnet8",
-        choices=sorted(MODEL_SAMPLE_RATE_BY_NAME.keys()),
-        help="Model name. The ONNX model will be loaded from model_zoo/onnx/<model_name>.onnx",
-    )
-    parser.add_argument(
         "--noisy_dir",
         type=Path,
         required=True,
@@ -225,6 +218,13 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         required=True,
         help="Output folder for enhanced WAVs.",
+    )
+    parser.add_argument(
+        "--model_name",
+        type=str,
+        default="dpdfnet8",
+        choices=sorted(MODEL_SAMPLE_RATE_BY_NAME.keys()),
+        help="Model name. The ONNX model will be loaded from model_zoo/onnx/<model_name>.onnx",
     )
     return parser.parse_args()
 
