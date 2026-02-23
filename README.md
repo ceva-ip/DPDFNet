@@ -85,7 +85,7 @@ python -m tflite_model.infer_dpdfnet_tflite \
 
 ```bash
 python -m onnx_model.infer_dpdfnet_onnx \
-  --noisy_dir ./noisy_wavs \
+  	--noisy_dir ./noisy_wavs \
 	--enhanced_dir ./enhanced_wavs \
 	--model_name dpdfnet4
 ```
@@ -142,30 +142,30 @@ To change model, edit `MODEL_NAME` near the top of `real_time_demo.py`.
 
 ## Troubleshooting / FAQ
 
-`Q: Model files are missing (TFLite / ONNX / checkpoints)`
+#### `Q: Model files are missing (TFLite / ONNX / checkpoints)`
 - Run the Hugging Face download commands from the `Try In 60 Seconds` notes block.
 - Confirm files are in:
   - `model_zoo/tflite/`
   - `model_zoo/onnx/`
   - `model_zoo/checkpoints/`
 
-`Q: No .wav files found`
+#### `Q: No .wav files found`
 - Both offline scripts scan only the exact folder given by `--noisy_dir` (non-recursive).
 - Ensure input files use `.wav` extension.
 
-`Q: Real-time demo has audio device errors`
+#### `Q: Real-time demo has audio device errors`
 - Check microphone permissions and default input/output device settings.
 - Install host audio dependencies for `sounddevice` (PortAudio packages on your OS).
 
-`Q: Real-time GUI does not open`
+#### `Q: Real-time GUI does not open`
 - Ensure Qt dependencies from `requirements.txt` installed successfully.
 - On headless servers, run offline enhancement instead.
 
-`Q: I get import/module errors when running commands`
+#### `Q: I get import/module errors when running commands`
 - Run from repo root and use module form exactly as documented (`python -m ...`).
 - Activate your virtual environment before running commands.
 
-`Q: CPU is too slow for my target`
+#### `Q: CPU is too slow for my target`
 - Try smaller models (`baseline`, `dpdfnet2`).
 - Benchmark ONNX runtime using `python -m onnx_model.infer_dpdfnet_onnx ...` and compare RTF.
 
