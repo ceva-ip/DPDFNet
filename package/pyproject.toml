@@ -1,0 +1,58 @@
+[build-system]
+requires = [
+  "setuptools>=61",
+  "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dpdfnet"
+version = "0.2.0"
+description = "CPU-only ONNX inference package for DPDFNet speech enhancement."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "Daniel Rika" }
+]
+keywords = ["speech-enhancement", "audio", "onnx", "cpu", "dpdfnet"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Multimedia :: Sound/Audio",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+ 
+dependencies = [
+  "numpy>=1.26",
+  "librosa>=0.11",
+  "soundfile>=0.13",
+  "onnxruntime>=1.20",
+  "filelock>=3.16",
+  "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=7.4",
+]
+
+[project.scripts]
+dpdfnet = "dpdfnet.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ceva-ip/DPDFNet"
+Repository = "https://github.com/ceva-ip/DPDFNet"
+Issues = "https://github.com/ceva-ip/DPDFNet/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
