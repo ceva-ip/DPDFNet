@@ -108,4 +108,3 @@ dpdfnet.download("dpdfnet4")
 
 - Homepage: https://github.com/ceva-ip/DPDFNet
 - Issues: https://github.com/ceva-ip/DPDFNet/issues
-- Contributing guide: `CONTRIBUTING.md`
