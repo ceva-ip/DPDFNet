@@ -104,23 +104,6 @@ dpdfnet.download()
 dpdfnet.download("dpdfnet4")
 ```
 
-## Model Cache
-
-Models are downloaded from Hugging Face and cached locally.
-
-Default cache root:
-- Linux: `$XDG_CACHE_HOME/dpdfnet` (fallback `~/.cache/dpdfnet`)
-- macOS: `~/Library/Caches/dpdfnet`
-- Windows: `%LOCALAPPDATA%\\dpdfnet` (fallback `%USERPROFILE%\\AppData\\Local\\dpdfnet`)
-
-Environment variables:
-- `DPDFNET_CACHE_DIR`
-- `DPDFNET_MODEL_DIR`
-- `DPDFNET_HF_REPO` (default `Ceva-IP/DPDFNet`)
-- `DPDFNET_HF_BASE_URL` (default `https://huggingface.co`)
-- `DPDFNET_HF_SUBDIR` (default `onnx`)
-- `DPDFNET_DOWNLOAD_RETRIES` (default `3`)
-
 ## Links
 
 - Homepage: https://github.com/ceva-ip/DPDFNet
