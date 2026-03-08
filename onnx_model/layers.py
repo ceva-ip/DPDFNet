@@ -1037,8 +1037,9 @@ class GroupedLinear(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         outputs: List[Tensor] = []
-        for i, layer in enumerate(self.layers):
-            outputs.append(layer(x[..., i * self.input_size: (i + 1) * self.input_size]))
+        input_splits = torch.split(x, self.input_size, dim=-1)
+        for layer, x_split in zip(self.layers, input_splits):
+            outputs.append(layer(x_split))
         output = torch.cat(outputs, dim=-1)
         if self.shuffle:
             orig_shape = output.shape

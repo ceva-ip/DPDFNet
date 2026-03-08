@@ -70,16 +70,11 @@ def vorbis_window(window_len: int) -> np.ndarray:
     return window.astype(np.float32)
 
 
-def get_wnorm(window_len: int, frame_size: int) -> float:
-    return 1.0 / (window_len**2 / (2 * frame_size))
-
-
 class STFTStreamingPreprocess:
-    def __init__(self, win_len: int, hop_size: int, window: np.ndarray, wnorm: float):
+    def __init__(self, win_len: int, hop_size: int, window: np.ndarray):
         self.win_len = int(win_len)
         self.hop_size = int(hop_size)
         self.window = np.asarray(window, dtype=np.float32)
-        self.wnorm = np.asarray(wnorm, dtype=np.float32)
         self.buffer = np.zeros(self.win_len, dtype=np.float32)
 
     def call(self, inputs: np.ndarray) -> np.ndarray:
@@ -91,7 +86,6 @@ class STFTStreamingPreprocess:
         self.buffer = shifted
         frame = shifted * self.window
         spec = np.fft.rfft(frame[None, :], axis=-1)
-        spec = spec * self.wnorm.astype(spec.real.dtype, copy=False)
         out = np.stack([spec.real, spec.imag], axis=-1)
         return out[:, None, :, :].astype(np.float32, copy=False)
 
@@ -99,11 +93,10 @@ class STFTStreamingPreprocess:
 
 
 class ISTFTStreamingPostprocess:
-    def __init__(self, win_len: int, hop_size: int, window: np.ndarray, wnorm: float):
+    def __init__(self, win_len: int, hop_size: int, window: np.ndarray):
         self.win_len = int(win_len)
         self.hop_size = int(hop_size)
         self.window = np.asarray(window, dtype=np.float32)
-        self.wnorm = float(np.asarray(wnorm, dtype=np.float32))
         self.ola_buffer = np.zeros(self.win_len, dtype=np.float32)
 
     def call(self, inputs: np.ndarray) -> np.ndarray:
@@ -117,7 +110,7 @@ class ISTFTStreamingPostprocess:
 
         spec = (x[..., 0] + 1j * x[..., 1]).astype(np.complex64, copy=False)[None, :]
         frame = np.fft.irfft(spec, n=self.win_len, axis=-1)[0].astype(np.float32, copy=False)
-        frame = (frame * self.window) / self.wnorm
+        frame = frame * self.window
 
         shifted = np.concatenate(
             [self.ola_buffer[self.hop_size:], np.zeros(self.hop_size, dtype=np.float32)], axis=0
@@ -206,9 +199,8 @@ def main() -> None:
     agc_gain = 1.0
 
     window = vorbis_window(n_fft)
-    wnorm = get_wnorm(n_fft, hop_size)
-    stft = STFTStreamingPreprocess(n_fft, hop_size, window, wnorm)
-    istft = ISTFTStreamingPostprocess(n_fft, hop_size, window, wnorm)
+    stft = STFTStreamingPreprocess(n_fft, hop_size, window)
+    istft = ISTFTStreamingPostprocess(n_fft, hop_size, window)
     runtime_state = init_state.copy()
     onnx_ms_ema = float("nan")
 

@@ -28,7 +28,8 @@ class StftConfig:
     win_len: int
     hop_size: int
     window: np.ndarray
-    wnorm: float
+
+
 def infer_win_len(session: ort.InferenceSession, default_sr: int) -> int:
     spec_shape = session.get_inputs()[0].shape
     freq_bins = spec_shape[-2] if len(spec_shape) >= 2 else None
@@ -158,15 +159,10 @@ def vorbis_window(window_len: int) -> np.ndarray:
     return np.sin(0.5 * np.pi * s * s).astype(np.float32)
 
 
-def get_wnorm(window_len: int, frame_size: int) -> float:
-    return 1.0 / (window_len**2 / (2 * frame_size))
-
-
 def make_stft_config(win_len: int) -> StftConfig:
     hop_size = win_len // 2
     window = vorbis_window(win_len)
-    wnorm = get_wnorm(win_len, hop_size)
-    return StftConfig(win_len=win_len, hop_size=hop_size, window=window, wnorm=wnorm)
+    return StftConfig(win_len=win_len, hop_size=hop_size, window=window)
 
 
 def preprocess_waveform(waveform: np.ndarray, cfg: StftConfig) -> np.ndarray:
@@ -180,7 +176,7 @@ def preprocess_waveform(waveform: np.ndarray, cfg: StftConfig) -> np.ndarray:
         center=True,
         pad_mode="reflect",
     )
-    spec = (spec.T * cfg.wnorm).astype(np.complex64, copy=False)
+    spec = spec.T.astype(np.complex64, copy=False)
     spec_ri = np.stack([spec.real, spec.imag], axis=-1).astype(np.float32, copy=False)
     return np.ascontiguousarray(spec_ri[None, ...], dtype=np.float32)
 
@@ -198,7 +194,6 @@ def postprocess_spec(spec_e: np.ndarray, cfg: StftConfig) -> np.ndarray:
         length=None,
     ).astype(np.float32, copy=False)
 
-    waveform_e = waveform_e / cfg.wnorm
     return np.concatenate(
         [waveform_e[cfg.win_len * 2 :], np.zeros(cfg.win_len * 2, dtype=np.float32)],
         axis=0,

@@ -12,9 +12,13 @@ class DPDFNet48HROnnxWrapper(nn.Module):
     def __init__(self, model: DPDFNet48HR):
         super().__init__()
         self.model = model
+        self.register_buffer("wnorm", torch.tensor(float(model.wnorm), dtype=torch.float32))
+        self.register_buffer("inv_wnorm", torch.tensor(1.0 / float(model.wnorm), dtype=torch.float32))
 
     def forward(self, spec: torch.Tensor, state_in: torch.Tensor):
+        spec = spec * self.wnorm
         spec_e, state_out = self.model(spec, state_in)
+        spec_e = spec_e * self.inv_wnorm
         return spec_e, state_out
 
 
