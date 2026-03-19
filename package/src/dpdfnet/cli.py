@@ -70,17 +70,23 @@ def _build_parser() -> argparse.ArgumentParser:
 
     p_enhance = subparsers.add_parser(
         "enhance",
-        help="Enhance a single wav file.",
+        help="Enhance a single audio file (.wav, .flac, .mp3, .ogg, …).",
     )
-    p_enhance.add_argument("input", type=Path, help="Input wav file path.")
+    p_enhance.add_argument(
+        "input", type=Path,
+        help="Input audio file (.wav, .flac, .mp3, .ogg, and more).",
+    )
     p_enhance.add_argument("output", type=Path, help="Output wav file path.")
     _add_model_resolution_args(p_enhance)
 
     p_enhance_dir = subparsers.add_parser(
         "enhance-dir",
-        help="Enhance all .wav files from one directory (non-recursive).",
+        help="Enhance all supported audio files from one directory (non-recursive).",
     )
-    p_enhance_dir.add_argument("input_dir", type=Path, help="Input directory.")
+    p_enhance_dir.add_argument(
+        "input_dir", type=Path,
+        help="Input directory containing audio files (.wav, .flac, .mp3, .ogg, …).",
+    )
     p_enhance_dir.add_argument("output_dir", type=Path, help="Output directory.")
     _add_model_resolution_args(p_enhance_dir)
 
@@ -162,20 +168,27 @@ def _run_enhance(args: argparse.Namespace) -> int:
 
 
 def _run_enhance_dir(args: argparse.Namespace) -> int:
-    from .api import enhance_file
+    from .api import enhance_file, SUPPORTED_EXTENSIONS
 
     input_dir = Path(args.input_dir).expanduser().resolve()
     output_dir = Path(args.output_dir).expanduser().resolve()
     if not input_dir.is_dir():
         raise FileNotFoundError(f"Input directory not found: {input_dir}")
 
-    wav_files = sorted([p for p in input_dir.iterdir() if p.is_file() and p.suffix.lower() == ".wav"])
-    if not wav_files:
-        raise FileNotFoundError(f"No .wav files found in {input_dir}")
+    audio_files = sorted(
+        p for p in input_dir.iterdir()
+        if p.is_file() and p.suffix.lower() in SUPPORTED_EXTENSIONS
+    )
+    if not audio_files:
+        supported = ", ".join(sorted(SUPPORTED_EXTENSIONS))
+        raise FileNotFoundError(
+            f"No supported audio files found in {input_dir}\n"
+            f"Supported extensions: {supported}"
+        )
 
     output_dir.mkdir(parents=True, exist_ok=True)
     with tqdm(
-        total=len(wav_files),
+        total=len(audio_files),
         unit="file",
         desc="Files",
         dynamic_ncols=True,
@@ -188,7 +201,7 @@ def _run_enhance_dir(args: argparse.Namespace) -> int:
             dynamic_ncols=True,
             file=sys.stderr,
         ) as frames_progress:
-            for wav_path in wav_files:
+            for wav_path in audio_files:
                 out_path = output_dir / f"{wav_path.stem}_enhanced.wav"
                 last_done = 0
 

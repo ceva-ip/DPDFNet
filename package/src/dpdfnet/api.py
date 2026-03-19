@@ -110,6 +110,44 @@ def enhance(
     return fit_length(enhanced, waveform.shape[0]).astype(np.float32, copy=False)
 
 
+# Extensions handled natively by soundfile (libsndfile)
+_SF_EXTENSIONS: frozenset[str] = frozenset({".wav", ".flac", ".ogg", ".aiff", ".aif", ".au", ".snd"})
+# Extensions that require pydub + ffmpeg
+_PYDUB_EXTENSIONS: frozenset[str] = frozenset({".mp3", ".m4a", ".aac", ".wma", ".opus"})
+# All supported input extensions
+SUPPORTED_EXTENSIONS: frozenset[str] = _SF_EXTENSIONS | _PYDUB_EXTENSIONS
+
+
+def _read_audio(path: Path) -> tuple[np.ndarray, int]:
+    """Return (audio float32, sample_rate) for any supported audio format."""
+    suffix = path.suffix.lower()
+    if suffix in _SF_EXTENSIONS:
+        import soundfile as sf
+        audio, sr = sf.read(str(path), always_2d=False)
+        return np.asarray(audio, dtype=np.float32), int(sr)
+    if suffix in _PYDUB_EXTENSIONS:
+        try:
+            from pydub import AudioSegment
+        except ImportError:
+            raise ImportError(
+                f"Reading {suffix!r} files requires the 'pydub' package and ffmpeg.\n"
+                f"Install them with:  pip install 'dpdfnet[mp3]'\n"
+                f"and ensure ffmpeg is available on your PATH."
+            ) from None
+        seg = AudioSegment.from_file(str(path))
+        sr = seg.frame_rate
+        samples = np.array(seg.get_array_of_samples(), dtype=np.float32)
+        samples /= float(1 << (seg.sample_width * 8 - 1))
+        if seg.channels > 1:
+            samples = samples.reshape(-1, seg.channels)
+        return samples, sr
+    supported = ", ".join(sorted(SUPPORTED_EXTENSIONS))
+    raise ValueError(
+        f"Unsupported audio format {suffix!r} for file: {path}\n"
+        f"Supported extensions: {supported}"
+    )
+
+
 def enhance_file(
     input_path: Union[str, Path],
     output_path: Optional[Union[str, Path]] = None,
@@ -127,7 +165,7 @@ def enhance_file(
     if not in_path.is_file():
         raise FileNotFoundError(f"Input file not found: {in_path}")
 
-    audio, sr = sf.read(str(in_path), always_2d=False)
+    audio, sr = _read_audio(in_path)
     enhanced = enhance(
         audio=audio,
         sample_rate=int(sr),

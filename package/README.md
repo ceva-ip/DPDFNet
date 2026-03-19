@@ -21,6 +21,40 @@ Runtime dependencies are installed automatically:
 - `filelock`
 - `tqdm`
 
+## Supported Audio Formats
+
+The following input formats are supported out of the box (via `soundfile`/libsndfile):
+
+| Format | Extensions |
+|--------|-----------|
+| WAV | `.wav` |
+| FLAC | `.flac` |
+| Ogg Vorbis | `.ogg` |
+| AIFF | `.aiff`, `.aif` |
+| AU/SND | `.au`, `.snd` |
+
+MP3 and other compressed formats require the optional `pydub` dependency and
+[ffmpeg](https://ffmpeg.org/) on your PATH:
+
+```bash
+pip install 'dpdfnet[mp3]'
+# also install ffmpeg, e.g.:
+#   Ubuntu/Debian:  sudo apt install ffmpeg
+#   macOS:          brew install ffmpeg
+#   Windows:        https://ffmpeg.org/download.html
+```
+
+Once installed, these additional formats are supported:
+
+| Format | Extensions |
+|--------|-----------|
+| MP3 | `.mp3` |
+| AAC / M4A | `.aac`, `.m4a` |
+| WMA | `.wma` |
+| Opus | `.opus` |
+
+Output is always written as PCM16 `.wav` regardless of the input format.
+
 ## CLI
 
 Show help:
@@ -34,11 +68,11 @@ Commands:
 1. `dpdfnet models`
 - List supported models and local availability.
 
-2. `dpdfnet enhance <input.wav> <output.wav> [--model <name>] [-v|--verbose]`
-- Enhance one WAV file.
+2. `dpdfnet enhance <input> <output.wav> [--model <name>] [-v|--verbose]`
+- Enhance one audio file (any supported format; output is always `.wav`).
 
 3. `dpdfnet enhance-dir <input_dir> <output_dir> [--model <name>] [-v|--verbose]`
-- Enhance all `.wav` files in a directory (non-recursive).
+- Enhance all supported audio files in a directory (non-recursive).
 
 4. `dpdfnet download [model] [--force|--refresh] [-q|--quiet | -v|--verbose]`
 - Download all models when `model` is omitted, or one model when provided.
