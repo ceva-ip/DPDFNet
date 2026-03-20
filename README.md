@@ -69,6 +69,69 @@ dpdfnet.download()				# All models
 dpdfnet.download("dpdfnet4")	# Specific model
 ```
 
+### Streaming (Real-Time) API
+
+Install `sounddevice` (not included in `dpdfnet` dependencies):
+
+```bash
+pip install sounddevice
+```
+
+`StreamEnhancer` processes audio chunk-by-chunk, preserving RNN state across
+calls.  Any chunk size works; enhanced samples are returned as soon as enough
+data has accumulated for the first model frame (20 ms).
+
+```python
+import numpy as np
+import sounddevice as sd
+import dpdfnet
+
+INPUT_SR   = 48000
+# Use one model hop (10 ms) as the block size so process() returns
+# exactly one hop's worth of enhanced audio on every callback.
+BLOCK_SIZE = int(INPUT_SR * 0.010)   # 480 samples at 48 kHz
+
+enhancer = dpdfnet.StreamEnhancer(model="dpdfnet2_48khz_hr")
+
+def callback(indata, outdata, frames, time, status):
+    mono_in = indata[:, 0] if indata.ndim > 1 else indata.ravel()
+    enhanced = enhancer.process(mono_in, sample_rate=INPUT_SR)
+    n = min(len(enhanced), frames)
+    outdata[:n, 0] = enhanced[:n]
+    if n < frames:
+        outdata[n:] = 0.0   # silence while the first window accumulates
+
+with sd.Stream(
+    samplerate=INPUT_SR,
+    blocksize=BLOCK_SIZE,
+    channels=1,
+    dtype="float32",
+    callback=callback,
+):
+    print("Enhancing microphone input - press Ctrl+C to stop")
+    try:
+        while True:
+            sd.sleep(100)
+    except KeyboardInterrupt:
+        pass
+
+# Optional: drain the final partial window at the end of a recording
+tail = enhancer.flush()
+```
+
+> **Notes:**
+>
+> **Latency** - the first enhanced output arrives after one full model window
+>   (~20 ms) has been buffered.  All subsequent blocks are returned with ~10 ms
+>   additional delay.\
+> **Sample rate** - `StreamEnhancer` resamples internally.  Pass your device's
+>   native rate as `sample_rate`; the return value is at the same rate.\
+> **Block size** - using `BLOCK_SIZE = int(SR * 0.010)` (one model hop) gives
+>   one enhanced block per callback.  Other sizes also work but may produce empty
+>   returns while the buffer fills.\
+> **Multiple streams** - create a separate `StreamEnhancer` per stream.  Call
+>   `enhancer.reset()` between independent audio segments to clear RNN state.
+
 ## Run From Source
 
 ### 1) Install dependencies
