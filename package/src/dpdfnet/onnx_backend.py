@@ -26,6 +26,7 @@ def create_cpu_session(onnx_path: Union[str, Path]) -> ort.InferenceSession:
     options = ort.SessionOptions()
     options.intra_op_num_threads = 1
     options.inter_op_num_threads = 1
+    options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
 
     try:
         session = ort.InferenceSession(

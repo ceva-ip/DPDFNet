@@ -65,6 +65,7 @@ def build_session(onnx_path: Path) -> ort.InferenceSession:
     options = ort.SessionOptions()
     options.intra_op_num_threads = 1
     options.inter_op_num_threads = 1
+    options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
 
     available = set(ort.get_available_providers())
     providers = ["CPUExecutionProvider"]

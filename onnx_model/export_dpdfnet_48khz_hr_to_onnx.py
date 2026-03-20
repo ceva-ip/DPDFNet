@@ -8,6 +8,7 @@ import torch
 from torch import nn
 
 from .dpdfnet_48khz_hr import DPDFNet48HR, correct_state_dict
+from .layers import convert_grouped_linear_to_einsum
 
 
 class DPDFNet48HROnnxWrapper(nn.Module):
@@ -22,6 +23,20 @@ class DPDFNet48HROnnxWrapper(nn.Module):
         spec_e, state_out = self.model(spec, state_in)
         spec_e = spec_e * self.inv_wnorm
         return spec_e, state_out
+
+
+def simplify_onnx(path: Path) -> None:
+    try:
+        import onnxsim
+        model = onnx.load(str(path))
+        model_sim, ok = onnxsim.simplify(model)
+        if ok:
+            onnx.save(model_sim, str(path))
+            print("[INFO] Graph simplified with onnxsim.")
+        else:
+            print("[WARN] onnxsim simplification check failed; keeping original graph.")
+    except ImportError:
+        print("[INFO] onnxsim not installed; skipping simplification (pip install onnxsim).")
 
 
 def add_meta_data(filename: Path, meta_data: dict[str, Any]) -> None:
@@ -87,6 +102,7 @@ def build_model(args: argparse.Namespace) -> DPDFNet48HR:
         state_dict = torch.load(args.checkpoint, map_location="cpu", weights_only=True)
         stream_state_dict = correct_state_dict(state_dict)
         model.load_state_dict(stream_state_dict, strict=True)
+    convert_grouped_linear_to_einsum(model)
     model.eval()
     return model
 
@@ -161,6 +177,7 @@ def main() -> None:
     model = build_model(args)
     export_onnx(model, output, opset=args.opset, use_dynamic_axes=args.dynamic_axes)
     add_meta_data(output, build_meta_data(model))
+    simplify_onnx(output)
     print(f"[OK] Exported ONNX model to: {output}")
     print(f"[INFO] State vector size: {model.state_size()}")
     print(f"[INFO] Frequency bins: {model.freq_bins}")

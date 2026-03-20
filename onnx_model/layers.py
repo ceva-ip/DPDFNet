@@ -1006,14 +1006,11 @@ class GroupedLinearEinsum(nn.Module):
             nn.init.uniform_(self.bias, -bound, bound)
 
     def forward(self, x: Tensor) -> Tensor:
-        b, t, _ = x.shape
-        new_shape = (b, t, self.groups, self.ws)
-        x = x.view(new_shape)
-        x = torch.einsum("btgi,gih->btgh", x, self.weight)  # [..., G, H/G]
-        x = x.flatten(2, 3)  # [B, T, H]
-        # Add the bias term
-        x = x + self.bias
-        return x
+        leading = x.shape[:-1]                                          # e.g. (B,) or (B, T)
+        x = x.reshape(-1, self.groups, self.ws)                        # [N, G, I/G]
+        x = (x.unsqueeze(-2) @ self.weight).squeeze(-2)               # [N, G, H/G]
+        x = x.reshape(leading + torch.Size([self.hidden_size]))         # [..., H]
+        return x + self.bias
 
     def __repr__(self):
         cls = self.__class__.__name__
@@ -1051,6 +1048,36 @@ class GroupedLinear(nn.Module):
     def __repr__(self):
         cls = self.__class__.__name__
         return f"{cls}(input_size: {self.input_size}, hidden_size: {self.hidden_size}, groups: {self.groups})"
+
+
+def convert_grouped_linear_to_einsum(module: nn.Module) -> nn.Module:
+    """Recursively replace every GroupedLinear with a GroupedLinearEinsum.
+
+    Weights are merged so the module exports to ONNX as a single Einsum
+    operator instead of one Linear per group.
+    """
+    for name, child in list(module.named_children()):
+        if isinstance(child, GroupedLinear):
+            if child.shuffle:
+                raise ValueError(
+                    f"Cannot convert '{name}': GroupedLinear with shuffle=True "
+                    "has no GroupedLinearEinsum equivalent."
+                )
+            G = child.groups
+            I = child.input_size * G  # child.input_size is per-group
+            H = child.hidden_size * G  # child.hidden_size is per-group
+            einsum = GroupedLinearEinsum(I, H, G)
+            with torch.no_grad():
+                einsum.weight.copy_(
+                    torch.stack([l.weight.T for l in child.layers], dim=0)
+                )
+                einsum.bias.copy_(
+                    torch.cat([l.bias for l in child.layers], dim=0)
+                )
+            setattr(module, name, einsum)
+        else:
+            convert_grouped_linear_to_einsum(child)
+    return module
 
 
 class GroupedConv2D(nn.Module):
