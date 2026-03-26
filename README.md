@@ -22,6 +22,24 @@
   <img src="figures/dpdfnet2_48khz_hr_gif.gif" width="688" alt="Noisy→Enhanced spectrogram slideshow" />
 </p>
 
+## Model Profile
+
+### 16 kHz models
+
+| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
+| --- | :---: | :---: | :---: | :---: | --- |
+| baseline | 2.31 | 0.36 | 8.5 | 8.3 | Fastest / lowest resource usage |
+| dpdfnet2 | 2.49 | 1.35 | 10.7 | 9.7 | Real-time / embedded devices |
+| dpdfnet4 | 2.84 | 2.36 | 12.9 | 11.1 | Balanced performance |
+| dpdfnet8 | 3.54 | 4.37 | 17.2 | 13.9 | Best enhancement quality |
+
+### 48 kHz models
+
+| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
+| --- | :---: | :---: | :---: | :---: | --- |
+| dpdfnet2_48khz_hr | 2.58 | 2.42 | 11.6 | 10.0 | High-resolution 48 kHz audio |
+| dpdfnet8_48khz_hr | 3.63 | 7.17 | 18.7 | 14.2 | Best quality high-resolution 48 kHz audio |
+
 ## Install the PyPI Package
 
 For CPU-only ONNX inference using the packaged CLI and Python API:
@@ -227,25 +245,6 @@ How it works:
 - Enables the use of AGC during playback.
 
 To change model, edit `MODEL_NAME` near the top of `real_time_demo.py`.
-
-## Model Profile
-
-### 16 kHz models
-
-| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
-| --- | :---: | :---: | :---: | :---: | --- |
-| baseline | 2.31 | 0.36 | 8.5 | 8.3 | Fastest / lowest resource usage |
-| dpdfnet2 | 2.49 | 1.35 | 10.7 | 9.7 | Real-time / embedded devices |
-| dpdfnet4 | 2.84 | 2.36 | 12.9 | 11.1 | Balanced performance |
-| dpdfnet8 | 3.54 | 4.37 | 17.2 | 13.9 | Best enhancement quality |
-
-### 48 kHz models
-
-| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
-| --- | :---: | :---: | :---: | :---: | --- |
-| dpdfnet2_48khz_hr | 2.58 | 2.42 | 11.6 | 10.0 | High-resolution 48 kHz audio |
-| dpdfnet8_48khz_hr | 3.63 | 7.17 | 18.7 | 14.2 | Best quality high-resolution 48 kHz audio |
-
 
 ## Troubleshooting / FAQ
 
