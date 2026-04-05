@@ -54,6 +54,17 @@ def _add_model_resolution_args(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def _add_attn_limit_arg(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--attn-limit-db",
+        "--attn_limit_db",
+        dest="attn_limit_db",
+        type=float,
+        default=None,
+        help="Offline-only attenuation limit in dB. Higher values allow stronger denoising.",
+    )
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="dpdfnet",
@@ -81,6 +92,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Input audio file (.wav, .flac, .mp3, .ogg, and more).",
     )
     p_enhance.add_argument("output", type=Path, help="Output wav file path.")
+    _add_attn_limit_arg(p_enhance)
     _add_model_resolution_args(p_enhance)
 
     p_enhance_dir = subparsers.add_parser(
@@ -99,6 +111,7 @@ def _build_parser() -> argparse.ArgumentParser:
         metavar="N",
         help="Number of parallel workers (default: CPU count).",
     )
+    _add_attn_limit_arg(p_enhance_dir)
     _add_model_resolution_args(p_enhance_dir)
 
     p_download = subparsers.add_parser(
@@ -196,6 +209,7 @@ def _run_enhance(args: argparse.Namespace) -> int:
             input_path=args.input,
             output_path=args.output,
             model=args.model,
+            attn_limit_db=args.attn_limit_db,
             verbose=args.verbose,
             progress_callback=_build_frame_progress_callback(progress),
         )
@@ -287,6 +301,7 @@ def _run_enhance_dir(args: argparse.Namespace) -> int:
                     output_path=out_path,
                     runtime=_get_runtime(),
                     model_sample_rate=resolved.info.sample_rate,
+                    attn_limit_db=args.attn_limit_db,
                     progress_callback=_make_callback(wav_path),
                 )
 

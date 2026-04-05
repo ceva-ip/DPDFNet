@@ -16,6 +16,7 @@ from banner import print_banner
 
 TFLITE_DIR = Path('./model_zoo/tflite')
 Interpreter = tf.lite.Interpreter
+ATTN_LIMIT_NOISY_FRAME_OFFSET = 4
 
 # -----------------------------------------------------------------------------
 # Model registry
@@ -149,6 +150,45 @@ def pcm16_safe(x: np.ndarray) -> np.ndarray:
     return (x * 32767.0).astype(np.int16)
 
 
+def validate_attn_limit_db(attn_limit_db: float | None) -> float | None:
+    if attn_limit_db is None:
+        return None
+    value = float(attn_limit_db)
+    if np.isnan(value) or value < 0.0:
+        raise ValueError("attn_limit_db must be non-negative, infinity, or None.")
+    return value
+
+
+def apply_attn_limit(
+    spec_noisy: np.ndarray,
+    spec_enh: np.ndarray,
+    attn_limit_db: float | None,
+) -> np.ndarray:
+    value = validate_attn_limit_db(attn_limit_db)
+    enhanced = np.asarray(spec_enh, dtype=np.float32)
+    if value is None:
+        return enhanced
+
+    noisy = np.asarray(spec_noisy, dtype=np.float32)
+    if noisy.shape != enhanced.shape:
+        raise ValueError(
+            "spec_noisy and spec_enh must have matching shapes, "
+            f"got {noisy.shape} and {enhanced.shape}."
+        )
+
+    # The TFLite offline path emits enhanced spectra ~4 hops ahead of the
+    # original noisy STFT, so shift the noisy reference to that frame index
+    # before blending for attenuation limiting.
+    aligned_noisy = np.zeros_like(noisy, dtype=np.float32)
+    if noisy.shape[1] > ATTN_LIMIT_NOISY_FRAME_OFFSET:
+        aligned_noisy[:, ATTN_LIMIT_NOISY_FRAME_OFFSET:, :, :] = noisy[
+            :, :-ATTN_LIMIT_NOISY_FRAME_OFFSET, :, :
+        ]
+
+    alpha = float(10.0 ** (-value / 20.0))
+    return np.ascontiguousarray(alpha * aligned_noisy + (1.0 - alpha) * enhanced, dtype=np.float32)
+
+
 # -----------------------------------------------------------------------------
 # Core processing
 # -----------------------------------------------------------------------------
@@ -195,6 +235,7 @@ def enhance_file(
     in_path: Path,
     out_path: Path,
     model_name: str,
+    attn_limit_db: float | None = None,
 ) -> tuple[int, float, float, float]:
     """Returns (num_frames, total_infer_time_s, avg_frame_ms, rtf)."""
     # Load audio
@@ -231,6 +272,7 @@ def enhance_file(
 
     # Concatenate along time dimension
     spec_e = np.concatenate(outputs, axis=1).astype(np.float32)  # [1, T, F, 2]
+    spec_e = apply_attn_limit(spec, spec_e, attn_limit_db)
 
     # iSTFT to waveform (model SR), then back to original SR for saving
     enhanced_model_sr = postprocessing(spec_e, cfg)
@@ -285,8 +327,17 @@ def main():
         default=None,
         help="Number of parallel worker threads. Defaults to os.cpu_count().",
     )
+    parser.add_argument(
+        "--attn-limit-db",
+        "--attn_limit_db",
+        dest="attn_limit_db",
+        type=float,
+        default=None,
+        help="Offline-only attenuation limit in dB. Higher values allow stronger denoising.",
+    )
 
     args = parser.parse_args()
+    attn_limit_db = validate_attn_limit_db(args.attn_limit_db)
     print_banner(version=None)
     noisy_dir = Path(args.noisy_dir)
     enhanced_dir = Path(args.enhanced_dir)
@@ -309,6 +360,7 @@ def main():
 
     print(f"Model: {model_name}")
     print(f"Model SR: {model_cfg['sr']} Hz | win_len: {model_cfg['win_len']} | hop: {model_cfg['win_len']//2}")
+    print(f"Attenuation limit: {attn_limit_db if attn_limit_db is not None else 'disabled'}")
     print(f"Input : {noisy_dir}")
     print(f"Output: {enhanced_dir}")
 
@@ -328,7 +380,7 @@ def main():
     def _process(wav: Path) -> tuple[Path, Path, tuple]:
         interp = _get_interpreter()
         out_path = enhanced_dir / (wav.stem + f"_{model_name}.wav")
-        result = enhance_file(interp, cfg, wav, out_path, model_name)
+        result = enhance_file(interp, cfg, wav, out_path, model_name, attn_limit_db=attn_limit_db)
         return wav, out_path, result
 
     future_to_wav = {}

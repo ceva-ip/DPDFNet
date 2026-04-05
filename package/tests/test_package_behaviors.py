@@ -118,6 +118,67 @@ def test_enhance_progress_callback_reports_frame_progress(monkeypatch) -> None:
     assert len(updates) == 5
 
 
+def test_enhance_applies_attn_limit_before_postprocess(monkeypatch) -> None:
+    from dpdfnet import api
+
+    spec_r = np.arange(1, 1 + (1 * 4 * 3 * 2), dtype=np.float32).reshape(1, 4, 3, 2)
+    spec_e_frames = np.full((4, 1, 3, 2), 77.0, dtype=np.float32)
+    captured: dict[str, np.ndarray] = {}
+
+    class _FakeSession:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def run(self, _outputs, _inputs):
+            frame = spec_e_frames[self.calls : self.calls + 1]
+            self.calls += 1
+            return frame.copy(), np.zeros((1,), dtype=np.float32)
+
+    class _FakeRuntime:
+        session = _FakeSession()
+        init_state = np.zeros((1,), dtype=np.float32)
+        in_spec_name = "spec"
+        in_state_name = "state"
+        out_spec_name = "out_spec"
+        out_state_name = "out_state"
+
+    class _ResolvedInfo:
+        sample_rate = 16000
+
+    class _ResolvedModel:
+        info = _ResolvedInfo()
+        onnx_path = Path("fake.onnx")
+
+    monkeypatch.setattr(api, "resolve_model", lambda **_kwargs: _ResolvedModel())
+
+    import dpdfnet.audio as audio_mod
+    import dpdfnet.onnx_backend as backend_mod
+
+    monkeypatch.setattr(audio_mod, "to_mono", lambda x: np.asarray(x, dtype=np.float32))
+    monkeypatch.setattr(audio_mod, "ensure_sample_rate", lambda x, _a, _b: np.asarray(x, dtype=np.float32))
+    monkeypatch.setattr(audio_mod, "make_stft_config", lambda _win: type("Cfg", (), {"win_len": 4})())
+    monkeypatch.setattr(audio_mod, "preprocess_waveform", lambda _w, _cfg: spec_r.copy())
+
+    def _capture_postprocess(spec, _cfg):
+        captured["spec"] = np.asarray(spec, dtype=np.float32).copy()
+        return np.zeros((8,), dtype=np.float32)
+
+    monkeypatch.setattr(audio_mod, "postprocess_spec", _capture_postprocess)
+    monkeypatch.setattr(audio_mod, "fit_length", lambda x, _n: np.asarray(x, dtype=np.float32))
+    monkeypatch.setattr(backend_mod, "build_runtime_model", lambda _onnx: _FakeRuntime())
+    monkeypatch.setattr(backend_mod, "infer_win_len", lambda _session, _sr: 4)
+
+    api.enhance(
+        audio=np.zeros((8,), dtype=np.float32),
+        sample_rate=16000,
+        attn_limit_db=0.0,
+    )
+
+    expected = np.zeros_like(spec_r)
+    expected[:, 4:, :, :] = spec_r[:, :-4, :, :]
+    np.testing.assert_array_equal(captured["spec"], expected)
+
+
 def test_model_download_http_error_reports_status(tmp_path, monkeypatch) -> None:
     from dpdfnet import models
 
@@ -671,6 +732,68 @@ def test_ensure_sample_rate_identity_when_same_sr() -> None:
     assert result.dtype == np.float32
 
 
+def test_apply_attn_limit_none_returns_enhanced() -> None:
+    from dpdfnet.audio import apply_attn_limit
+
+    spec_noisy = np.ones((1, 4, 2, 2), dtype=np.float32)
+    spec_enh = np.full((1, 4, 2, 2), 3.0, dtype=np.float32)
+
+    result = apply_attn_limit(spec_noisy, spec_enh, None)
+
+    np.testing.assert_array_equal(result, spec_enh)
+    assert result.dtype == np.float32
+
+
+def test_apply_attn_limit_zero_db_returns_shifted_noisy_reference() -> None:
+    from dpdfnet.audio import apply_attn_limit
+
+    spec_noisy = np.arange(1, 1 + (1 * 7 * 1 * 2), dtype=np.float32).reshape(1, 7, 1, 2)
+    spec_enh = np.full_like(spec_noisy, 99.0)
+
+    result = apply_attn_limit(spec_noisy, spec_enh, 0.0)
+
+    expected = np.zeros_like(spec_noisy)
+    expected[:, 4:, :, :] = spec_noisy[:, :-4, :, :]
+    np.testing.assert_array_equal(result, expected)
+
+
+def test_apply_attn_limit_finite_db_blends_shifted_noisy_and_enhanced() -> None:
+    from dpdfnet.audio import apply_attn_limit
+
+    spec_noisy = np.arange(1, 1 + (1 * 7 * 1 * 2), dtype=np.float32).reshape(1, 7, 1, 2)
+    spec_enh = np.full_like(spec_noisy, 8.0)
+    attn_limit_db = 6.0
+
+    result = apply_attn_limit(spec_noisy, spec_enh, attn_limit_db)
+
+    alpha = 10.0 ** (-attn_limit_db / 20.0)
+    aligned = np.zeros_like(spec_noisy)
+    aligned[:, 4:, :, :] = spec_noisy[:, :-4, :, :]
+    expected = alpha * aligned + (1.0 - alpha) * spec_enh
+    np.testing.assert_allclose(result, expected.astype(np.float32), atol=1e-6)
+
+
+def test_apply_attn_limit_inf_returns_enhanced() -> None:
+    from dpdfnet.audio import apply_attn_limit
+
+    spec_noisy = np.ones((1, 4, 2, 2), dtype=np.float32)
+    spec_enh = np.full((1, 4, 2, 2), 7.0, dtype=np.float32)
+
+    result = apply_attn_limit(spec_noisy, spec_enh, np.inf)
+
+    np.testing.assert_array_equal(result, spec_enh)
+
+
+@pytest.mark.parametrize("attn_limit_db", [-1.0, np.nan])
+def test_apply_attn_limit_invalid_values_raise(attn_limit_db: float) -> None:
+    from dpdfnet.audio import apply_attn_limit
+
+    spec = np.zeros((1, 4, 2, 2), dtype=np.float32)
+
+    with pytest.raises(ValueError, match="attn_limit_db"):
+        apply_attn_limit(spec, spec, attn_limit_db)
+
+
 # ---------------------------------------------------------------------------
 # models.py unit tests
 # ---------------------------------------------------------------------------
@@ -756,6 +879,58 @@ def test_enhance_file_default_output_path(tmp_path, monkeypatch) -> None:
     assert result.is_file()
 
 
+def test_enhance_file_forwards_attn_limit_db(tmp_path, monkeypatch) -> None:
+    """enhance_file() forwards attn_limit_db to enhance()."""
+    import soundfile as sf
+    from dpdfnet import api
+
+    in_path = tmp_path / "speech.wav"
+    out_path = tmp_path / "speech_out.wav"
+    sf.write(str(in_path), np.zeros(160, dtype=np.float32), 16000)
+
+    captured: dict[str, float] = {}
+
+    def _fake_enhance(audio, sample_rate, **kwargs):
+        captured["attn_limit_db"] = kwargs["attn_limit_db"]
+        return np.zeros_like(np.asarray(audio, dtype=np.float32))
+
+    monkeypatch.setattr(api, "enhance", _fake_enhance)
+
+    result = api.enhance_file(in_path, out_path, attn_limit_db=12.0)
+
+    assert result == out_path.resolve()
+    assert captured["attn_limit_db"] == 12.0
+
+
+def test__enhance_file_with_runtime_forwards_attn_limit_db(tmp_path, monkeypatch) -> None:
+    """_enhance_file_with_runtime() forwards attn_limit_db to _enhance_with_runtime()."""
+    import soundfile as sf
+    from dpdfnet import api
+
+    in_path = tmp_path / "speech.wav"
+    out_path = tmp_path / "speech_out.wav"
+    sf.write(str(in_path), np.zeros(160, dtype=np.float32), 16000)
+
+    captured: dict[str, float] = {}
+
+    def _fake_enhance_with_runtime(audio, sample_rate, **kwargs):
+        captured["attn_limit_db"] = kwargs["attn_limit_db"]
+        return np.zeros_like(np.asarray(audio, dtype=np.float32))
+
+    monkeypatch.setattr(api, "_enhance_with_runtime", _fake_enhance_with_runtime)
+
+    result = api._enhance_file_with_runtime(
+        input_path=in_path,
+        output_path=out_path,
+        runtime=object(),
+        model_sample_rate=16000,
+        attn_limit_db=9.0,
+    )
+
+    assert result == out_path.resolve()
+    assert captured["attn_limit_db"] == 9.0
+
+
 def test_read_audio_unsupported_extension_raises(tmp_path) -> None:
     from dpdfnet.api import _read_audio
     bad = tmp_path / "clip.xyz"
@@ -836,3 +1011,65 @@ def test_cli_enhance_single_file(tmp_path, monkeypatch, capsys) -> None:
     assert exit_code == 0
     output = capsys.readouterr().out
     assert "output.wav" in output
+
+
+def test_cli_enhance_forwards_attn_limit_db(tmp_path, monkeypatch) -> None:
+    import soundfile as sf
+    from dpdfnet import api, cli
+
+    in_path = tmp_path / "input.wav"
+    out_path = tmp_path / "output.wav"
+    sf.write(str(in_path), np.zeros(160, dtype=np.float32), 16000)
+
+    captured: dict[str, float] = {}
+
+    def _fake_enhance_file(*_args, **kwargs):
+        captured["attn_limit_db"] = kwargs["attn_limit_db"]
+        return out_path
+
+    monkeypatch.setattr(cli, "print_banner", lambda **_kwargs: None)
+    monkeypatch.setattr(api, "enhance_file", _fake_enhance_file)
+
+    exit_code = cli.main(
+        ["enhance", str(in_path), str(out_path), "--attn_limit_db", "12"]
+    )
+
+    assert exit_code == 0
+    assert captured["attn_limit_db"] == 12.0
+
+
+def test_cli_enhance_dir_forwards_attn_limit_db(tmp_path, monkeypatch) -> None:
+    import soundfile as sf
+    from dpdfnet import api, cli
+    import dpdfnet.models as models
+    import dpdfnet.onnx_backend as onnx_backend
+
+    in_dir = tmp_path / "in"
+    out_dir = tmp_path / "out"
+    in_dir.mkdir()
+    sf.write(str(in_dir / "input.wav"), np.zeros(160, dtype=np.float32), 16000)
+
+    class _Info:
+        sample_rate = 16000
+
+    class _Resolved:
+        info = _Info()
+        onnx_path = Path("fake.onnx")
+
+    captured: dict[str, float] = {}
+
+    def _fake_enhance_file_with_runtime(*_args, **kwargs):
+        captured["attn_limit_db"] = kwargs["attn_limit_db"]
+        return Path(kwargs["output_path"])
+
+    monkeypatch.setattr(cli, "print_banner", lambda **_kwargs: None)
+    monkeypatch.setattr(models, "resolve_model", lambda **_kwargs: _Resolved())
+    monkeypatch.setattr(onnx_backend, "build_runtime_model", lambda _path: object())
+    monkeypatch.setattr(api, "_enhance_file_with_runtime", _fake_enhance_file_with_runtime)
+
+    exit_code = cli.main(
+        ["enhance-dir", str(in_dir), str(out_dir), "--attn-limit-db", "9"]
+    )
+
+    assert exit_code == 0
+    assert captured["attn_limit_db"] == 9.0

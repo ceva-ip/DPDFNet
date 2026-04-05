@@ -34,13 +34,13 @@ pip install dpdfnet
 
 ```bash
 # Enhance one file
-dpdfnet enhance noisy.wav enhanced.wav --model dpdfnet4
+dpdfnet enhance noisy.wav enhanced.wav --model dpdfnet4 --attn-limit-db 12
 
 # Enhance a directory (uses all CPU cores by default)
-dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2
+dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2 --attn-limit-db 12
 
 # Enhance a directory with a fixed worker count
-dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2 --workers 4
+dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2 --workers 4 --attn-limit-db 12
 
 # Download models
 dpdfnet download
@@ -56,11 +56,11 @@ import dpdfnet
 
 # In-memory enhancement:
 audio, sr = sf.read("noisy.wav")
-enhanced = dpdfnet.enhance(audio, sample_rate=sr, model="dpdfnet4")
+enhanced = dpdfnet.enhance(audio, sample_rate=sr, model="dpdfnet4", attn_limit_db=12)
 sf.write("enhanced.wav", enhanced, sr)
 
 # Enhance one file:
-out_path = dpdfnet.enhance_file("noisy.wav", model="dpdfnet2")
+out_path = dpdfnet.enhance_file("noisy.wav", model="dpdfnet2", attn_limit_db=12)
 print(out_path)
 
 # Model listing:
@@ -183,7 +183,8 @@ python -m tflite_model.infer_dpdfnet_tflite \
 	--noisy_dir ./noisy_wavs \
 	--enhanced_dir ./enhanced_wavs \
 	--model_name dpdfnet4 \
-	--workers 5
+	--workers 5 \
+	--attn-limit-db 12
 ```
 
 #### Option B: `ONNX`
@@ -193,7 +194,8 @@ python -m onnx_model.infer_dpdfnet_onnx \
   	--noisy_dir ./noisy_wavs \
 	--enhanced_dir ./enhanced_wavs \
 	--model_name dpdfnet4 \
-	--workers 5
+	--workers 5 \
+	--attn-limit-db 12
 ```
 
 Enhanced files are written as:

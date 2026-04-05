@@ -54,10 +54,12 @@ def enhance(
     *,
     model: str = DEFAULT_MODEL,
     onnx_path: Optional[Union[str, Path]] = None,
+    attn_limit_db: Optional[float] = None,
     verbose: bool = False,
     progress_callback: Optional[Callable[[int, int], None]] = None,
 ) -> np.ndarray:
     from .audio import (
+        apply_attn_limit,
         ensure_sample_rate,
         fit_length,
         make_stft_config,
@@ -105,6 +107,7 @@ def enhance(
         return waveform.copy()
 
     spec_e = np.concatenate(frames, axis=1)
+    spec_e = apply_attn_limit(spec_r, spec_e, attn_limit_db)
     enhanced_model_sr = postprocess_spec(spec_e, cfg)
     enhanced = ensure_sample_rate(enhanced_model_sr, resolved.info.sample_rate, sr_in)
     return fit_length(enhanced, waveform.shape[0]).astype(np.float32, copy=False)
@@ -116,10 +119,12 @@ def _enhance_with_runtime(
     *,
     runtime,
     model_sample_rate: int,
+    attn_limit_db: Optional[float] = None,
     progress_callback: Optional[Callable[[int, int], None]] = None,
 ) -> np.ndarray:
     """Like `enhance()` but skips model resolution/loading; uses a pre-built RuntimeModel."""
     from .audio import (
+        apply_attn_limit,
         ensure_sample_rate,
         fit_length,
         make_stft_config,
@@ -158,6 +163,7 @@ def _enhance_with_runtime(
         return waveform.copy()
 
     spec_e = np.concatenate(frames, axis=1)
+    spec_e = apply_attn_limit(spec_r, spec_e, attn_limit_db)
     enhanced_model_sr = postprocess_spec(spec_e, cfg)
     enhanced = ensure_sample_rate(enhanced_model_sr, model_sample_rate, sr_in)
     return fit_length(enhanced, waveform.shape[0]).astype(np.float32, copy=False)
@@ -169,6 +175,7 @@ def _enhance_file_with_runtime(
     *,
     runtime,
     model_sample_rate: int,
+    attn_limit_db: Optional[float] = None,
     progress_callback: Optional[Callable[[int, int], None]] = None,
 ) -> Path:
     """Like `enhance_file()` but uses a pre-built RuntimeModel to skip model loading."""
@@ -186,6 +193,7 @@ def _enhance_file_with_runtime(
         sample_rate=int(sr),
         runtime=runtime,
         model_sample_rate=model_sample_rate,
+        attn_limit_db=attn_limit_db,
         progress_callback=progress_callback,
     )
 
@@ -239,6 +247,7 @@ def enhance_file(
     *,
     model: str = DEFAULT_MODEL,
     onnx_path: Optional[Union[str, Path]] = None,
+    attn_limit_db: Optional[float] = None,
     verbose: bool = False,
     progress_callback: Optional[Callable[[int, int], None]] = None,
 ) -> Path:
@@ -256,6 +265,7 @@ def enhance_file(
         sample_rate=int(sr),
         model=model,
         onnx_path=onnx_path,
+        attn_limit_db=attn_limit_db,
         verbose=verbose,
         progress_callback=progress_callback,
     )

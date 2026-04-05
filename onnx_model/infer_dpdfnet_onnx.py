@@ -15,6 +15,7 @@ import soundfile
 from banner import print_banner
 
 ONNX_DIR = Path("./model_zoo/onnx")
+ATTN_LIMIT_NOISY_FRAME_OFFSET = 4
 
 MODEL_SAMPLE_RATE_BY_NAME = {
     "baseline": 16000,
@@ -145,6 +146,44 @@ def fit_length(waveform: np.ndarray, target_len: int) -> np.ndarray:
     return out
 
 
+def validate_attn_limit_db(attn_limit_db: float | None) -> float | None:
+    if attn_limit_db is None:
+        return None
+    value = float(attn_limit_db)
+    if np.isnan(value) or value < 0.0:
+        raise ValueError("attn_limit_db must be non-negative, infinity, or None.")
+    return value
+
+
+def apply_attn_limit(
+    spec_noisy: np.ndarray,
+    spec_enh: np.ndarray,
+    attn_limit_db: float | None,
+) -> np.ndarray:
+    value = validate_attn_limit_db(attn_limit_db)
+    enhanced = np.asarray(spec_enh, dtype=np.float32)
+    if value is None:
+        return enhanced
+
+    noisy = np.asarray(spec_noisy, dtype=np.float32)
+    if noisy.shape != enhanced.shape:
+        raise ValueError(
+            "spec_noisy and spec_enh must have matching shapes, "
+            f"got {noisy.shape} and {enhanced.shape}."
+        )
+
+    # The offline ISTFT path advances the output by ~4 hops, so align the
+    # noisy reference to that frame index before attenuation-limit blending.
+    aligned_noisy = np.zeros_like(noisy, dtype=np.float32)
+    if noisy.shape[1] > ATTN_LIMIT_NOISY_FRAME_OFFSET:
+        aligned_noisy[:, ATTN_LIMIT_NOISY_FRAME_OFFSET:, :, :] = noisy[
+            :, :-ATTN_LIMIT_NOISY_FRAME_OFFSET, :, :
+        ]
+
+    alpha = float(10.0 ** (-value / 20.0))
+    return np.ascontiguousarray(alpha * aligned_noisy + (1.0 - alpha) * enhanced, dtype=np.float32)
+
+
 def vorbis_window(window_len: int) -> np.ndarray:
     window_size_h = window_len / 2
     indices = np.arange(window_len)
@@ -220,6 +259,14 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Number of parallel worker threads. Defaults to os.cpu_count().",
     )
+    parser.add_argument(
+        "--attn-limit-db",
+        "--attn_limit_db",
+        dest="attn_limit_db",
+        type=float,
+        default=None,
+        help="Offline-only attenuation limit in dB. Higher values allow stronger denoising.",
+    )
     return parser.parse_args()
 
 
@@ -230,6 +277,7 @@ def enhance_file_onnx(
     win_len: int,
     input_wav: Path,
     output_wav: Path,
+    attn_limit_db: float | None = None,
 ) -> tuple[int, tuple[int, ...], float, float, float]:
     waveform, sr_in = soundfile.read(str(input_wav))
     waveform = to_mono(np.asarray(waveform, dtype=np.float32))
@@ -240,6 +288,7 @@ def enhance_file_onnx(
     spec_r_np = preprocess_waveform(waveform_padded, cfg)
 
     spec_e_np, state_out_np, total_infer_time_s = run_onnx_streaming(session, spec_r_np, init_state)
+    spec_e_np = apply_attn_limit(spec_r_np, spec_e_np, attn_limit_db)
     waveform_e_model_sr = postprocess_spec(spec_e_np, cfg)
     waveform_e = resample_back(waveform_e_model_sr, expected_sr, sr_in)
     waveform_e = fit_length(waveform_e, waveform.size)
@@ -260,6 +309,7 @@ def enhance_file_onnx(
 
 def main() -> None:
     args = parse_args()
+    attn_limit_db = validate_attn_limit_db(args.attn_limit_db)
     print_banner(version=None)
 
     model_name = args.model_name
@@ -293,6 +343,7 @@ def main() -> None:
     print(f"[INFO] Model name: {model_name}")
     print(f"[INFO] Model SR: {expected_sr} Hz")
     print(f"[INFO] STFT win_len: {win_len}, hop: {win_len // 2}")
+    print(f"[INFO] Attenuation limit: {attn_limit_db if attn_limit_db is not None else 'disabled'}")
     print(f"[INFO] Initial state shape: {tuple(init_state.shape)}")
     del tmp_session  # free before spawning per-thread sessions
 
@@ -321,6 +372,7 @@ def main() -> None:
             win_len=win_len,
             input_wav=wav,
             output_wav=output_wav,
+            attn_limit_db=attn_limit_db,
         )
         return wav, output_wav, result
 

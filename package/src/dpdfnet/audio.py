@@ -5,6 +5,8 @@ from dataclasses import dataclass
 import librosa
 import numpy as np
 
+ATTN_LIMIT_NOISY_FRAME_OFFSET = 4
+
 
 def to_mono(audio: np.ndarray) -> np.ndarray:
     x = np.asarray(audio, dtype=np.float32)
@@ -34,6 +36,44 @@ def fit_length(audio: np.ndarray, target_len: int) -> np.ndarray:
     out = np.zeros(target_len, dtype=np.float32)
     out[: x.shape[0]] = x
     return out
+
+
+def _validate_attn_limit_db(attn_limit_db: float | None) -> float | None:
+    if attn_limit_db is None:
+        return None
+    value = float(attn_limit_db)
+    if np.isnan(value) or value < 0.0:
+        raise ValueError("attn_limit_db must be non-negative, infinity, or None.")
+    return value
+
+
+def apply_attn_limit(
+    spec_noisy: np.ndarray,
+    spec_enh: np.ndarray,
+    attn_limit_db: float | None,
+) -> np.ndarray:
+    value = _validate_attn_limit_db(attn_limit_db)
+    enhanced = np.asarray(spec_enh, dtype=np.float32)
+    if value is None:
+        return enhanced
+
+    noisy = np.asarray(spec_noisy, dtype=np.float32)
+    if noisy.shape != enhanced.shape:
+        raise ValueError(
+            "spec_noisy and spec_enh must have matching shapes, "
+            f"got {noisy.shape} and {enhanced.shape}."
+        )
+
+    # The offline ISTFT path advances the output by ~4 hops, so align the
+    # noisy reference to that frame index before attenuation-limit blending.
+    aligned_noisy = np.zeros_like(noisy, dtype=np.float32)
+    if noisy.shape[1] > ATTN_LIMIT_NOISY_FRAME_OFFSET:
+        aligned_noisy[:, ATTN_LIMIT_NOISY_FRAME_OFFSET:, :, :] = noisy[
+            :, :-ATTN_LIMIT_NOISY_FRAME_OFFSET, :, :
+        ]
+
+    alpha = float(10.0 ** (-value / 20.0))
+    return np.ascontiguousarray(alpha * aligned_noisy + (1.0 - alpha) * enhanced, dtype=np.float32)
 
 
 def pcm16_safe(audio: np.ndarray) -> np.ndarray:

@@ -68,10 +68,10 @@ Commands:
 1. `dpdfnet models`
 - List supported models and local availability.
 
-2. `dpdfnet enhance <input> <output.wav> [--model <name>] [-v|--verbose]`
+2. `dpdfnet enhance <input> <output.wav> [--model <name>] [--attn-limit-db DB] [-v|--verbose]`
 - Enhance one audio file (any supported format; output is always `.wav`).
 
-3. `dpdfnet enhance-dir <input_dir> <output_dir> [--model <name>] [--workers N] [-v|--verbose]`
+3. `dpdfnet enhance-dir <input_dir> <output_dir> [--model <name>] [--workers N] [--attn-limit-db DB] [-v|--verbose]`
 - Enhance all supported audio files in a directory (non-recursive).
 - Files are processed concurrently; `--workers` sets the thread count (default: CPU count).
 
@@ -82,13 +82,13 @@ CLI examples:
 
 ```bash
 # Enhance one file
-dpdfnet enhance noisy.wav enhanced.wav --model dpdfnet4
+dpdfnet enhance noisy.wav enhanced.wav --model dpdfnet4 --attn-limit-db 12
 
 # Enhance a directory (uses all CPU cores by default)
-dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2
+dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2 --attn-limit-db 12
 
 # Enhance a directory with a fixed worker count
-dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2 --workers 4
+dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2 --workers 4 --attn-limit-db 12
 
 # Download models
 dpdfnet download
@@ -111,7 +111,7 @@ import soundfile as sf
 import dpdfnet
 
 audio, sr = sf.read("noisy.wav")
-enhanced = dpdfnet.enhance(audio, sample_rate=sr, model="dpdfnet4")
+enhanced = dpdfnet.enhance(audio, sample_rate=sr, model="dpdfnet4", attn_limit_db=12)
 sf.write("enhanced.wav", enhanced, sr)
 ```
 
@@ -120,7 +120,7 @@ Enhance one file:
 ```python
 import dpdfnet
 
-out_path = dpdfnet.enhance_file("noisy.wav", model="dpdfnet2")
+out_path = dpdfnet.enhance_file("noisy.wav", model="dpdfnet2", attn_limit_db=12)
 print(out_path)
 ```
 
