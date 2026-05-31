@@ -4,7 +4,6 @@ from dataclasses import dataclass
 import os
 from pathlib import Path
 import sys
-import threading
 import time
 
 import numpy as np
@@ -230,7 +229,7 @@ def _load_model_and_cfg(model_name: str) -> tuple[Interpreter, STFTConfig]:
 
 
 def enhance_file(
-    interpreter: Interpreter,
+    interpreter: Interpreter | None,
     cfg: STFTConfig,
     in_path: Path,
     out_path: Path,
@@ -238,6 +237,9 @@ def enhance_file(
     attn_limit_db: float | None = None,
 ) -> tuple[int, float, float, float]:
     """Returns (num_frames, total_infer_time_s, avg_frame_ms, rtf)."""
+    del interpreter
+    interpreter, cfg = _load_model_and_cfg(model_name)
+
     # Load audio
     audio, sr_in = sf.read(str(in_path), always_2d=False)
     audio = to_mono(audio)
@@ -367,20 +369,9 @@ def main():
     n_workers = args.workers or (os.cpu_count() or 1)
     print(f"Found {len(wavs)} file(s). Enhancing with {n_workers} worker(s)...\n")
 
-    # Each thread gets its own independent TFLite interpreter (not thread-safe to share).
-    _tls = threading.local()
-
-    def _get_interpreter() -> Interpreter:
-        interp = getattr(_tls, "interp", None)
-        if interp is None:
-            interp, _ = _load_model_and_cfg(model_name)
-            _tls.interp = interp
-        return interp
-
     def _process(wav: Path) -> tuple[Path, Path, tuple]:
-        interp = _get_interpreter()
         out_path = enhanced_dir / (wav.stem + f"_{model_name}.wav")
-        result = enhance_file(interp, cfg, wav, out_path, model_name, attn_limit_db=attn_limit_db)
+        result = enhance_file(None, cfg, wav, out_path, model_name, attn_limit_db=attn_limit_db)
         return wav, out_path, result
 
     future_to_wav = {}
