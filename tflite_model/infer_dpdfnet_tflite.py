@@ -20,17 +20,22 @@ ATTN_LIMIT_NOISY_FRAME_OFFSET = 4
 # -----------------------------------------------------------------------------
 # Model registry
 # -----------------------------------------------------------------------------
+# 8 kHz models:  WIN_LEN=160  (20 ms)
 # 16 kHz models: WIN_LEN=320  (20 ms)
 # 48 kHz models: WIN_LEN=960  (20 ms)
 
 MODEL_CONFIG = {
+    # 8 kHz models
+    "dpdfnet2_8khz": {"sr": 8000, "win_len": 160},
+    "dpdfnet8_8khz": {"sr": 8000, "win_len": 160},
+
     # 16 kHz models
     "baseline":  {"sr": 16000, "win_len": 320},
     "dpdfnet2":  {"sr": 16000, "win_len": 320},
     "dpdfnet4":  {"sr": 16000, "win_len": 320},
     "dpdfnet8":  {"sr": 16000, "win_len": 320},
 
-    # 48 kHz models - TBD
+    # 48 kHz models
     "dpdfnet2_48khz_hr": {"sr": 48000, "win_len": 960},
     "dpdfnet8_48khz_hr": {"sr": 48000, "win_len": 960},
 }
