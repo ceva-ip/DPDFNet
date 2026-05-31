@@ -3,11 +3,16 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-import onnx
 import torch
 from torch import nn
 
 from .dpdfnet_48khz_hr import DPDFNet48HR, correct_state_dict
+from .export_utils import (
+    check_single_file_onnx,
+    load_onnx_model,
+    save_single_file_onnx,
+    validate_onnx_runtime,
+)
 from .layers import convert_grouped_linear_to_einsum
 
 
@@ -28,10 +33,10 @@ class DPDFNet48HROnnxWrapper(nn.Module):
 def simplify_onnx(path: Path) -> None:
     try:
         import onnxsim
-        model = onnx.load(str(path))
+        model = load_onnx_model(path)
         model_sim, ok = onnxsim.simplify(model)
         if ok:
-            onnx.save(model_sim, str(path))
+            save_single_file_onnx(model_sim, path)
             print("[INFO] Graph simplified with onnxsim.")
         else:
             print("[WARN] onnxsim simplification check failed; keeping original graph.")
@@ -40,7 +45,7 @@ def simplify_onnx(path: Path) -> None:
 
 
 def add_meta_data(filename: Path, meta_data: dict[str, Any]) -> None:
-    model = onnx.load(str(filename))
+    model = load_onnx_model(filename)
     while len(model.metadata_props):
         model.metadata_props.pop()
 
@@ -49,7 +54,7 @@ def add_meta_data(filename: Path, meta_data: dict[str, Any]) -> None:
         meta.key = key
         meta.value = str(value)
 
-    onnx.save(model, str(filename))
+    save_single_file_onnx(model, filename)
 
 
 def serialize_float_list(values: np.ndarray) -> str:
@@ -111,7 +116,13 @@ def build_model(args: argparse.Namespace) -> DPDFNet48HR:
     return model
 
 
-def export_onnx(model: DPDFNet48HR, output_path: Path, opset: int, use_dynamic_axes: bool) -> None:
+def export_onnx(
+    model: DPDFNet48HR,
+    output_path: Path,
+    opset: int,
+    use_dynamic_axes: bool,
+    exporter: str,
+) -> DPDFNet48HROnnxWrapper:
     wrapper = DPDFNet48HROnnxWrapper(model).eval()
     spec = torch.randn(1, 1, model.freq_bins, 2, dtype=torch.float32)
     state_in = model.initial_state(dtype=torch.float32)
@@ -122,6 +133,7 @@ def export_onnx(model: DPDFNet48HR, output_path: Path, opset: int, use_dynamic_a
         output_names=["spec_e", "state_out"],
         opset_version=opset,
         do_constant_folding=True,
+        external_data=False,
     )
     if use_dynamic_axes:
         export_kwargs["dynamic_axes"] = {
@@ -129,14 +141,24 @@ def export_onnx(model: DPDFNet48HR, output_path: Path, opset: int, use_dynamic_a
             "spec_e": {0: "batch", 1: "time"},
         }
 
-    # Prefer the newer exporter and fall back to legacy if needed.
-    try:
-        torch.onnx.export(wrapper, (spec, state_in), dynamo=True, **export_kwargs)
-    except Exception as dynamo_err:
-        print(f"[WARN] ONNX dynamo export failed: {dynamo_err}")
-        print("[INFO] Falling back to legacy torch.onnx.export path.")
+    if exporter == "legacy":
+        print("[INFO] Exporting with legacy torch.onnx exporter.")
         torch.onnx.export(wrapper, (spec, state_in), dynamo=False, **export_kwargs)
+    elif exporter == "dynamo":
+        print("[INFO] Exporting with dynamo torch.onnx exporter.")
+        torch.onnx.export(wrapper, (spec, state_in), dynamo=True, **export_kwargs)
+    elif exporter == "auto":
+        try:
+            print("[INFO] Exporting with dynamo torch.onnx exporter.")
+            torch.onnx.export(wrapper, (spec, state_in), dynamo=True, **export_kwargs)
+        except Exception as dynamo_err:
+            print(f"[WARN] ONNX dynamo export failed: {dynamo_err}")
+            print("[INFO] Falling back to legacy torch.onnx.export path.")
+            torch.onnx.export(wrapper, (spec, state_in), dynamo=False, **export_kwargs)
+    else:
+        raise ValueError(f"Unknown exporter: {exporter}")
 
+    return wrapper
 
 
 def parse_args() -> argparse.Namespace:
@@ -160,6 +182,12 @@ def parse_args() -> argparse.Namespace:
         help="ONNX opset version.",
     )
     parser.add_argument(
+        "--exporter",
+        choices=("legacy", "dynamo", "auto"),
+        default="legacy",
+        help="PyTorch ONNX exporter to use. Legacy is the default for this streaming model.",
+    )
+    parser.add_argument(
         "--dynamic-axes",
         action="store_true",
         help="Export with dynamic batch/time axes for spec input/output.",
@@ -170,6 +198,11 @@ def parse_args() -> argparse.Namespace:
         default=2,
         help="Number of DPRNN blocks in encoder branches.",
     )
+    parser.add_argument(
+        "--skip-validation",
+        action="store_true",
+        help="Skip ONNX checker and ONNX Runtime parity validation.",
+    )
     return parser.parse_args()
 
 
@@ -179,9 +212,20 @@ def main() -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
 
     model = build_model(args)
-    export_onnx(model, output, opset=args.opset, use_dynamic_axes=args.dynamic_axes)
+    wrapper = export_onnx(
+        model,
+        output,
+        opset=args.opset,
+        use_dynamic_axes=args.dynamic_axes,
+        exporter=args.exporter,
+    )
     add_meta_data(output, build_meta_data(model))
     simplify_onnx(output)
+    if not args.skip_validation:
+        check_single_file_onnx(output)
+        validate_onnx_runtime(wrapper, model, output)
+    else:
+        check_single_file_onnx(output)
     print(f"[OK] Exported ONNX model to: {output}")
     print(f"[INFO] State vector size: {model.state_size()}")
     print(f"[INFO] Frequency bins: {model.freq_bins}")
