@@ -18,6 +18,8 @@ ONNX_DIR = Path("./model_zoo/onnx")
 ATTN_LIMIT_NOISY_FRAME_OFFSET = 4
 
 MODEL_SAMPLE_RATE_BY_NAME = {
+    "dpdfnet2_8khz": 8000,
+    "dpdfnet8_8khz": 8000,
     "baseline": 16000,
     "dpdfnet2": 16000,
     "dpdfnet4": 16000,

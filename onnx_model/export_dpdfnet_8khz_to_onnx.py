@@ -1,0 +1,254 @@
+import argparse
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import torch
+from torch import nn
+
+from .dpdfnet_8khz import DPDFNet8KHz, correct_state_dict
+from .export_utils import (
+    check_single_file_onnx,
+    load_onnx_model,
+    save_single_file_onnx,
+    validate_onnx_runtime,
+)
+from .layers import convert_grouped_linear_to_einsum
+
+
+class DPDFNet8KHzOnnxWrapper(nn.Module):
+    def __init__(self, model: DPDFNet8KHz):
+        super().__init__()
+        self.model = model
+        self.register_buffer("wnorm", torch.tensor(float(model.wnorm), dtype=torch.float32))
+        self.register_buffer("inv_wnorm", torch.tensor(1.0 / float(model.wnorm), dtype=torch.float32))
+
+    def forward(self, spec: torch.Tensor, state_in: torch.Tensor):
+        spec = spec * self.wnorm
+        spec_e, state_out = self.model(spec, state_in)
+        spec_e = spec_e * self.inv_wnorm
+        return spec_e, state_out
+
+
+def simplify_onnx(path: Path) -> None:
+    try:
+        import onnxsim
+        model = load_onnx_model(path)
+        model_sim, ok = onnxsim.simplify(model)
+        if ok:
+            save_single_file_onnx(model_sim, path)
+            print("[INFO] Graph simplified with onnxsim.")
+        else:
+            print("[WARN] onnxsim simplification check failed; keeping original graph.")
+    except ImportError:
+        print("[INFO] onnxsim not installed; skipping simplification (pip install onnxsim).")
+
+
+def add_meta_data(filename: Path, meta_data: dict[str, Any]) -> None:
+    model = load_onnx_model(filename)
+    while len(model.metadata_props):
+        model.metadata_props.pop()
+
+    for key, value in meta_data.items():
+        meta = model.metadata_props.add()
+        meta.key = key
+        meta.value = str(value)
+
+    save_single_file_onnx(model, filename)
+
+
+def serialize_float_list(values: np.ndarray) -> str:
+    return ",".join(format(float(v), ".9g") for v in values.reshape(-1))
+
+
+def build_meta_data(model: DPDFNet8KHz, profile: str) -> dict[str, Any]:
+    erb_norm_init = model.erb_norm.initial_state(dtype=torch.float32).cpu().numpy()
+    spec_norm_init = model.spec_norm.initial_state(dtype=torch.float32).cpu().numpy()
+
+    return {
+        "model_type": "dpdfnet",
+        "version": 1,
+        "profile": profile,
+        "sample_rate": 8000,
+        "n_fft": model.stft.n_fft,
+        "hop_length": model.stft.hop,
+        "window_length": model.stft.win_len,
+        "window_type": "vorbis",
+        "normalized": 0,
+        "center": 1,
+        "pad_mode": "reflect",
+        "freq_bins": model.freq_bins,
+        "erb_bins": model.erb_bins,
+        "spec_bins": model.nb_df,
+        "state_size": model.state_size(),
+        "erb_norm_state_size": model.erb_norm.state_size(),
+        "spec_norm_state_size": model.spec_norm.state_size(),
+        "erb_norm_init": serialize_float_list(erb_norm_init),
+        "spec_norm_init": serialize_float_list(spec_norm_init),
+    }
+
+
+def _dprnn_blocks_for_model_name(model_name: str) -> int:
+    if model_name == "dpdfnet2_8khz":
+        return 2
+    if model_name == "dpdfnet8_8khz":
+        return 8
+    raise ValueError(f"Unsupported 8 kHz model name: {model_name}")
+
+
+def build_model(args: argparse.Namespace) -> DPDFNet8KHz:
+    dprnn_num_blocks = (
+        args.dprnn_num_blocks
+        if args.dprnn_num_blocks is not None
+        else _dprnn_blocks_for_model_name(args.model_name)
+    )
+    model = DPDFNet8KHz(
+        conv_kernel_inp=(3, 3),
+        conv_ch=64,
+        enc_gru_dim=256,
+        erb_dec_gru_dim=256,
+        df_dec_gru_dim=256,
+        enc_lin_groups=32,
+        lin_groups=16,
+        upsample_conv_type="subpixel",
+        group_linear_type="loop",
+        point_wise_type="cnn",
+        separable_first_conv=True,
+        dprnn_num_blocks=dprnn_num_blocks,
+    )
+    if args.checkpoint is not None:
+        try:
+            state_dict = torch.load(args.checkpoint, map_location="cpu", weights_only=True)
+        except Exception:
+            checkpoint = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
+            state_dict = checkpoint["state_dict"]
+        stream_state_dict = correct_state_dict(state_dict)
+        model.load_state_dict(stream_state_dict, strict=True)
+    convert_grouped_linear_to_einsum(model)
+    model.eval()
+    return model
+
+
+def export_onnx(
+    model: DPDFNet8KHz,
+    output_path: Path,
+    opset: int,
+    use_dynamic_axes: bool,
+    exporter: str,
+) -> DPDFNet8KHzOnnxWrapper:
+    wrapper = DPDFNet8KHzOnnxWrapper(model).eval()
+    spec = torch.randn(1, 1, model.freq_bins, 2, dtype=torch.float32)
+    state_in = model.initial_state(dtype=torch.float32)
+
+    export_kwargs = dict(
+        f=str(output_path),
+        input_names=["spec", "state_in"],
+        output_names=["spec_e", "state_out"],
+        opset_version=opset,
+        do_constant_folding=True,
+        external_data=False,
+    )
+    if use_dynamic_axes:
+        export_kwargs["dynamic_axes"] = {
+            "spec": {0: "batch", 1: "time"},
+            "spec_e": {0: "batch", 1: "time"},
+        }
+
+    if exporter == "legacy":
+        print("[INFO] Exporting with legacy torch.onnx exporter.")
+        torch.onnx.export(wrapper, (spec, state_in), dynamo=False, **export_kwargs)
+    elif exporter == "dynamo":
+        print("[INFO] Exporting with dynamo torch.onnx exporter.")
+        torch.onnx.export(wrapper, (spec, state_in), dynamo=True, **export_kwargs)
+    elif exporter == "auto":
+        try:
+            print("[INFO] Exporting with dynamo torch.onnx exporter.")
+            torch.onnx.export(wrapper, (spec, state_in), dynamo=True, **export_kwargs)
+        except Exception as dynamo_err:
+            print(f"[WARN] ONNX dynamo export failed: {dynamo_err}")
+            print("[INFO] Falling back to legacy torch.onnx.export path.")
+            torch.onnx.export(wrapper, (spec, state_in), dynamo=False, **export_kwargs)
+    else:
+        raise ValueError(f"Unknown exporter: {exporter}")
+
+    return wrapper
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Export streaming 8 kHz DPDFNet model to ONNX.")
+    parser.add_argument(
+        "--model-name",
+        choices=("dpdfnet2_8khz", "dpdfnet8_8khz"),
+        default="dpdfnet2_8khz",
+        help="8 kHz model profile name to embed in metadata.",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="Output ONNX path.",
+    )
+    parser.add_argument(
+        "--checkpoint",
+        type=Path,
+        default=None,
+        help="Optional .pth checkpoint for DPDFNet8KHz weights.",
+    )
+    parser.add_argument(
+        "--opset",
+        type=int,
+        default=17,
+        help="ONNX opset version.",
+    )
+    parser.add_argument(
+        "--exporter",
+        choices=("legacy", "dynamo", "auto"),
+        default="legacy",
+        help="PyTorch ONNX exporter to use. Legacy is the default for this streaming model.",
+    )
+    parser.add_argument(
+        "--dynamic-axes",
+        action="store_true",
+        help="Export with dynamic batch/time axes for spec input/output.",
+    )
+    parser.add_argument(
+        "--dprnn-num-blocks",
+        type=int,
+        default=None,
+        help="Number of DPRNN blocks in encoder branches. Defaults to 2 or 8 from --model-name.",
+    )
+    parser.add_argument(
+        "--skip-validation",
+        action="store_true",
+        help="Skip ONNX checker and ONNX Runtime parity validation.",
+    )
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+    output = args.output.expanduser().resolve()
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    model = build_model(args)
+    wrapper = export_onnx(
+        model,
+        output,
+        opset=args.opset,
+        use_dynamic_axes=args.dynamic_axes,
+        exporter=args.exporter,
+    )
+    add_meta_data(output, build_meta_data(model, args.model_name))
+    simplify_onnx(output)
+    if not args.skip_validation:
+        check_single_file_onnx(output)
+        validate_onnx_runtime(wrapper, model, output)
+    else:
+        check_single_file_onnx(output)
+    print(f"[OK] Exported ONNX model to: {output}")
+    print(f"[INFO] State vector size: {model.state_size()}")
+    print(f"[INFO] Frequency bins: {model.freq_bins}")
+
+
+if __name__ == "__main__":
+    main()
