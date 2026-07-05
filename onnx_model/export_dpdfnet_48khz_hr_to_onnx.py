@@ -61,14 +61,18 @@ def serialize_float_list(values: np.ndarray) -> str:
     return ",".join(format(float(v), ".9g") for v in values.reshape(-1))
 
 
-def build_meta_data(model: DPDFNet48HR) -> dict[str, Any]:
+def _profile_for_dprnn_num_blocks(dprnn_num_blocks: int) -> str:
+    return f"dpdfnet{dprnn_num_blocks}_48khz_hr"
+
+
+def build_meta_data(model: DPDFNet48HR, profile: str = "dpdfnet2_48khz_hr") -> dict[str, Any]:
     erb_norm_init = model.erb_norm.initial_state(dtype=torch.float32).cpu().numpy()
     spec_norm_init = model.spec_norm.initial_state(dtype=torch.float32).cpu().numpy()
 
     return {
         "model_type": "dpdfnet",
         "version": 1,
-        "profile": "dpdfnet2_48khz_hr",
+        "profile": profile,
         "sample_rate": 48000,
         "n_fft": model.stft.n_fft,
         "hop_length": model.stft.hop,
@@ -219,7 +223,10 @@ def main() -> None:
         use_dynamic_axes=args.dynamic_axes,
         exporter=args.exporter,
     )
-    add_meta_data(output, build_meta_data(model))
+    add_meta_data(
+        output,
+        build_meta_data(model, _profile_for_dprnn_num_blocks(args.dprnn_num_blocks)),
+    )
     simplify_onnx(output)
     if not args.skip_validation:
         check_single_file_onnx(output)

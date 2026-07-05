@@ -225,12 +225,13 @@ python -m onnx_model.infer_dpdfnet_onnx \
 	--attn-limit-db 12
 ```
 
-To export ONNX models from checkpoints, use the exporter that matches the sample-rate family:
+To export ONNX models from checkpoints, use the exporter that matches the sample-rate family.
+Set `--dprnn-num-blocks` to match the checkpoint variant; for 8 kHz and 48 kHz HR exports,
+this also determines the ONNX metadata profile:
 
 ```bash
 # 8 kHz
 python -m onnx_model.export_dpdfnet_8khz_to_onnx \
-	--model-name dpdfnet2_8khz \
 	--checkpoint model_zoo/checkpoints/dpdfnet2_8khz.pth \
 	--output model_zoo/onnx/dpdfnet2_8khz.onnx \
 	--dprnn-num-blocks 2

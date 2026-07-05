@@ -61,6 +61,10 @@ def serialize_float_list(values: np.ndarray) -> str:
     return ",".join(format(float(v), ".9g") for v in values.reshape(-1))
 
 
+def _profile_for_dprnn_num_blocks(dprnn_num_blocks: int) -> str:
+    return f"dpdfnet{dprnn_num_blocks}_8khz"
+
+
 def build_meta_data(model: DPDFNet8KHz, profile: str) -> dict[str, Any]:
     erb_norm_init = model.erb_norm.initial_state(dtype=torch.float32).cpu().numpy()
     spec_norm_init = model.spec_norm.initial_state(dtype=torch.float32).cpu().numpy()
@@ -87,21 +91,7 @@ def build_meta_data(model: DPDFNet8KHz, profile: str) -> dict[str, Any]:
         "spec_norm_init": serialize_float_list(spec_norm_init),
     }
 
-
-def _dprnn_blocks_for_model_name(model_name: str) -> int:
-    if model_name == "dpdfnet2_8khz":
-        return 2
-    if model_name == "dpdfnet8_8khz":
-        return 8
-    raise ValueError(f"Unsupported 8 kHz model name: {model_name}")
-
-
 def build_model(args: argparse.Namespace) -> DPDFNet8KHz:
-    dprnn_num_blocks = (
-        args.dprnn_num_blocks
-        if args.dprnn_num_blocks is not None
-        else _dprnn_blocks_for_model_name(args.model_name)
-    )
     model = DPDFNet8KHz(
         conv_kernel_inp=(3, 3),
         conv_ch=64,
@@ -114,7 +104,7 @@ def build_model(args: argparse.Namespace) -> DPDFNet8KHz:
         group_linear_type="loop",
         point_wise_type="cnn",
         separable_first_conv=True,
-        dprnn_num_blocks=dprnn_num_blocks,
+        dprnn_num_blocks=args.dprnn_num_blocks,
     )
     if args.checkpoint is not None:
         try:
@@ -177,12 +167,6 @@ def export_onnx(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export streaming 8 kHz DPDFNet model to ONNX.")
     parser.add_argument(
-        "--model-name",
-        choices=("dpdfnet2_8khz", "dpdfnet8_8khz"),
-        default="dpdfnet2_8khz",
-        help="8 kHz model profile name to embed in metadata.",
-    )
-    parser.add_argument(
         "--output",
         type=Path,
         required=True,
@@ -214,8 +198,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--dprnn-num-blocks",
         type=int,
-        default=None,
-        help="Number of DPRNN blocks in encoder branches. Defaults to 2 or 8 from --model-name.",
+        default=2,
+        help="Number of DPRNN blocks in encoder branches.",
     )
     parser.add_argument(
         "--skip-validation",
@@ -238,7 +222,10 @@ def main() -> None:
         use_dynamic_axes=args.dynamic_axes,
         exporter=args.exporter,
     )
-    add_meta_data(output, build_meta_data(model, args.model_name))
+    add_meta_data(
+        output,
+        build_meta_data(model, _profile_for_dprnn_num_blocks(args.dprnn_num_blocks)),
+    )
     simplify_onnx(output)
     if not args.skip_validation:
         check_single_file_onnx(output)
