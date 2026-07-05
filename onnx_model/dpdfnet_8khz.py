@@ -4,9 +4,9 @@ from torch.nn import Module
 from functools import partial
 from typing import List, Optional, Tuple
 
-from .layers import Stft, Istft, ErbNorm, \
+from .layers import Stft, Istft, MagNorm48, \
     GroupedLinearEinsum, GroupedLinear, SqueezedGRU_S, Conv2dNormAct, \
-    ConvTranspose2dNormAct, SpecNorm, SubPixelConv2dNormAct, DPRNN, CyclicBuffer
+    ConvTranspose2dNormAct, SpecNorm48, SubPixelConv2dNormAct, DPRNN, CyclicBuffer
 from model.utils import as_real, to_db, get_wnorm, vorbis_window, erb_filter_banks
 from .utils import get_mag
 from . import multiframe as MF
@@ -103,6 +103,7 @@ class Encoder(Module):
         erb_conv_bins = erb_input_bins - 1 if drop_last_erb_bin else erb_input_bins
         erb_conv_bins = (erb_conv_bins + 2 - 3) // 2 + 1
         erb_conv_bins = (erb_conv_bins + 2 - 3) // 2 + 1
+        erb_conv_bins = (erb_conv_bins + 2 - 3) // 2 + 1
 
         # --- Conv0 Buffers --- #
         if conv_kernel_inp[0] > 1:
@@ -143,7 +144,7 @@ class Encoder(Module):
         )
         self.erb_conv1 = conv_layer(fstride=2)
         self.erb_conv2 = conv_layer(fstride=2)
-        self.erb_conv3 = conv_layer(fstride=1)
+        self.erb_conv3 = conv_layer(fstride=2)
         self.df_conv0 = Conv2dNormAct(
             in_ch=2,
             out_ch=conv_ch,
@@ -337,6 +338,7 @@ class ErbDecoder(Module):
         erb_conv_bins = erb_input_bins - 1 if drop_last_erb_bin else erb_input_bins
         erb_conv_bins = (erb_conv_bins + 2 - 3) // 2 + 1
         erb_conv_bins = (erb_conv_bins + 2 - 3) // 2 + 1
+        erb_conv_bins = (erb_conv_bins + 2 - 3) // 2 + 1
 
         self.emb_in_dim = emb_dim
         self.emb_dim = emb_hidden_dim
@@ -384,7 +386,7 @@ class ErbDecoder(Module):
         )
         # convt: TransposedConvolution, convp: Pathway (encoder to decoder) convolutions
         self.conv3p = conv_layer(conv_ch, conv_ch, kernel_size=1)
-        self.convt3 = conv_layer(conv_ch, conv_ch, kernel_size=conv_kernel)
+        self.convt3 = tconv_layer(conv_ch, conv_ch, fstride=2)
         self.conv2p = conv_layer(conv_ch, conv_ch, kernel_size=1)
         self.convt2 = tconv_layer(conv_ch, conv_ch, fstride=2)
         self.conv1p = conv_layer(conv_ch, conv_ch, kernel_size=1)
@@ -789,13 +791,13 @@ class DPDFNet8KHz(Module):
 
         self.run_erb = self.nb_df + 1 < self.freq_bins
 
-        self.erb_norm = ErbNorm(
+        self.erb_norm = MagNorm48(
             num_feat=self.freq_bins,
             alpha=alpha_norm,
             dynamic_var=erb_dynamic_var,
             stateful=norm_stateful
         )
-        self.spec_norm = SpecNorm(
+        self.spec_norm = SpecNorm48(
             num_feat=self.nb_df,
             alpha=alpha_norm,
             stateful=norm_stateful
