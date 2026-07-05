@@ -52,6 +52,20 @@ MODEL_REGISTRY: Dict[str, ModelInfo] = {
         description="Highest quality 16 kHz DPDFNet-8 model.",
         onnx_filename="dpdfnet8.onnx",
     ),
+    "dpdfnet2_8khz": ModelInfo(
+        name="dpdfnet2_8khz",
+        sample_rate=8000,
+        frame_ms=20.0,
+        description="Low-bandwidth 8 kHz DPDFNet-2 model.",
+        onnx_filename="dpdfnet2_8khz.onnx",
+    ),
+    "dpdfnet8_8khz": ModelInfo(
+        name="dpdfnet8_8khz",
+        sample_rate=8000,
+        frame_ms=20.0,
+        description="Low-bandwidth 8 kHz DPDFNet-8 model.",
+        onnx_filename="dpdfnet8_8khz.onnx",
+    ),
     "dpdfnet2_48khz_hr": ModelInfo(
         name="dpdfnet2_48khz_hr",
         sample_rate=48000,

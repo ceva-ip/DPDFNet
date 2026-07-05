@@ -586,10 +586,7 @@ class MagNorm48(nn.Module):
         self.register_buffer("var0", torch.full((1, 1, self.num_feat), 40 ** 2), persistent=False)
 
     def _init_mu0(self) -> Tensor:
-        if self.num_feat == 481:
-            mu = self.init_vals.get_ampirical_mu_0(num_feat=self.num_feat)
-        else:
-            mu = self.init_vals.get_heiuristic_mu_0(num_feat=self.num_feat)
+        mu = self.init_vals.get_ampirical_mu_0(num_feat=self.num_feat)
         return mu.view(1, 1, self.num_feat)
 
     def state_size(self) -> int:
@@ -672,10 +669,7 @@ class SpecNorm48(nn.Module):
         self.register_buffer("s0", self._init_state(), persistent=False)
 
     def _init_state(self) -> Tensor:
-        if self.num_feat == 96:
-            s = self.init_vals.get_ampirical_s_0(num_feat=self.num_feat)
-        else:
-            s = self.init_vals.get_heiuristic_s_0(num_feat=self.num_feat)
+        s = self.init_vals.get_ampirical_s_0(num_feat=self.num_feat)
         return s.view(1, 1, self.num_feat)
 
     def state_size(self) -> int:

@@ -5,13 +5,22 @@ import sys
 import numpy as np
 import pandas as pd
 import soundfile as sf
-from scipy.signal import resample_poly, correlate, correlation_lags
+from scipy.signal import (
+    resample_poly,
+    correlate,
+    correlation_lags,
+    butter,
+    sosfiltfilt,
+)
 
 # Metrics
 from pystoi.stoi import stoi
 from pesq import pesq  # WB-PESQ: pesq(fs, ref, deg, 'wb')
 
 TARGET_SR = 16000
+HIGHPASS_CUTOFF_HZ = 70.0
+HIGHPASS_ORDER = 4
+
 
 def si_snr(ref: np.ndarray, est: np.ndarray, eps: float = 1e-8) -> float:
     """
@@ -25,6 +34,31 @@ def si_snr(ref: np.ndarray, est: np.ndarray, eps: float = 1e-8) -> float:
     s_target = alpha * ref
     e_noise = est - s_target
     return 10.0 * np.log10((np.sum(s_target ** 2) + eps) / (np.sum(e_noise ** 2) + eps))
+
+
+def apply_highpass(
+    x: np.ndarray,
+    sr: int,
+    cutoff_hz: float = HIGHPASS_CUTOFF_HZ,
+    order: int = HIGHPASS_ORDER,
+) -> np.ndarray:
+    """
+    Apply a zero-phase Butterworth high-pass filter.
+    Used optionally to remove very low-frequency content below the cutoff.
+    """
+    if cutoff_hz <= 0:
+        return x.astype(np.float32)
+
+    nyquist = 0.5 * sr
+    if cutoff_hz >= nyquist:
+        raise ValueError(
+            f"High-pass cutoff must be below Nyquist ({nyquist} Hz), got {cutoff_hz} Hz."
+        )
+
+    sos = butter(order, cutoff_hz, btype="highpass", fs=sr, output="sos")
+    y = sosfiltfilt(sos, x, padtype=None)
+    return y.astype(np.float32)
+
 
 # (Legacy) SI-SNR-based sliding alignment (kept for reference, not used)
 def align_by_sisnr_valid(a: np.ndarray, b: np.ndarray):
@@ -171,6 +205,14 @@ def main():
         default=None,
         help="Output CSV filename or path (default: results.csv next to the metadata CSV)"
     )
+    parser.add_argument(
+        "--enable-highpass",
+        action="store_true",
+        help=(
+            "Apply a 70 Hz high-pass filter to both clean and enhanced signals "
+            "before alignment and metric calculation (default: disabled)."
+        ),
+    )
     args = parser.parse_args()
 
     meta_path = os.path.abspath(args.csv)
@@ -219,6 +261,10 @@ def main():
             x_noisy = load_audio_mono_16k(mix_path, TARGET_SR)
             x_clean = load_audio_mono_16k(clean_path, TARGET_SR)
 
+            if args.enable_highpass:
+                x_noisy = apply_highpass(x_noisy, TARGET_SR)
+                x_clean = apply_highpass(x_clean, TARGET_SR)
+
             if len(x_noisy) == 0 or len(x_clean) == 0:
                 raise ValueError("Empty audio after load/resample")
 
@@ -254,6 +300,7 @@ def main():
     )
     out_df.to_csv(out_path, index=False)
     print(f"Wrote {len(out_df)} rows to: {out_path}")
+
 
 if __name__ == "__main__":
     main()

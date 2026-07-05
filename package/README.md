@@ -21,6 +21,31 @@ Runtime dependencies are installed automatically:
 - `filelock`
 - `tqdm`
 
+## Supported Models
+
+**8 kHz models**
+
+| Model           | Native sample rate |          Notes          |
+| :-------------- | :----------------: | :---------------------: |
+| `dpdfnet2_8khz` |        8 kHz       | Low-bandwidth DPDFNet-2 |
+| `dpdfnet8_8khz` |        8 kHz       | Low-bandwidth DPDFNet-8 |
+
+**16 kHz models**
+
+| Model      | Native sample rate |             Notes            |
+| :--------- | :----------------: | :--------------------------: |
+| `baseline` |       16 kHz       |     Fastest 16 kHz model     |
+| `dpdfnet2` |       16 kHz       |     Balanced 16 kHz model    |
+| `dpdfnet4` |       16 kHz       |  Higher-quality 16 kHz model |
+| `dpdfnet8` |       16 kHz       | Highest-quality 16 kHz model |
+
+**48 kHz models**
+
+| Model               | Native sample rate |           Notes           |
+| :------------------ | :----------------: | :-----------------------: |
+| `dpdfnet2_48khz_hr` |       48 kHz       | High-resolution DPDFNet-2 |
+| `dpdfnet8_48khz_hr` |       48 kHz       | High-resolution DPDFNet-8 |
+
 ## Supported Audio Formats
 
 The following input formats are supported out of the box (via `soundfile`/libsndfile):
@@ -93,6 +118,7 @@ dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2 --workers 4 --
 # Download models
 dpdfnet download
 dpdfnet download dpdfnet8
+dpdfnet download dpdfnet2_8khz
 dpdfnet download dpdfnet4 --force
 ```
 
@@ -140,6 +166,7 @@ import dpdfnet
 
 dpdfnet.download()
 dpdfnet.download("dpdfnet4")
+dpdfnet.download("dpdfnet2_8khz")
 ```
 
 ### Real-time Microphone Enhancement

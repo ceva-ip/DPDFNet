@@ -804,6 +804,21 @@ def test_get_model_info_invalid_raises() -> None:
         get_model_info("nonexistent_model_xyz")
 
 
+def test_8khz_models_are_registered() -> None:
+    from dpdfnet import models
+
+    expected = {
+        "dpdfnet2_8khz": "dpdfnet2_8khz.onnx",
+        "dpdfnet8_8khz": "dpdfnet8_8khz.onnx",
+    }
+    for model_name, onnx_filename in expected.items():
+        info = models.get_model_info(model_name)
+        assert info.sample_rate == 8000
+        assert info.frame_ms == 20.0
+        assert info.onnx_filename == onnx_filename
+        assert model_name in models.supported_models()
+
+
 def test_available_model_entries_keys(tmp_path, monkeypatch) -> None:
     from dpdfnet import models
     monkeypatch.setenv("DPDFNET_MODEL_DIR", str(tmp_path))

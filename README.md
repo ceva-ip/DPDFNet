@@ -24,6 +24,13 @@
 
 ## Model Profile
 
+### 8 kHz models
+
+| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
+| --- | :---: | :---: | :---: | :---: | --- |
+| dpdfnet2_8khz | 2.51 | 1.29 | 10.5 | 9.7 | Low-bandwidth real-time enhancement |
+| dpdfnet8_8khz | 3.56 | 3.99 | 16.5 | 13.8 | Best 8 kHz enhancement quality |
+
 ### 16 kHz models
 
 | Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
@@ -63,6 +70,7 @@ dpdfnet enhance-dir ./noisy_wavs ./enhanced_wavs --model dpdfnet2 --workers 4 --
 # Download models
 dpdfnet download
 dpdfnet download dpdfnet8
+dpdfnet download dpdfnet2_8khz
 dpdfnet download dpdfnet4 --force
 ```
 
@@ -88,6 +96,7 @@ for row in dpdfnet.available_models():
 # Download models:
 dpdfnet.download()				# All models
 dpdfnet.download("dpdfnet4")	# Specific model
+dpdfnet.download("dpdfnet2_8khz")
 ```
 
 ### Streaming (Real-Time) API
@@ -214,6 +223,29 @@ python -m onnx_model.infer_dpdfnet_onnx \
 	--model_name dpdfnet4 \
 	--workers 5 \
 	--attn-limit-db 12
+```
+
+To export ONNX models from checkpoints, use the exporter that matches the sample-rate family:
+
+```bash
+# 8 kHz
+python -m onnx_model.export_dpdfnet_8khz_to_onnx \
+	--model-name dpdfnet2_8khz \
+	--checkpoint model_zoo/checkpoints/dpdfnet2_8khz.pth \
+	--output model_zoo/onnx/dpdfnet2_8khz.onnx \
+	--dprnn-num-blocks 2
+
+# 16 kHz
+python -m onnx_model.export_dpdfnet_to_onnx \
+	--checkpoint model_zoo/checkpoints/dpdfnet4.pth \
+	--output model_zoo/onnx/dpdfnet4.onnx \
+	--dprnn-num-blocks 4
+
+# 48 kHz HR
+python -m onnx_model.export_dpdfnet_48khz_hr_to_onnx \
+	--checkpoint model_zoo/checkpoints/dpdfnet8_48khz_hr.pth \
+	--output model_zoo/onnx/dpdfnet8_48khz_hr.onnx \
+	--dprnn-num-blocks 8
 ```
 
 Enhanced files are written as:

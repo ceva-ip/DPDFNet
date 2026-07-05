@@ -13,7 +13,7 @@ from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 # CONFIG (GLOBAL STYLE)
 # =======================
 ONNX_DIR = Path("./model_zoo/onnx")
-MODEL_NAME = "dpdfnet2"  # baseline | dpdfnet2 | dpdfnet4 | dpdfnet8 | dpdfnet2_48khz_hr | dpdfnet8_48khz_hr
+MODEL_NAME = "dpdfnet2"  # dpdfnet2_8khz | dpdfnet8_8khz | baseline | dpdfnet2 | dpdfnet4 | dpdfnet8 | dpdfnet2_48khz_hr | dpdfnet8_48khz_hr
 ONNX_PATH = ONNX_DIR / f"{MODEL_NAME}.onnx"
 
 PROVIDERS_PRIORITY = ["CPUExecutionProvider"]
@@ -22,6 +22,8 @@ PLAYBACK_MIX = 0.0
 ONNX_MS_EMA_ALPHA = 0.02
 
 MODEL_AUDIO_PARAMS_BY_NAME = {
+    "dpdfnet2_8khz": (8000, 160, 80),
+    "dpdfnet8_8khz": (8000, 160, 80),
     "baseline": (16000, 320, 160),
     "dpdfnet2": (16000, 320, 160),
     "dpdfnet4": (16000, 320, 160),

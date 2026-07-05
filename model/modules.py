@@ -551,10 +551,7 @@ class MagNorm48(nn.Module):
         B, T, num_feat = x.shape
 
         if self.mu is None or not self.training or not self.stateful:
-            if num_feat == 481:
-                mu = self.init_vals.get_ampirical_mu_0(num_feat)
-            else:
-                mu = self.init_vals.get_heiuristic_mu_0(num_feat)
+            mu = self.init_vals.get_ampirical_mu_0(num_feat)
             mu = mu[None, :].expand(B, num_feat)
             var = torch.zeros_like(mu) + 40**2  # the init is like the DFN3 default value
         else:
@@ -594,10 +591,7 @@ class SpecNorm48(nn.Module):
 
         if self.s is None or not self.training or not self.stateful:
             B, T, num_feat, _ = x.shape
-            if num_feat == 96:
-                s = self.init_vals.get_ampirical_s_0(num_feat)
-            else:
-                s = self.init_vals.get_heiuristic_s_0(num_feat)
+            s = self.init_vals.get_ampirical_s_0(num_feat)
             s = s[None, :].expand(B, num_feat)
         else:
             s = self.s
@@ -1252,5 +1246,4 @@ class GroupedGRU(nn.Module):
                 output = input
         outstate = torch.cat(outstates, dim=0)
         return output, outstate
-
 

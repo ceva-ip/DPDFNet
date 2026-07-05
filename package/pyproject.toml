@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dpdfnet"
-version = "0.5.1"
+version = "0.6.0"
 description = "CPU-only ONNX inference package for DPDFNet speech enhancement."
 readme = "README.md"
 requires-python = ">=3.11"
