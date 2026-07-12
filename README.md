@@ -26,26 +26,26 @@
 
 ### 8 kHz models
 
-| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
-| --- | :---: | :---: | :---: | :---: | --- |
-| dpdfnet2_8khz | 2.51 | 1.29 | 10.5 | 9.7 | Low-bandwidth real-time enhancement |
-| dpdfnet8_8khz | 3.56 | 3.99 | 16.5 | 13.8 | Best 8 kHz enhancement quality |
+| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] |
+| --- | :---: | :---: | :---: | :---: |
+| dpdfnet2_8khz | 2.51 | 1.29 | 10.5 | 9.7 |
+| dpdfnet8_8khz | 3.56 | 3.99 | 16.5 | 13.8 |
 
 ### 16 kHz models
 
-| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
-| --- | :---: | :---: | :---: | :---: | --- |
-| baseline | 2.31 | 0.36 | 8.5 | 8.3 | Fastest / lowest resource usage |
-| dpdfnet2 | 2.49 | 1.35 | 10.7 | 9.7 | Real-time / embedded devices |
-| dpdfnet4 | 2.84 | 2.36 | 12.9 | 11.1 | Balanced performance |
-| dpdfnet8 | 3.54 | 4.37 | 17.2 | 13.9 | Best enhancement quality |
+| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] |
+| --- | :---: | :---: | :---: | :---: |
+| baseline | 2.31 | 0.36 | 8.5 | 8.3 |
+| dpdfnet2 | 2.49 | 1.35 | 10.7 | 9.7 |
+| dpdfnet4 | 2.84 | 2.36 | 12.9 | 11.1 |
+| dpdfnet8 | 3.54 | 4.37 | 17.2 | 13.9 |
 
 ### 48 kHz models
 
-| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] | Intended Use |
-| --- | :---: | :---: | :---: | :---: | --- |
-| dpdfnet2_48khz_hr | 2.58 | 2.42 | 11.6 | 10.0 | Balanced performance |
-| dpdfnet8_48khz_hr | 3.63 | 7.17 | 18.7 | 14.2 | Best enhancement quality |
+| Model | Params [M] | MACs [G] | TFLite Size [MB] | ONNX Size [MB] |
+| --- | :---: | :---: | :---: | :---: |
+| dpdfnet2_48khz_hr | 2.58 | 2.42 | 11.6 | 10.0 |
+| dpdfnet8_48khz_hr | 3.63 | 7.17 | 18.7 | 14.2 |
 
 ## Install the PyPI Package
 
