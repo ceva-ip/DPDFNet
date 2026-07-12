@@ -1,25 +1,33 @@
 
 
-<h1 align="center">DPDFNet: Boosting DeepFilterNet2 via Dual-Path RNN</h1>
-<br></br>
-
-<div align="center">
-
-[![Project Page](https://img.shields.io/badge/Project-Page-orange)](https://ceva-ip.github.io/DPDFNet/)
-[![arXiv Paper](https://img.shields.io/badge/arXiv-Paper-b31b1b)](https://arxiv.org/abs/2512.16420)
-[![Hugging Face Models](https://img.shields.io/badge/Hugging%20Face-Models-yellow)](https://huggingface.co/Ceva-IP/DPDFNet)
-[![Hugging Face Dataset](https://img.shields.io/badge/Hugging%20Face-Dataset-yellowgreen)](https://huggingface.co/datasets/Ceva-IP/DPDFNet_EvalSet)
-[![Hugging Face Space](https://img.shields.io/badge/Hugging%20Face-Space-blue)](https://huggingface.co/spaces/Ceva-IP/DPDFNetDemo)
-
-
-</div>
+<h1 align="center">DPDFNet</h1>
 
 <p align="center">
- <sub><em><strong>--- Official project for the DPDFNet paper ---</strong></em></sub>
+  <strong>Real-time speech enhancement for recordings, live streams, and edge devices.</strong><br>
+  Pretrained 8, 16, and 48 kHz models for the CLI, Python API, and stateful streaming.
 </p>
 
 <p align="center">
-  <img src="figures/dpdfnet2_48khz_hr_gif.gif" width="688" alt="Noisy→Enhanced spectrogram slideshow" />
+  <a href="https://pypi.org/project/dpdfnet/"><img src="https://img.shields.io/pypi/v/dpdfnet?label=PyPI&style=for-the-badge" alt="PyPI version"></a>&nbsp;
+  <a href="https://arxiv.org/abs/2512.16420"><img src="https://img.shields.io/badge/arXiv-2512.16420-b31b1b?style=for-the-badge" alt="arXiv paper"></a>&nbsp;
+  <a href="https://huggingface.co/Ceva-IP/DPDFNet"><img src="https://img.shields.io/badge/Hugging%20Face-Models-FFD21E?style=for-the-badge" alt="Hugging Face models"></a>&nbsp;
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue?style=for-the-badge" alt="Apache 2.0 license"></a>
+</p>
+
+<p align="center">
+  <a href="https://huggingface.co/spaces/Ceva-IP/DPDFNetDemo"><strong>Live demo</strong></a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://ceva-ip.github.io/DPDFNet/"><strong>Audio examples</strong></a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://huggingface.co/Ceva-IP/DPDFNet"><strong>Pretrained models</strong></a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://arxiv.org/abs/2512.16420"><strong>Paper</strong></a>
+</p>
+
+<br>
+
+<p align="center">
+  <img src="figures/dpdfnet2_48khz_hr_gif.gif" width="760" alt="DPDFNet noisy-to-enhanced spectrogram comparison" />
 </p>
 
 ## Model Profile
