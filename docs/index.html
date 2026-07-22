@@ -8,13 +8,13 @@
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <!-- Favicon (headset emoji as SVG) -->
-<link rel="icon" type="image/x-icon" href="./fig/favicon.ico"/>
+<link href="./fig/favicon.ico" rel="icon" type="image/x-icon"/>
 <!-- Meta -->
-<meta content=" extends DeepFilterNet with dual-path RNN blocks to improve long-range temporal and cross-band modeling for causal single-channel speech enhancement." name="description"/>
-<meta content=" — Boosting DeepFilterNet via Dual-Path RNN" property="og:title"/>
-<meta content="Causal single-channel speech enhancement with dual-path RNNs" property="og:description"/>
+<meta content="DPDFNet is an open-source causal speech enhancement model that boosts DeepFilterNet2 with dual-path RNN blocks for robust real-time denoising." name="description"/>
+<meta content="DPDFNet — Boosting DeepFilterNet2 via Dual-Path RNN" property="og:title"/>
+<meta content="Open-source, causal speech enhancement with live inference, audio comparisons, and edge deployment results." property="og:description"/>
 <meta content="website" property="og:type"/>
 <meta content="assets/og-image.png" property="og:image"/>
 <!-- Theme: Light Orange -->
@@ -629,8 +629,6 @@ section.hero {
   transform: none;
 }
 </style>
-
-
 <style>
 /* === Adjustments per follow-up ================================= */
 /* Revert the Examples section title to centered */
@@ -652,8 +650,6 @@ section.hero {
   text-align: left;
 }
 </style>
-
-
 <style>
 /* === Precise fix: left-align ONLY the first column header cell ("Example") in the grid === */
 #examples .ex-grid > .head:first-child {
@@ -665,8 +661,6 @@ section.hero {
   margin-right: auto !important;    /* guard against flex-centered inner wrappers */
 }
 </style>
-
-
 <style>
 /* === Center the entire "Example" column (grid-based layout) === */
 #examples .ex-grid > :nth-child(6n+1) {
@@ -696,8 +690,6 @@ section.hero {
   text-align: center !important;
 }
 </style>
-
-
 <style>
 /* === Back-to-top floating button ======================================= */
 #toTopBtn {
@@ -746,8 +738,6 @@ section.hero {
   border: 0;
 }
 </style>
-
-
 <style>
 /* === Increase spacing between "AI Division, Ceva Technologies" line and the 3 buttons === */
 /* Try common structures used in the page: */
@@ -783,15 +773,11 @@ section.hero {
    we add a general rule for first button row to get more space from preceding content. */
 main .cta-group:first-of-type { margin-top: 28px !important; }
 </style>
-
-
 <style>
 /* === Precise spacing between subtitle and the 3 buttons === */
 p.subtitle { margin-bottom: 28px !important; }
 p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the subtitle's margin */
 </style>
-
-
 <style id="btn-black-to-orange">
 /* Make Paper, arXiv, and Code buttons black by default,
    and switch to the existing orange gradient on hover */
@@ -817,7 +803,6 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
   outline-offset: 2px;
 }
 </style>
-
 <style id="architecture-box-css">
 #architecture .img-row{
   display: grid;
@@ -847,7 +832,6 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
   #architecture .img-row figure:last-child{ align-self: auto; } /* normal flow on mobile */
 }
 </style>
-
 <style>
 /* Swap Hugging Face icon on hover (black -> white) to match other buttons */
 .publication-links .link-block .hf-icon .hf-icon-white {
@@ -1059,9 +1043,581 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
   .ae-card-head{ padding-left: 8px; }
   }
 </style>
-
-
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style id="dpdfnet-visual-refresh">
+/* === DPDFNet visual refresh ============================================ */
+:root {
+  --bg: #f4f6f8 !important;
+  --panel: rgba(255,255,255,0.92);
+  --text: #101923;
+  --muted: #5d6876;
+  --accent: #ed7d31;
+  --accent-2: #ffad58;
+  --hf: #ffb000;
+  --navy: #071b31;
+  --line-soft: rgba(7,27,49,0.10);
+  --shadow: 0 20px 55px rgba(7,27,49,0.09);
+  --maxw: 1160px;
+  --radius: 24px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: Manrope, ui-sans-serif, system-ui, sans-serif !important;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(237,125,49,0.14), transparent 28rem),
+    radial-gradient(circle at 88% 2%, rgba(255,176,0,0.12), transparent 24rem),
+    linear-gradient(rgba(7,27,49,0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(7,27,49,0.026) 1px, transparent 1px),
+    #f4f6f8 !important;
+  background-size: auto, auto, 32px 32px, 32px 32px, auto !important;
+  line-height: 1.7;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(255,255,255,0.55), transparent 28rem);
+}
+
+.wrap { max-width: var(--maxw); padding-inline: 24px; }
+section.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 36px 20px 24px !important;
+}
+section.hero::before,
+section.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(2px);
+  pointer-events: none;
+}
+section.hero::before {
+  width: 420px;
+  height: 420px;
+  top: -260px;
+  left: calc(50% - 520px);
+  border: 1px solid rgba(237,125,49,0.22);
+  box-shadow: 0 0 0 40px rgba(237,125,49,0.035), 0 0 0 90px rgba(237,125,49,0.025);
+}
+section.hero::after {
+  width: 350px;
+  height: 350px;
+  right: calc(50% - 560px);
+  bottom: -260px;
+  border: 1px solid rgba(255,176,0,0.18);
+  box-shadow: 0 0 0 50px rgba(255,176,0,0.035);
+}
+.hero-card.wrap {
+  position: relative;
+  z-index: 1;
+  padding: 24px 28px 22px !important;
+}
+.title-with-logo {
+  align-items: center !important;
+  text-align: center;
+  gap: 0 !important;
+}
+.title-with-logo a {
+  margin: 0 0 20px !important;
+  padding: 9px 15px;
+  border: 1px solid rgba(7,27,49,0.08);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.78);
+  box-shadow: 0 12px 30px rgba(7,27,49,0.07);
+}
+.title-with-logo a img {
+  max-height: 62px !important;
+  width: auto;
+}
+.project-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #8a4a1f;
+}
+.project-kicker::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px rgba(237,125,49,0.12);
+}
+h1 {
+  max-width: 1000px;
+  font-size: clamp(38px, 6.4vw, 74px) !important;
+  line-height: 1.01 !important;
+  letter-spacing: -0.055em !important;
+  margin: 0 auto 18px !important;
+}
+h1 .em {
+  background: linear-gradient(110deg, var(--navy) 15%, #234766 52%, var(--accent) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+.hero-lede {
+  max-width: 780px;
+  margin: 0 auto 18px;
+  font-size: clamp(17px, 2vw, 21px);
+  line-height: 1.55;
+  color: #526171;
+}
+.authors {
+  margin: 14px 0 2px !important;
+  font-size: 15px;
+}
+.authors .author:not(:last-child)::after {
+  content: " ·";
+  color: var(--accent);
+  margin-left: 10px;
+}
+p.subtitle {
+  margin: 4px 0 24px !important;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #75808b;
+}
+.publication-links {
+  gap: 10px !important;
+  margin-top: 0 !important;
+}
+.publication-links .button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 46px;
+  padding: 11px 17px !important;
+  border: 1px solid rgba(7,27,49,0.12) !important;
+  background: var(--navy) !important;
+  color: #fff !important;
+  box-shadow: 0 12px 26px rgba(7,27,49,0.14) !important;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+.publication-links .button > * {
+  position: relative;
+  z-index: 1;
+}
+.publication-links .button::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: -45%;
+  bottom: -45%;
+  left: -70%;
+  width: 48%;
+  pointer-events: none;
+  transform: skewX(-18deg);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,122,26,0.08) 18%,
+    rgba(255,122,26,0.82) 50%,
+    rgba(255,154,74,0.16) 82%,
+    transparent 100%
+  );
+  opacity: 0;
+}
+.publication-links .button:hover {
+  transform: translateY(-2px) !important;
+  background: #12314e !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+  box-shadow: 0 16px 34px rgba(255,122,26,0.22) !important;
+  text-decoration: none !important;
+}
+.publication-links .button:hover::after {
+  opacity: 1;
+  animation: orangeShimmer 0.78s ease-out forwards;
+}
+.publication-links .button:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 3px;
+}
+@keyframes orangeShimmer {
+  from { left: -70%; }
+  to { left: 128%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .publication-links .button,
+  .publication-links .button::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  .publication-links .button:hover::after {
+    left: 26%;
+    opacity: 0.28;
+  }
+}
+.hero-capabilities {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 20px;
+}
+.hero-capabilities span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border: 1px solid rgba(7,27,49,0.08);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.68);
+  color: #596777;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+.hero-capabilities i { color: var(--accent); }
+
+.section-nav {
+  position: sticky;
+  top: 14px;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 780px;
+  margin: 0 auto 34px;
+  padding: 6px;
+  border: 1px solid rgba(7,27,49,0.09);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.82);
+  box-shadow: 0 12px 34px rgba(7,27,49,0.09);
+  backdrop-filter: blur(14px) saturate(150%);
+}
+.section-nav a {
+  padding: 8px 13px;
+  border-radius: 999px;
+  color: #526171;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+.section-nav a:hover {
+  color: var(--navy);
+  background: rgba(237,125,49,0.11);
+}
+
+body > .wrap { padding-bottom: 70px; }
+body > .wrap > section {
+  position: relative;
+  margin-top: 24px !important;
+  scroll-margin-top: 86px;
+}
+.card {
+  overflow: hidden;
+  padding: clamp(24px, 4vw, 44px) !important;
+  border: 1px solid rgba(7,27,49,0.09) !important;
+  border-radius: var(--radius) !important;
+  background: var(--panel) !important;
+  box-shadow: var(--shadow) !important;
+  backdrop-filter: blur(12px);
+}
+.card::before {
+  content: attr(data-eyebrow);
+  display: block;
+  margin-bottom: 8px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+.card h2 {
+  text-align: left !important;
+  margin: 0 0 26px !important;
+  font-size: clamp(25px, 3vw, 36px) !important;
+  letter-spacing: -0.035em !important;
+}
+.card h2::after {
+  left: 0 !important;
+  transform: none !important;
+  bottom: -11px !important;
+  width: 72px !important;
+  height: 3px !important;
+  background: linear-gradient(90deg, var(--accent), var(--hf)) !important;
+}
+.card p { color: #445363; }
+#abstract p {
+  max-width: 92ch;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.82;
+}
+.tldr {
+  border: 1px solid rgba(237,125,49,0.17) !important;
+  background:
+    linear-gradient(115deg, rgba(237,125,49,0.10), rgba(255,176,0,0.035) 48%, rgba(255,255,255,0.9)) !important;
+}
+.tldr::before { content: "IN ONE SENTENCE"; }
+.tldr h2 { font-size: 21px !important; margin-bottom: 22px !important; }
+.tldr p { margin: 0; font-size: 18px !important; color: #27394a; }
+#architecture .img-row { gap: 18px !important; }
+#architecture figure {
+  padding: 14px;
+  border: 1px solid rgba(7,27,49,0.08);
+  border-radius: 20px;
+  background: #fff;
+}
+#architecture img { border-radius: 13px !important; }
+#architecture figcaption {
+  margin-top: 10px !important;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px !important;
+  letter-spacing: 0.04em;
+  color: #718090 !important;
+}
+#rtfPlot { border-radius: 18px; overflow: hidden; }
+#aeShell.ae-shell {
+  border-color: rgba(7,27,49,0.09) !important;
+  background: #f8fafb !important;
+  box-shadow: none !important;
+}
+.ae-card {
+  border-color: rgba(7,27,49,0.08) !important;
+  box-shadow: 0 8px 24px rgba(7,27,49,0.055) !important;
+}
+.ae-card::before { background: linear-gradient(180deg, var(--accent), var(--hf)) !important; }
+.ae-signal { color: var(--navy) !important; }
+#aeExample, .ae-btn { border-color: rgba(7,27,49,0.10) !important; }
+pre.code {
+  padding: 20px !important;
+  border-color: rgba(7,27,49,0.10) !important;
+  border-radius: 18px !important;
+  background: #071b31 !important;
+  color: #eaf1f7 !important;
+  font-family: "IBM Plex Mono", monospace !important;
+}
+.btn-copy {
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--navy) !important;
+  box-shadow: 0 10px 22px rgba(7,27,49,0.15) !important;
+}
+footer { border-top: 0 !important; margin-top: 20px !important; }
+footer p { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: .05em; }
+#toTopBtn {
+  width: 46px !important;
+  height: 46px !important;
+  background: var(--navy) !important;
+  box-shadow: 0 12px 28px rgba(7,27,49,0.22) !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-card > * { animation: heroReveal .65s both; }
+  .hero-card > *:nth-child(2) { animation-delay: .05s; }
+  .hero-card > *:nth-child(3) { animation-delay: .10s; }
+  .hero-card > *:nth-child(4) { animation-delay: .15s; }
+  @keyframes heroReveal {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@media (max-width: 720px) {
+  section.hero { padding-top: 20px !important; }
+  .hero-card.wrap { padding-inline: 14px !important; }
+  .title-with-logo a img { max-height: 50px !important; }
+  h1 { font-size: clamp(36px, 12vw, 52px) !important; }
+  .hero-lede { font-size: 16px; }
+  .authors .author { display: inline-block; margin-block: 2px; }
+  .section-nav {
+    position: static;
+    margin-inline: 16px;
+    border-radius: 20px;
+  }
+  .section-nav a { padding: 7px 9px; font-size: 11px; }
+  .card { padding: 25px 20px !important; border-radius: 20px !important; }
+  #abstract p { font-size: 15px; line-height: 1.75; }
+  .publication-links .button { min-height: 44px; }
+  .hero-capabilities span { font-size: 9px; }
+}
+</style><style id="dpdfnet-clean-start-overrides">
+/* === Cleaner opening and label removal ================================ */
+section.hero {
+  padding: 22px 20px 12px !important;
+  overflow: visible !important;
+}
+section.hero::before,
+section.hero::after {
+  display: none !important;
+}
+.hero-card.wrap {
+  padding: 14px 28px 20px !important;
+}
+.title-with-logo a {
+  margin: 0 0 14px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.title-with-logo a img {
+  max-height: 88px !important;
+}
+h1 {
+  max-width: 920px;
+  font-size: clamp(34px, 5vw, 58px) !important;
+  line-height: 1.06 !important;
+  letter-spacing: -0.045em !important;
+  margin: 0 auto 12px !important;
+}
+.authors {
+  margin: 12px 0 2px !important;
+}
+p.subtitle {
+  margin: 4px 0 22px !important;
+}
+.publication-links {
+  margin-top: 0 !important;
+}
+body > .wrap {
+  padding-top: 2px;
+}
+.card::before,
+.tldr::before {
+  content: none !important;
+  display: none !important;
+  margin: 0 !important;
+}
+.card h2 {
+  margin-top: 0 !important;
+}
+@media (max-width: 720px) {
+  section.hero { padding-top: 14px !important; }
+  .hero-card.wrap { padding: 10px 14px 18px !important; }
+  .title-with-logo a img { max-height: 64px !important; }
+  h1 { font-size: clamp(32px, 10.5vw, 46px) !important; }
+  .publication-links { gap: 8px !important; }
+  .publication-links .button {
+    min-height: 42px !important;
+    padding: 10px 14px !important;
+  }
+}
+</style>
+<style id="unified-page-background">
+/* Unified page background: remove the grid and decorative backdrop layers. */
+html, body {
+  background: #f4f6f8 !important;
+  background-image: none !important;
+  background-size: auto !important;
+}
+body::before,
+section.hero::before,
+section.hero::after {
+  display: none !important;
+  content: none !important;
+}
+</style>
+
+<style id="dpdfnet-final-polish-v5">
+/* Final requested visual refinements. */
+/* Keep the project title a single, unified CEVA orange. */
+h1 .em {
+  background: none !important;
+  color: var(--accent) !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+/* Keep the CEVA logo left-aligned while the title remains centered. */
+.title-with-logo {
+  width: 100%;
+  align-items: stretch !important;
+}
+.title-with-logo > a {
+  align-self: flex-start !important;
+}
+.title-with-logo > h1 {
+  width: 100%;
+  text-align: center;
+}
+
+/* Hugging Face icon remains white in every interaction state. */
+.publication-links .hf-icon .hf-icon-black,
+.publication-links .link-block a:hover .hf-icon .hf-icon-black,
+.publication-links .link-block a:focus-visible .hf-icon .hf-icon-black {
+  display: none !important;
+}
+.publication-links .hf-icon .hf-icon-white,
+.publication-links .link-block a:hover .hf-icon .hf-icon-white,
+.publication-links .link-block a:focus-visible .hf-icon .hf-icon-white {
+  display: inline-block !important;
+}
+
+/* Remove the short underline beneath every card title. */
+.card h2::after,
+.card h2:first-child::after {
+  content: none !important;
+  display: none !important;
+}
+.card h2 {
+  margin-bottom: 20px !important;
+}
+
+/* Restore a comfortably readable footer size. */
+footer p {
+  font-size: 16px !important;
+  line-height: 1.6;
+  letter-spacing: 0 !important;
+}
+
+/* Copied state: check mark plus copied label. */
+.btn-copy {
+  min-width: 104px;
+  justify-content: center;
+}
+.btn-copy .copy-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+
+<style id="audio-and-copy-final-tweaks">
+/* Match the other card titles. */
+#examples > h2 {
+  text-align: left !important;
+}
+
+/* Remove the decorative orange rail from each audio sample. */
+#examples .ae-card::before {
+  content: none !important;
+  display: none !important;
+}
+#examples .ae-card-head {
+  padding-left: 0 !important;
+}
+
+/* Keep the BibTeX copy button visually unchanged in copied/disabled states. */
+#bibtexCopyBtn,
+#bibtexCopyBtn:hover,
+#bibtexCopyBtn:active,
+#bibtexCopyBtn:disabled,
+#bibtexCopyBtn.is-copied {
+  background: var(--navy) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+}
+</style>
 </head>
 <body>
 <section class="hero">
@@ -1074,12 +1630,6 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
 </p>
 <p class="subtitle">AI Division, Ceva Technologies</p>
 <div class="publication-links">
-<span class="link-block">
-<a class="external-link button is-normal is-rounded is-orange" href="./paper/DPDFNet.pdf" rel="noopener" target="_blank">
-<span class="icon"><i aria-hidden="true" class="fas fa-file-pdf"></i></span>
-<span>Paper</span>
-</a>
-</span>
 <span class="link-block">
 <a class="external-link button is-normal is-rounded is-orange is-outlined" href="https://arxiv.org/abs/2512.16420" rel="noopener" target="_blank">
 <span class="icon"><i aria-hidden="true" class="ai ai-arxiv"></i></span>
@@ -1095,56 +1645,46 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
 <span class="link-block">
 <a class="external-link button is-normal is-rounded is-orange is-outlined" href="https://huggingface.co/Ceva-IP/DPDFNet" rel="noopener" target="_blank">
 <span class="icon hf-icon">
-  <img class="hf-icon-black" src="./fig/hf-icon_black.png"
-       alt="Hugging Face logo (black)"
-       style="width:1.1em;height:1.1em;vertical-align:middle;" />
-  <img class="hf-icon-white" src="./fig/hf-icon_white.png"
-       alt="Hugging Face logo (white)"
-       style="width:1.1em;height:1.1em;vertical-align:middle;" />
+<img alt="Hugging Face logo (white)" class="hf-icon-white" src="./fig/hf-icon_white.png" style="width:1.1em;height:1.1em;vertical-align:middle;"/>
 </span>
 <span>Hugging Face</span>
 </a>
 </span>
-</div>
+<span class="link-block"><a aria-label="Open the DPDFNet live demo on Hugging Face Spaces" class="external-link button is-normal is-rounded is-orange is-outlined" href="https://huggingface.co/spaces/Ceva-IP/DPDFNetDemo" rel="noopener" target="_blank"><span aria-hidden="true" class="icon"><i class="fas fa-wave-square"></i></span><span>Live Demo</span></a></span></div>
+
 </div>
 </section>
+
 <div class="wrap">
 <!-- TL;DR separate block inserted before Abstract section -->
 <section class="tldr card" id="tldr">
 <h2>TL;DR</h2>
-<p>DPDFNet is a causal, streaming speech enhancer that adds dual‑path RNN blocks to DeepFilterNet2’s encoder to improve cross‑band and temporal modeling for robust real‑time noise suppression.</p>
+<p>DPDFNet enhances DeepFilterNet2 with dual-path encoder blocks and over-attenuation-aware “always-on” fine-tuning, outperforming larger causal open-source speech enhancers on a multilingual long-form benchmark while achieving real-time deployment on Ceva-NeuPro™-Nano edge NPUs.</p>
 </section>
 <section class="card" id="abstract">
 <h2>Abstract</h2>
-<p>We present DPDFNet, a causal single-channel speech enhancement model that extends DeepFilterNet2 architecture with dual-path blocks in the encoder, strengthening long-range temporal and cross-band modeling while preserving the original enhancement framework. In addition, we demonstrate that adding a loss component to mitigate over-attenuation in the enhanced speech, combined with a fine-tuning phase tailored for “always-on” applications, leads to substantial improvements in overall model performance. To compare our proposed architecture with a variety of causal open-source models, we created a new evaluation set comprising long, low-SNR recordings in 12 languages across everyday noise scenarios, better reflecting real-world conditions than commonly used benchmarks. On this evaluation set, DPDFNet delivers superior performance to other causal open-source models, including some that are substantially larger and more computationally demanding. We also propose an holistic metric named PRISM, a composite, scale-normalized aggregate of intrusive and non-intrusive metrics, which demonstrates clear scalability with the number of dual-path blocks. We further demonstrate on-device feasibility by deploying DPDFNet on Ceva-NeuPro™-Nano edge NPUs. Results indicate that DPDFNet-4, our second-largest model, achieves real-time performance on NPN32 and runs even faster on NPN64, confirming that state-of-the-art quality can be sustained within strict embedded power and latency constraints.</p>
+<p>We present DPDFNet, a causal single-channel speech enhancement model that extends DeepFilterNet2 architecture with dual-path blocks in the encoder, strengthening long-range temporal and cross-band modeling while preserving the original enhancement framework. In addition, we demonstrate that adding a loss component to mitigate over-attenuation in the enhanced speech, combined with a fine-tuning phase tailored for “always-on” applications, leads to substantial improvements in overall model performance. To compare our proposed architecture with a variety of causal open-source models, we created a new evaluation set comprising long, low-SNR recordings in 12 languages across everyday noise scenarios, better reflecting real-world conditions than commonly used benchmarks. On this evaluation set, DPDFNet delivers superior performance to other causal open-source models, including some that are substantially larger and more computationally demanding. We also propose an holistic metric named PRISM, a composite, scale-normalized aggregate of intrusive and non-intrusive metrics, which demonstrates clear scalability with the number of dual-path blocks. We further demonstrate on-device feasibility by deploying DPDFNet on Ceva-NeuPro-Nano edge NPUs. Results indicate that DPDFNet-4, our second-largest model, achieves real-time performance on NPN32 and runs even faster on NPN64, confirming that state-of-the-art quality can be sustained within strict embedded power and latency constraints.</p>
 </section>
-
 <section class="card" id="architecture">
-  <h2>The Architecture</h2>
-  <div class="img-row">
-    <figure>
-      <img src="./fig/dpdfnet_arch.png" alt="DPDFNet overall architecture">
-      <figcaption>DPDFNet overall architecture</figcaption>
-    </figure>
-    <figure>
-      <img src="./fig/dprnn_block.png" alt="DPRNN block diagram">
-      <figcaption>Dual-Path RNN (DPRNN) block</figcaption>
-    </figure>
-  </div>
+<h2>The Architecture</h2>
+<div class="img-row">
+<figure>
+<img alt="DPDFNet overall architecture" src="./fig/dpdfnet_arch.png"/>
+<figcaption>DPDFNet overall architecture</figcaption>
+</figure>
+<figure>
+<img alt="DPRNN block diagram" src="./fig/dprnn_block.png"/>
+<figcaption>Dual-Path RNN (DPRNN) block</figcaption>
+</figure>
+</div>
 </section>
-
-
-
 <section class="card" id="realtime-npn">
-  <h2>Ceva‑NeuPro™‑Nano</h2>
-
-  <p style="margin-top:0.35rem;">
+<h2>Ceva‑NeuPro™‑Nano</h2>
+<p style="margin-top:0.35rem;">
 	The benchmarks below were obtained on Ceva‑NeuPro™‑Nano edge NPUs (32/64), for the DPDFNet family, assuming deployment with int8 weights and int16 activations.
   </p>
-
-  <div id="rtfPlot" style="width:100%;height:420px;"></div>
+<div id="rtfPlot" style="width:100%;height:420px;"></div>
 </section>
-
 <section class="card" id="examples">
 <h2>Audio Examples</h2>
 <p>
@@ -1153,23 +1693,22 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
 		The following examples allow you to listen and compare the outputs generated by different models.
 	  </p>
 <div class="examples ae-shell" id="aeShell">
-  <div class="ae-toolbar" role="group" aria-label="Audio examples selector">
-    <div class="ae-select">
-      <label for="aeExample">Choose an example</label>
-      <div class="ae-select-row">
-        <button class="ae-btn" id="aePrev" type="button" aria-label="Previous example" title="Previous">←</button>
-        <select id="aeExample" aria-label="Select an audio example"></select>
-        <button class="ae-btn" id="aeNext" type="button" aria-label="Next example" title="Next">→</button>
+<div aria-label="Audio examples selector" class="ae-toolbar" role="group">
+<div class="ae-select">
+<label for="aeExample">Choose an example</label>
+<div class="ae-select-row">
+<button aria-label="Previous example" class="ae-btn" id="aePrev" title="Previous" type="button">←</button>
+<select aria-label="Select an audio example" id="aeExample"></select>
+<button aria-label="Next example" class="ae-btn" id="aeNext" title="Next" type="button">→</button>
 </div>
 </div>
 </div>
-
-  <div class="ae-signals" id="aeSignals" role="list" aria-label="Signals for selected example">
-    <!-- Populated by JS -->
-  </div>
+<div aria-label="Signals for selected example" class="ae-signals" id="aeSignals" role="list">
+<!-- Populated by JS -->
+</div>
 </div></section>
 <section class="card" id="citation">
-<div class="cite-header"><h2>BibTeX</h2><button aria-label="Copy BibTeX citation" class="btn-copy" id="bibtexCopyBtn" type="button"><svg aria-hidden="true" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>copy</span></button></div>
+<div class="cite-header"><h2>BibTeX</h2><button aria-label="Copy BibTeX citation" class="btn-copy" id="bibtexCopyBtn" type="button"><span class="copy-icon" aria-hidden="true"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span><span class="copy-label">copy</span></button></div>
 <pre class="code bibtex" id="bibtexText">@inproceedings{rika2025dpdfnet,
   title   = {DPDFNet: Boosting DeepFilterNet2 via Dual-Path RNN},
   author  = {Rika, Daniel and Sapir, Nino and Gus, Ido},
@@ -1202,13 +1741,24 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
     const btn = document.getElementById('bibtexCopyBtn');
     function done(ok){
       if(!btn) return;
-      const old = btn.querySelector('span');
-      if (old) {
-        const prev = old.textContent;
-        old.textContent = ok ? 'copied!' : 'failed';
-        btn.disabled = true;
-        setTimeout(()=>{ old.textContent = 'copy'; btn.disabled = false; }, 1200);
-      }
+      const icon = btn.querySelector('.copy-icon');
+      const label = btn.querySelector('.copy-label');
+      if (!icon || !label) return;
+
+      const originalIcon = icon.innerHTML;
+      icon.innerHTML = ok
+        ? '<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5 9.5 17 19 7"></path></svg>'
+        : '<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 7l10 10M17 7 7 17"></path></svg>';
+      label.textContent = ok ? 'copied' : 'failed';
+      btn.disabled = true;
+      btn.classList.toggle('is-copied', ok);
+
+      setTimeout(()=>{
+        icon.innerHTML = originalIcon;
+        label.textContent = 'copy';
+        btn.disabled = false;
+        btn.classList.remove('is-copied');
+      }, 1400);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(()=>done(true)).catch(()=>done(false));
@@ -1230,15 +1780,13 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
 </script>
 <div aria-hidden="false" id="ceva-fixed-topbar"><div class="slot-left"><a aria-label="CEVA homepage" href="https://www.ceva-ip.com/" title="CEVA"></a></div></div>
 <!-- Back-to-top Button -->
-<button id="toTopBtn" aria-label="Back to top" title="Back to top">
-  <span class="sr-only">Back to top</span>
-  <!-- White up arrow inside a black circle -->
-  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M6 14 L12 8 L18 14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
+<button aria-label="Back to top" id="toTopBtn" title="Back to top">
+<span class="sr-only">Back to top</span>
+<!-- White up arrow inside a black circle -->
+<svg aria-hidden="true" height="22" viewbox="0 0 24 24" width="22">
+<path d="M6 14 L12 8 L18 14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
 </button>
-
-
 <script>
 (function() {
   var btn = document.getElementById('toTopBtn');
@@ -1264,7 +1812,6 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
   btn.addEventListener('click', scrollToTop);
 })();
 </script>
-
 <script id="audio-examples-picker-js">
 /* === Audio Examples data + UI ============================================
    Add new models/signals by extending the `signals` array for each example.
@@ -1278,18 +1825,13 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
     { name: "GTCRN", suffix: "gtcrn" },
     { name: "RNNoise", suffix: "rnnoise" },
     { name: "NSNet2", suffix: "nsnet2" },
-    { name: "FastEnhancer-T", suffix: "fastenhancer-t" },
     { name: "FullSubNet", suffix: "fullsubnet" },
     { name: "DPCRN", suffix: "dpcrn" },
 	{ name: "aTENNuate", suffix: "atennuate" },
     { name: "DEMUCS", suffix: "demucs" },
-	{ name: "FastEnhancer-B", suffix: "fastenhancer-b" },
 	{ name: "DeepFilterNet2", suffix: "deepfilternet2" },
     { name: "CleanUNet", suffix: "cleanunet" },
-    { name: "FastEnhancer-M", suffix: "fastenhancer-m" },
-    { name: "FastEnhancer-S", suffix: "fastenhancer-s" },
 	{ name: "DeepFilterNet3", suffix: "deepfilternet3" },
-    { name: "FastEnhancer-L", suffix: "fastenhancer-l" },
     { name: "Baseline", suffix: "baseline" },
     { name: "DPDFNet-2", suffix: "dpdfnet2" },
     { name: "DPDFNet-4", suffix: "dpdfnet4" },
@@ -1467,8 +2009,6 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
   });
 })();
 </script>
-
-
 <script id="rtf-plotly-script">
 (function(){
   if (!window.Plotly) return;
@@ -1599,6 +2139,5 @@ p.subtitle + .publication-links { margin-top: 0 !important; } /* rely on the sub
   Plotly.newPlot(el, [trace1, trace2], layout, config);
 })();
 </script>
-
 </body>
 </html>
