@@ -329,6 +329,13 @@ We provide a dedicated script, `pesq_stoi_sisnr_calc.py`, which computes **PESQ*
 - **DNSMOS (P.835 & P.808)** - We use the **official** DNSMOS local inference script from the DNS Challenge repository: [`dnsmos_local.py`](https://github.com/microsoft/DNS-Challenge/blob/master/DNSMOS/dnsmos_local.py). Please follow their installation and model download instructions in that project before running. 
 - **NISQA v2** - We use the **official** NISQA project: <https://github.com/gabrielmittag/NISQA>. Refer to their README for environment setup, pretrained model weights, and inference commands (*e.g.*, running `nisqa_predict.py` on a folder of WAVs).
 
+## Built with DPDFNet
+
+Explore [applications, plugins, libraries and research projects](COMMUNITY.md)
+built with DPDFNet.
+
+Using DPDFNet in your project? Open an issue or submit a pull request
+to add it to the list.
 
 ## Citation
 
