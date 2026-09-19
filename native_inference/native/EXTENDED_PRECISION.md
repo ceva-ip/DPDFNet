@@ -40,6 +40,32 @@ Memory is the median fresh-process RSS increase in decimal MB.
 | New INT8 DPRNN + dense FC | 2.948 | 3.173 | 12.46 | 24.34 |
 | New INT8 DPRNN + dense/grouped FC + 1×1 CNN | 2.979 | 3.130 | 11.08 | 22.92 |
 
+### Exact `dpdfnet8_48khz_hr` kernel follow-up
+
+An architecture-first pass then optimized the final selective modes without
+changing their numerical outputs. Adjacent DPRNN blocks now retain their
+frequency-major layout, eliminating 28 individual layout-copy passes (14
+round trips) per hop. The INT8
+path additionally shares quantization/activation traffic between the two
+intra-frequency directions and uses a compact 64-output AVX2 kernel for the
+1,408 single-row recurrent projections per hop.
+
+This A/B used preserved and candidate libraries in rotating order on identical
+streams. INT8 values are medians of seven continuous and five paced run means;
+FP16 values use five and three respectively.
+
+| Selective mode | Preserved continuous | Optimized continuous | Preserved paced | Optimized paced |
+| --- | ---: | ---: | ---: | ---: |
+| FP16 | 3.196 ms | 3.152 ms (1.4% saved) | 3.243 ms | 3.240 ms (0.1% saved) |
+| INT8 | 2.940 ms | **2.710 ms (7.8% saved)** | 3.053 ms | **2.891 ms (5.3% saved)** |
+
+Output and the full recurrent state were bit-identical for 500 frames in both
+modes. All release and ASan/UBSan contracts passed. The comparison audio and
+quality measurements below are consequently unchanged. Raw A/B evidence is in
+[the INT8 result](../results/dpdfnet8_int8_optimized.json) and
+[the FP16 result](../results/dpdfnet8_fp16_layout_optimized.json); the topology
+analysis is in [the architecture note](DPDFNET8_ARCHITECTURE.md).
+
 The combined selective INT8 configuration reduces paced latency by **6.6%**
 and resident increase by **58.3%** versus the previous INT8 implementation.
 Selective FP16 reduces resident increase by **47.6%** versus previous FP16,

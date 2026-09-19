@@ -64,7 +64,63 @@ static void quantize(const float *x,int8_t *out,int k,float *scale,int *zp) {
     }
 }
 
-void dpdf_qaffine(const dpdf_qmatrix *q,const float *x,const float *bias,float *y,int m) {
+#ifndef DPDF_DISABLE_QAFFINE_ROW
+static void qaffine_row(const dpdf_qmatrix *q,const float *x,const float *bias,float *y) {
+    int8_t activation[512]; float activation_scale; int zp;
+    const int k=q->k,n=q->n;
+    quantize(x,activation,k,&activation_scale,&zp);
+    const __m256i ones=_mm256_set1_epi16(1);
+    int c=0;
+    for (;c+63<n;c+=64) {
+        __m256i sum0=_mm256_setzero_si256(),sum1=sum0,sum2=sum0,sum3=sum0;
+        __m256i sum4=sum0,sum5=sum0,sum6=sum0,sum7=sum0;
+        for (int j=0;j<k;j+=4) {
+            int32_t bytes; memcpy(&bytes,activation+j,4);
+            __m256i a=_mm256_set1_epi32(bytes),absolute=_mm256_abs_epi8(a);
+            const int8_t *base=q->packed+(c/8)*k*8+j*8;
+            __m256i w0=_mm256_loadu_si256((const __m256i *)(base));
+            __m256i w1=_mm256_loadu_si256((const __m256i *)(base+k*8));
+            __m256i w2=_mm256_loadu_si256((const __m256i *)(base+2*k*8));
+            __m256i w3=_mm256_loadu_si256((const __m256i *)(base+3*k*8));
+            __m256i w4=_mm256_loadu_si256((const __m256i *)(base+4*k*8));
+            __m256i w5=_mm256_loadu_si256((const __m256i *)(base+5*k*8));
+            __m256i w6=_mm256_loadu_si256((const __m256i *)(base+6*k*8));
+            __m256i w7=_mm256_loadu_si256((const __m256i *)(base+7*k*8));
+            sum0=_mm256_add_epi32(sum0,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w0,a)),ones));
+            sum1=_mm256_add_epi32(sum1,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w1,a)),ones));
+            sum2=_mm256_add_epi32(sum2,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w2,a)),ones));
+            sum3=_mm256_add_epi32(sum3,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w3,a)),ones));
+            sum4=_mm256_add_epi32(sum4,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w4,a)),ones));
+            sum5=_mm256_add_epi32(sum5,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w5,a)),ones));
+            sum6=_mm256_add_epi32(sum6,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w6,a)),ones));
+            sum7=_mm256_add_epi32(sum7,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w7,a)),ones));
+        }
+        __m256i sums[8]={sum0,sum1,sum2,sum3,sum4,sum5,sum6,sum7};
+        for (int t=0;t<8;++t) {
+            int column=c+t*8;
+            __m256i correction=_mm256_mullo_epi32(_mm256_loadu_si256((const __m256i *)(q->sum+column)),_mm256_set1_epi32(127-zp));
+            __m256 sum=_mm256_cvtepi32_ps(_mm256_add_epi32(sums[t],correction));
+            __m256 scale=_mm256_mul_ps(_mm256_set1_ps(activation_scale),_mm256_loadu_ps(q->scale+column));
+            _mm256_storeu_ps(y+column,_mm256_fmadd_ps(sum,scale,_mm256_loadu_ps(bias+column)));
+        }
+    }
+    for (;c<n;c+=8) {
+        __m256i sum=_mm256_setzero_si256();
+        for (int j=0;j<k;j+=4) {
+            int32_t bytes; memcpy(&bytes,activation+j,4);
+            __m256i a=_mm256_set1_epi32(bytes);
+            __m256i w=_mm256_loadu_si256((const __m256i *)(q->packed+c*k+j*8));
+            __m256i pairs=_mm256_maddubs_epi16(_mm256_abs_epi8(a),_mm256_sign_epi8(w,a));
+            sum=_mm256_add_epi32(sum,_mm256_madd_epi16(pairs,ones));
+        }
+        sum=_mm256_add_epi32(sum,_mm256_mullo_epi32(_mm256_loadu_si256((const __m256i *)(q->sum+c)),_mm256_set1_epi32(127-zp)));
+        __m256 scale=_mm256_mul_ps(_mm256_set1_ps(activation_scale),_mm256_loadu_ps(q->scale+c));
+        _mm256_storeu_ps(y+c,_mm256_fmadd_ps(_mm256_cvtepi32_ps(sum),scale,_mm256_loadu_ps(bias+c)));
+    }
+}
+#endif
+
+static void qaffine_batch(const dpdf_qmatrix *q,const float *x,const float *bias,float *y,int m) {
     /* Callers split larger batches into at most 48 rows. */
     int8_t activation[48*512]; float scales[48]; int zp[48];
     const int k=q->k,n=q->n;
@@ -93,14 +149,53 @@ void dpdf_qaffine(const dpdf_qmatrix *q,const float *x,const float *bias,float *
             _mm256_storeu_ps(y+(r+t)*n+c,result);
         }
     }
-    for (;r<m;++r) for (int c=0;c<n;c+=8) {
+    for (;r<m;++r) {
+      int c=0;
+      /* Recurrent GRU projections arrive here one row at a time. Walk K once
+       * for eight output vectors so each activation load/broadcast is reused.
+       * Each accumulator retains the original increasing-K sum order. */
+      for (;c+63<n;c+=64) {
+        __m256i sum0=_mm256_setzero_si256(),sum1=sum0,sum2=sum0,sum3=sum0;
+        __m256i sum4=sum0,sum5=sum0,sum6=sum0,sum7=sum0;
+        for (int j=0;j<k;j+=4) {
+            int32_t bytes; memcpy(&bytes,activation+r*k+j,4);
+            __m256i a=_mm256_set1_epi32(bytes);
+            __m256i absolute=_mm256_abs_epi8(a);
+            const int8_t *base=q->packed+(c/8)*k*8+j*8;
+            __m256i w0=_mm256_loadu_si256((const __m256i *)(base));
+            __m256i w1=_mm256_loadu_si256((const __m256i *)(base+k*8));
+            __m256i w2=_mm256_loadu_si256((const __m256i *)(base+2*k*8));
+            __m256i w3=_mm256_loadu_si256((const __m256i *)(base+3*k*8));
+            __m256i w4=_mm256_loadu_si256((const __m256i *)(base+4*k*8));
+            __m256i w5=_mm256_loadu_si256((const __m256i *)(base+5*k*8));
+            __m256i w6=_mm256_loadu_si256((const __m256i *)(base+6*k*8));
+            __m256i w7=_mm256_loadu_si256((const __m256i *)(base+7*k*8));
+            /* |a|<=127, |w|<=127 => pair sums <=32258, no i16 saturation.
+             * Neither operand contains -128, so sign transfer is exact. */
+            sum0=_mm256_add_epi32(sum0,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w0,a)),ones));
+            sum1=_mm256_add_epi32(sum1,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w1,a)),ones));
+            sum2=_mm256_add_epi32(sum2,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w2,a)),ones));
+            sum3=_mm256_add_epi32(sum3,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w3,a)),ones));
+            sum4=_mm256_add_epi32(sum4,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w4,a)),ones));
+            sum5=_mm256_add_epi32(sum5,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w5,a)),ones));
+            sum6=_mm256_add_epi32(sum6,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w6,a)),ones));
+            sum7=_mm256_add_epi32(sum7,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w7,a)),ones));
+        }
+        __m256i sums[8]={sum0,sum1,sum2,sum3,sum4,sum5,sum6,sum7};
+        for (int t=0;t<8;++t) {
+            int column=c+t*8;
+            __m256i correction=_mm256_mullo_epi32(_mm256_loadu_si256((const __m256i *)(q->sum+column)),_mm256_set1_epi32(127-zp[r]));
+            __m256 sum=_mm256_cvtepi32_ps(_mm256_add_epi32(sums[t],correction));
+            __m256 scale=_mm256_mul_ps(_mm256_set1_ps(scales[r]),_mm256_loadu_ps(q->scale+column));
+            _mm256_storeu_ps(y+r*n+column,_mm256_fmadd_ps(sum,scale,_mm256_loadu_ps(bias+column)));
+        }
+      }
+      for (;c<n;c+=8) {
         __m256i sum=_mm256_setzero_si256();
         for (int j=0;j<k;j+=4) {
             int32_t bytes; memcpy(&bytes,activation+r*k+j,4);
             __m256i a=_mm256_set1_epi32(bytes);
             __m256i w=_mm256_loadu_si256((const __m256i *)(q->packed+c*k+j*8));
-            /* |a|<=127, |w|<=127 => pair sums <=32258, no i16 saturation.
-             * Neither operand contains -128, so sign transfer is exact. */
             __m256i pairs=_mm256_maddubs_epi16(_mm256_abs_epi8(a),_mm256_sign_epi8(w,a));
             sum=_mm256_add_epi32(sum,_mm256_madd_epi16(pairs,ones));
         }
@@ -109,5 +204,65 @@ void dpdf_qaffine(const dpdf_qmatrix *q,const float *x,const float *bias,float *
         __m256 scale=_mm256_mul_ps(_mm256_set1_ps(scales[r]),_mm256_loadu_ps(q->scale+c));
         __m256 result=_mm256_fmadd_ps(_mm256_cvtepi32_ps(sum),scale,_mm256_loadu_ps(bias+c));
         _mm256_storeu_ps(y+r*n+c,result);
+      }
+    }
+}
+
+void dpdf_qaffine(const dpdf_qmatrix *q,const float *x,const float *bias,float *y,int m) {
+#ifndef DPDF_DISABLE_QAFFINE_ROW
+    if (m==1) qaffine_row(q,x,bias,y);
+    else qaffine_batch(q,x,bias,y,m);
+#else
+    qaffine_batch(q,x,bias,y,m);
+#endif
+}
+
+/* The bidirectional intra-frequency GRU applies two matrices to exactly the
+ * same rows. Quantize once and walk both packed matrices together, retaining
+ * the original increasing-K accumulation order for every output. */
+void dpdf_qaffine_pair(const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const float *x,
+                       const float *bias0,const float *bias1,float *y0,float *y1,int m) {
+    if (q0->k!=q1->k || q0->n!=q1->n || m%4) {
+        dpdf_qaffine(q0,x,bias0,y0,m); dpdf_qaffine(q1,x,bias1,y1,m); return;
+    }
+    int8_t activation[48*512]; float scales[48]; int zp[48];
+    const int k=q0->k,n=q0->n;
+    for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
+    const __m256i ones=_mm256_set1_epi16(1);
+    for (int r=0;r<m;r+=4) for (int c=0;c<n;c+=8) {
+        __m256i a0=_mm256_setzero_si256(),a1=a0,a2=a0,a3=a0;
+        __m256i b0=a0,b1=a0,b2=a0,b3=a0;
+        for (int j=0;j<k;j+=4) {
+            const __m256i w0=_mm256_loadu_si256((const __m256i *)(q0->packed+c*k+j*8));
+            const __m256i w1=_mm256_loadu_si256((const __m256i *)(q1->packed+c*k+j*8));
+            int32_t bytes; __m256i v,absolute;
+            memcpy(&bytes,activation+r*k+j,4); v=_mm256_set1_epi32(bytes); absolute=_mm256_abs_epi8(v);
+            a0=_mm256_add_epi32(a0,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w0,v)),ones));
+            b0=_mm256_add_epi32(b0,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w1,v)),ones));
+            memcpy(&bytes,activation+(r+1)*k+j,4); v=_mm256_set1_epi32(bytes); absolute=_mm256_abs_epi8(v);
+            a1=_mm256_add_epi32(a1,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w0,v)),ones));
+            b1=_mm256_add_epi32(b1,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w1,v)),ones));
+            memcpy(&bytes,activation+(r+2)*k+j,4); v=_mm256_set1_epi32(bytes); absolute=_mm256_abs_epi8(v);
+            a2=_mm256_add_epi32(a2,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w0,v)),ones));
+            b2=_mm256_add_epi32(b2,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w1,v)),ones));
+            memcpy(&bytes,activation+(r+3)*k+j,4); v=_mm256_set1_epi32(bytes); absolute=_mm256_abs_epi8(v);
+            a3=_mm256_add_epi32(a3,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w0,v)),ones));
+            b3=_mm256_add_epi32(b3,_mm256_madd_epi16(_mm256_maddubs_epi16(absolute,_mm256_sign_epi8(w1,v)),ones));
+        }
+        __m256i sums0[4]={a0,a1,a2,a3},sums1[4]={b0,b1,b2,b3};
+        const __m256i weight_sum0=_mm256_loadu_si256((const __m256i *)(q0->sum+c));
+        const __m256i weight_sum1=_mm256_loadu_si256((const __m256i *)(q1->sum+c));
+        const __m256 weight_scale0=_mm256_loadu_ps(q0->scale+c);
+        const __m256 weight_scale1=_mm256_loadu_ps(q1->scale+c);
+        for (int t=0;t<4;++t) {
+            __m256i zero=_mm256_set1_epi32(127-zp[r+t]);
+            __m256 scale=_mm256_set1_ps(scales[r+t]);
+            __m256i corrected=_mm256_add_epi32(sums0[t],_mm256_mullo_epi32(weight_sum0,zero));
+            _mm256_storeu_ps(y0+(r+t)*n+c,_mm256_fmadd_ps(_mm256_cvtepi32_ps(corrected),
+                             _mm256_mul_ps(scale,weight_scale0),_mm256_loadu_ps(bias0+c)));
+            corrected=_mm256_add_epi32(sums1[t],_mm256_mullo_epi32(weight_sum1,zero));
+            _mm256_storeu_ps(y1+(r+t)*n+c,_mm256_fmadd_ps(_mm256_cvtepi32_ps(corrected),
+                             _mm256_mul_ps(scale,weight_scale1),_mm256_loadu_ps(bias1+c)));
+        }
     }
 }

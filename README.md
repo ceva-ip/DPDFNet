@@ -57,8 +57,8 @@
 
 ### Experimental native FP16 / INT8 results
 
-The final selective native precision configuration has also been evaluated on
-`dpdfnet2_48khz_hr`. It stores DPRNN, dense/grouped FC, and 1×1 CNN weights in
+The final selective native precision configuration has been evaluated on both
+48 kHz HR models. It stores DPRNN, dense/grouped FC, and 1×1 CNN weights in
 FP16 or INT8; other convolutions, accumulation, biases, normalization,
 nonlinearities, recurrent state, and complex filtering remain FP32. These modes
 are explicit experiments and are not selected by the packaged ONNX API.
@@ -67,6 +67,23 @@ Intel i7-8700, Linux x86-64 under Docker/WSL2, one inference thread. Values are
 the median of three run means with 100 warmup and 1,000 timed 10 ms hops per
 run. Paced tests submit one hop every 10 ms. Memory is native-owned heap, not
 whole-process RSS.
+
+An architecture-specific `dpdfnet8_48khz_hr` follow-up keeps adjacent DPRNN
+blocks frequency-major, fuses the two intra-GRU INT8 input projections, and
+specializes the single-row recurrent INT8 dot product with 64-output AVX2
+tiles. Preserved and optimized libraries were interleaved on identical streams;
+INT8 uses seven continuous/five paced runs and FP16 uses five/three.
+
+| `dpdfnet8_48khz_hr` mode | Preserved continuous | Optimized continuous | Preserved paced | Optimized paced |
+| --- | ---: | ---: | ---: | ---: |
+| Selective FP16 | 3.196 ms | 3.152 ms (1.4% saved) | 3.243 ms | 3.240 ms (0.1% saved) |
+| Selective INT8 | 2.940 ms | **2.710 ms (7.8% saved)** | 3.053 ms | **2.891 ms (5.3% saved)** |
+
+Both optimized modes were bit-identical to their preserved implementations for
+500 recurrent frames, including the entire state vector. The INT8 median
+per-frame p50 also fell by 8.3% continuously and 5.7% when paced. Therefore the
+existing quality scores and listening WAVs remain valid: this pass changes
+execution only, not model numerics.
 
 | `dpdfnet2_48khz_hr` backend | Continuous mean | Paced mean | Time saved vs ONNX | Owned heap |
 | --- | ---: | ---: | ---: | ---: |
@@ -93,7 +110,11 @@ for noisy, original FP32, FP16, and INT8 audio from both 48 kHz HR models.
 Machine-readable evidence is in the
 [summary](native_inference/results/dpdfnet2_48khz_hr_summary.json),
 [timing and memory results](native_inference/results/dpdfnet2_48khz_hr_final.json),
-and [quality results](native_inference/results/dpdfnet2_48khz_hr_quality.json).
+[quality results](native_inference/results/dpdfnet2_48khz_hr_quality.json), and
+the `dpdfnet8_48khz_hr` [optimized INT8](native_inference/results/dpdfnet8_int8_optimized.json)
+and [FP16 layout](native_inference/results/dpdfnet8_fp16_layout_optimized.json)
+comparisons. The architecture analysis is in the
+[optimization map](native_inference/native/DPDFNET8_ARCHITECTURE.md).
 
 ## Install the PyPI Package
 

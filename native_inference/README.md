@@ -1,8 +1,10 @@
 # DPDFNet native inference investigation
 
-**Latest:** [FC/CNN precision and memory experiments](native/EXTENDED_PRECISION.md)
-extend FP16/INT8 to the remaining dense and convolution layers, with compact
-weight ownership and separate quality, latency and resident-memory measurements.
+**Latest:** the [`dpdfnet8_48khz_hr` architecture-first optimization](native/DPDFNET8_ARCHITECTURE.md)
+reduces final selective INT8 latency by 7.8% continuously and 5.3% at real
+cadence, with bit-identical output and recurrent state. The preceding
+[FC/CNN precision and memory experiments](native/EXTENDED_PRECISION.md) extend
+FP16/INT8 to the remaining dense and convolution layers.
 
 The same final selective FP16/INT8 configuration now supports and has measured
 results for `dpdfnet2_48khz_hr`. See the repository [README](../README.md#experimental-native-fp16--int8-results),
@@ -30,6 +32,7 @@ package, exporters, model definitions, and downloaded source weights are unchang
 
 - [Detailed findings and implementation plan](FEASIBILITY.md)
 - [Complete C model, FP16 and native INT8](native/FULL_MODEL.md)
+- [`dpdfnet8_48khz_hr` architecture and exact optimization results](native/DPDFNET8_ARCHITECTURE.md)
 - [Implemented C kernels and native hybrid results](native/README.md)
 - [Raw benchmark results](results/)
 - [Graph inventory, timing, profiling and numerical comparison](benchmark.py)

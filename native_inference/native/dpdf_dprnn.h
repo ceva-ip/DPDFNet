@@ -39,6 +39,13 @@ DPDF_API const char *dpdf_tier(const dpdf_block *block);
  */
 DPDF_API int dpdf_process(const dpdf_block *block, const float *x,
                           const float *state_in, float *y, float *state_out);
+/* Internal-layout entry point used by generated chains. Frequency-major flags
+ * avoid round-trip transposes between adjacent DPRNN blocks; flag 1 describes
+ * x and flag 2 requests y. The public channel-major dpdf_process ABI is kept. */
+enum { DPDF_INPUT_FREQ_MAJOR = 1, DPDF_OUTPUT_FREQ_MAJOR = 2 };
+DPDF_API int dpdf_process_layout(const dpdf_block *block, const float *x,
+                                 const float *state_in, float *y, float *state_out,
+                                 unsigned layout_flags);
 /* Direct activation probe for numerical validation of the SIMD approximation. */
 DPDF_API int dpdf_test_gates(int tier, const float *input, float *sigmoid,
                              float *tanh_out, size_t count);

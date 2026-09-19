@@ -4,6 +4,7 @@
   "gain": 1,
   "removed_model_delay_samples": 2400,
   "precision_scope": "DPRNN + dense/grouped FC + 1x1 CNN; other CNN remains FP32",
+  "dpdfnet8_optimized_output_bit_identical": true,
   "models": [
     "dpdfnet8_48khz_hr",
     "dpdfnet2_48khz_hr"

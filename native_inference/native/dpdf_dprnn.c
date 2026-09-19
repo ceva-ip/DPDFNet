@@ -172,23 +172,33 @@ static void norm_residual(float *out, const float *p, const float *skip,
     }
 }
 
-int dpdf_process(const dpdf_block *b, const float *input, const float *state,
-                   float *output, float *state_out) {
-    if (!b || !input || !state || !output || !state_out) return -1;
+int dpdf_process_layout(const dpdf_block *b, const float *input, const float *state,
+                        float *output, float *state_out, unsigned layout_flags) {
+    if (!b || !input || !state || !output || !state_out || layout_flags > 3) return -1;
     const int f = b->freq;
     float x[48*64], bi[48*128], mid[48*64], a[48*192], hproj[48*192], p[48*64];
     float h[64], step[192];
     const float *bias=b->params,*fib=b->params+768,*nis=fib+64,*nib=nis+64;
     const float *tib=b->params+960,*thb=tib+192,*fob=b->params+1344,*nos=fob+64,*nob=nos+64;
-    for (int r = 0; r < f; ++r)
-        for (int c = 0; c < 64; ++c) x[r*64+c] = input[c*f+r];
+    if (layout_flags & DPDF_INPUT_FREQ_MAJOR)
+        memcpy(x,input,(size_t)f*64*sizeof(float));
+    else
+        for (int r = 0; r < f; ++r)
+            for (int c = 0; c < 64; ++c) x[r*64+c] = input[c*f+r];
+    float *intra[2]={a,hproj};
+#if defined(DPDF_X86_DISPATCH) && !defined(DPDF_DISABLE_QAFFINE_PAIR)
+    if (b->q[0]) dpdf_qaffine_pair(b->q[0],b->q[1],x,bias,bias+384,a,hproj,f);
+#endif
     for (int direction = 0; direction < 2; ++direction) {
         memset(h, 0, sizeof(h));
-        affine(b, x, direction*64*192, bias+direction*384, a, f, 64, 192);
+#if defined(DPDF_X86_DISPATCH) && !defined(DPDF_DISABLE_QAFFINE_PAIR)
+        if (!b->q[0])
+#endif
+            affine(b, x, direction*64*192, bias+direction*384, intra[direction], f, 64, 192);
         for (int t = 0; t < f; ++t) {
             int r = direction == 0 ? t : f-1-t;
             affine(b, h, 24576+direction*64*192, bias+direction*384+192, step, 1, 64, 192);
-            b->gates(a+r*192, step, h, h, 1);
+            b->gates(intra[direction]+r*192, step, h, h, 1);
             memcpy(bi+r*128+direction*64, h, sizeof(h));
         }
     }
@@ -199,9 +209,17 @@ int dpdf_process(const dpdf_block *b, const float *input, const float *state,
     b->gates(a, hproj, state, state_out, f);
     affine(b, state_out, 83264, fob, p, f, 64, 64);
     norm_residual(x, p, mid, nos, nob, b->eps[1], f);
-    for (int r = 0; r < f; ++r)
-        for (int c = 0; c < 64; ++c) output[c*f+r] = x[r*64+c];
+    if (layout_flags & DPDF_OUTPUT_FREQ_MAJOR)
+        memcpy(output,x,(size_t)f*64*sizeof(float));
+    else
+        for (int r = 0; r < f; ++r)
+            for (int c = 0; c < 64; ++c) output[c*f+r] = x[r*64+c];
     return 0;
+}
+
+int dpdf_process(const dpdf_block *b, const float *input, const float *state,
+                 float *output, float *state_out) {
+    return dpdf_process_layout(b,input,state,output,state_out,0);
 }
 
 int dpdf_test_gates(int tier, const float *x, float *s, float *t, size_t count) {

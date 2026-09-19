@@ -6,6 +6,7 @@ Integer shape/index tensors are compile-time only. Views alias existing storage;
 all other tensors have fixed, disjoint arena slots for straightforward auditing.
 """
 import argparse
+from collections import defaultdict
 import hashlib
 import json
 import math
@@ -48,6 +49,16 @@ def generate(source, folder):
     shape.update({x.name:list(x.dims) for x in model.graph.initializer})
     if any(any(d<=0 for d in s) for s in shape.values()):
         raise ValueError('All dimensions must be static and positive')
+    consumers=defaultdict(list)
+    for consumer in model.graph.node:
+        for index,name in enumerate(consumer.input):
+            consumers[name].append((consumer,index))
+    chained_dprnn_outputs=set()
+    for producer in model.graph.node:
+        if producer.op_type!='DpdfDprnn': continue
+        uses=consumers[producer.output[0]]
+        if len(uses)==1 and uses[0][0].op_type=='DpdfDprnn' and uses[0][1]==0:
+            chained_dprnn_outputs.add(producer.output[0])
     ptr={'spec':'spec','state_in':'state_in'}
     chunks=[]; weight_count=0; arena_count=0; calls=[]; blocks=[]; tensors=[]; weight_layout=[]
     def weight(array):
@@ -100,7 +111,8 @@ def generate(source, folder):
         elif op=='DpdfDprnn':
             idx=len(blocks); w=weight(np.asarray(a['weights'],dtype=np.float32))
             blocks.append((w,a['freq'],a['intra_epsilon'],a['inter_epsilon']))
-            calls.append(f'if (dpdf_process(m->blocks[{idx}],{ptr[ins[0]]},{ptr[ins[1]]},{y},{dest[1]})) return -1;')
+            layout=(1 if ins[0] in chained_dprnn_outputs else 0) | (2 if outs[0] in chained_dprnn_outputs else 0)
+            calls.append(f'if (dpdf_process_layout(m->blocks[{idx}],{ptr[ins[0]]},{ptr[ins[1]]},{y},{dest[1]},{layout})) return -1;')
         elif op=='Transpose':
             perm=a['perm']; ss=shape[ins[0]]; st=strides(ss)
             assert sorted(perm)==list(range(len(ss))) and os==[ss[j] for j in perm]
