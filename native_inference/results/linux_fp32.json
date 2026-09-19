@@ -1,0 +1,527 @@
+{
+  "model": "dpdfnet8_48khz_hr.onnx",
+  "sha256": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631",
+  "bytes": 14857107,
+  "environment": {
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+    "machine": "x86_64",
+    "logical_cpus": 12,
+    "python": "3.11.16",
+    "numpy": "2.4.6",
+    "onnx": "1.22.0",
+    "onnxruntime": "1.27.0"
+  },
+  "config": {
+    "api": "run",
+    "frames": 1000,
+    "warmup": 200,
+    "repeats": 3,
+    "paced": false,
+    "threads": 1,
+    "hop_ms": 10,
+    "input": "synthetic causal STFT; seed 20260918"
+  },
+  "state_elements": 90228,
+  "inventory": {
+    "nodes": 937,
+    "operators": {
+      "Mul": 54,
+      "Pow": 2,
+      "ReduceSum": 6,
+      "Sqrt": 3,
+      "Add": 153,
+      "Log": 1,
+      "Div": 4,
+      "Slice": 49,
+      "Reshape": 166,
+      "Sub": 23,
+      "Gather": 6,
+      "Unsqueeze": 18,
+      "Concat": 16,
+      "Transpose": 131,
+      "Conv": 30,
+      "Relu": 22,
+      "GRU": 16,
+      "MatMul": 26,
+      "LayerNormalization": 32,
+      "Gemm": 58,
+      "Split": 42,
+      "Sigmoid": 43,
+      "Tanh": 22,
+      "Flatten": 2,
+      "Squeeze": 11,
+      "Pad": 1
+    },
+    "initializer_elements": 3632988,
+    "gru_nodes": [
+      {
+        "name": "/model/enc/dprnn_erb/blocks.0/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.1/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.2/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.3/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.4/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.5/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.6/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.7/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.0/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.1/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.2/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.3/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.4/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.5/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.6/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.7/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      }
+    ],
+    "opsets": {
+      "": 17
+    }
+  },
+  "runs": [
+    {
+      "mean_ms": 5.5942193699999985,
+      "rtf_mean": 0.5594219369999999,
+      "p50_ms": 5.3371295,
+      "p95_ms": 7.214975899999992,
+      "p99_ms": 9.172902849999993,
+      "max_ms": 19.881137,
+      "over_10ms": 9
+    },
+    {
+      "mean_ms": 5.540502133,
+      "rtf_mean": 0.5540502133,
+      "p50_ms": 5.402319,
+      "p95_ms": 6.263522999999999,
+      "p99_ms": 8.43244315,
+      "max_ms": 11.301015,
+      "over_10ms": 4
+    },
+    {
+      "mean_ms": 5.707052275,
+      "rtf_mean": 0.5707052275,
+      "p50_ms": 5.4738715,
+      "p95_ms": 6.894083549999998,
+      "p99_ms": 9.769331269999997,
+      "max_ms": 16.156732,
+      "over_10ms": 10
+    }
+  ],
+  "profile": {
+    "note": "Instrumented kernel durations include profiling overhead and startup; not latency measurements.",
+    "operators": [
+      {
+        "op": "GRU",
+        "share_percent": 30.738097380197363,
+        "calls": 1600
+      },
+      {
+        "op": "Gemm",
+        "share_percent": 15.884456067744889,
+        "calls": 7400
+      },
+      {
+        "op": "Transpose",
+        "share_percent": 9.881599266450332,
+        "calls": 13000
+      },
+      {
+        "op": "LayerNormalization",
+        "share_percent": 7.923125177933859,
+        "calls": 3200
+      },
+      {
+        "op": "Reshape",
+        "share_percent": 7.215087065887599,
+        "calls": 19800
+      },
+      {
+        "op": "Add",
+        "share_percent": 7.151862774942476,
+        "calls": 13700
+      },
+      {
+        "op": "Split",
+        "share_percent": 4.036988058866375,
+        "calls": 4800
+      },
+      {
+        "op": "Conv",
+        "share_percent": 3.6061262242773884,
+        "calls": 2900
+      },
+      {
+        "op": "Mul",
+        "share_percent": 2.4109036636812804,
+        "calls": 5400
+      },
+      {
+        "op": "Sigmoid",
+        "share_percent": 1.6693431205685996,
+        "calls": 4200
+      },
+      {
+        "op": "MatMul",
+        "share_percent": 1.538704234795051,
+        "calls": 1000
+      },
+      {
+        "op": "Concat",
+        "share_percent": 1.5237916827397686,
+        "calls": 1600
+      },
+      {
+        "op": "Slice",
+        "share_percent": 1.1316285369553991,
+        "calls": 1600
+      },
+      {
+        "op": "Sub",
+        "share_percent": 1.0252687648586327,
+        "calls": 2300
+      },
+      {
+        "op": "Tanh",
+        "share_percent": 0.857410121062809,
+        "calls": 2200
+      },
+      {
+        "op": "Squeeze",
+        "share_percent": 0.6801849156454856,
+        "calls": 1700
+      },
+      {
+        "op": "ReorderOutput",
+        "share_percent": 0.6253412324669675,
+        "calls": 1200
+      },
+      {
+        "op": "ReorderInput",
+        "share_percent": 0.4728881176538735,
+        "calls": 600
+      },
+      {
+        "op": "ReduceSum",
+        "share_percent": 0.35371094544347587,
+        "calls": 600
+      },
+      {
+        "op": "Unsqueeze",
+        "share_percent": 0.31365657008837844,
+        "calls": 900
+      },
+      {
+        "op": "Relu",
+        "share_percent": 0.2505555233751172,
+        "calls": 800
+      },
+      {
+        "op": "Div",
+        "share_percent": 0.16083372257969897,
+        "calls": 400
+      },
+      {
+        "op": "Sqrt",
+        "share_percent": 0.11079656444379261,
+        "calls": 300
+      },
+      {
+        "op": "FusedConv",
+        "share_percent": 0.11018034328448342,
+        "calls": 100
+      },
+      {
+        "op": "Pad",
+        "share_percent": 0.1062365278649046,
+        "calls": 100
+      },
+      {
+        "op": "Pow",
+        "share_percent": 0.10253920090904946,
+        "calls": 200
+      },
+      {
+        "op": "Flatten",
+        "share_percent": 0.06359402364070856,
+        "calls": 200
+      },
+      {
+        "op": "Log",
+        "share_percent": 0.05509017164224171,
+        "calls": 100
+      }
+    ],
+    "top_nodes": [
+      {
+        "name": "/model/enc/dprnn_df/blocks.0/intra_gru/GRU_kernel_time",
+        "share_percent": 2.1511048229165253
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.1/intra_gru/GRU_kernel_time",
+        "share_percent": 2.1024233513310993
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.5/intra_gru/GRU_kernel_time",
+        "share_percent": 2.0764188184082513
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.3/intra_gru/GRU_kernel_time",
+        "share_percent": 2.0581786720926996
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.7/intra_gru/GRU_kernel_time",
+        "share_percent": 2.0514002393402984
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.4/intra_gru/GRU_kernel_time",
+        "share_percent": 2.0474564239207194
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.2/intra_gru/GRU_kernel_time",
+        "share_percent": 2.0398152815452857
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.6/intra_gru/GRU_kernel_time",
+        "share_percent": 2.034639023807088
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.0/intra_gru/GRU_kernel_time",
+        "share_percent": 1.8692452646485014
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.6/intra_gru/GRU_kernel_time",
+        "share_percent": 1.794682504372089
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.5/intra_gru/GRU_kernel_time",
+        "share_percent": 1.7676920175943465
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.7/intra_gru/GRU_kernel_time",
+        "share_percent": 1.7616530502331165
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.2/intra_gru/GRU_kernel_time",
+        "share_percent": 1.7548746174807153
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.3/intra_gru/GRU_kernel_time",
+        "share_percent": 1.752902709770926
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.1/intra_gru/GRU_kernel_time",
+        "share_percent": 1.7515470232204458
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.4/intra_gru/GRU_kernel_time",
+        "share_percent": 1.7240635595152558
+      },
+      {
+        "name": "/model/df_dec/df_gru/linear_in/linear_in.0/Add_kernel_time",
+        "share_percent": 0.8563009229760524
+      },
+      {
+        "name": "/model/erb_dec/emb_gru/gru.1/grucell/Gemm_1_kernel_time",
+        "share_percent": 0.6227531035978688
+      },
+      {
+        "name": "/model/erb_dec/emb_gru/gru.1/grucell/Gemm_kernel_time",
+        "share_percent": 0.612030855425889
+      },
+      {
+        "name": "/model/df_dec/df_gru/gru.1/grucell/Gemm_1_kernel_time",
+        "share_percent": 0.6077173073107246
+      }
+    ]
+  }
+}

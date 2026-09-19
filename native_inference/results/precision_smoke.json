@@ -1,0 +1,115 @@
+{
+  "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+  "fp16_scope": "DPRNN matrix weights; F16C conversion, FP32 compute/state/bias/norm",
+  "int8_scope": "ten Gemm projections in remaining 256-unit GRUs; dynamic QInt8 reduced range",
+  "fp32_parity": {
+    "fixture": "synthetic",
+    "frames": 200,
+    "spectrum": {
+      "max_abs": 1.4901161193847656e-07,
+      "error_squared": 1.5331822060493946e-11,
+      "reference_squared": 0.0094818013811204,
+      "count": 192400,
+      "relative_rms": 4.021160966935956e-05,
+      "rmse": 8.926770123994576e-09
+    },
+    "state": {
+      "max_abs": 1.1444091796875e-05,
+      "error_squared": 8.961904613557558e-07,
+      "reference_squared": 166609521.58100966,
+      "count": 18045600,
+      "relative_rms": 7.33415780045243e-08,
+      "rmse": 2.2285095283176227e-07
+    },
+    "waveform_snr_db": 90.15307047611124,
+    "waveform_max_abs": 2.051820047199726e-09
+  },
+  "fp16_parity": [
+    {
+      "fixture": "synthetic",
+      "frames": 200,
+      "waveform_snr_db": 59.02383502601464,
+      "waveform_max_abs": 2.074229996651411e-07,
+      "spectrum_max_abs": 4.6510249376297e-05,
+      "state_max_abs": 0.0018223375082015991,
+      "spectrum_gate_pass": true,
+      "state_gate_pass": true,
+      "quality_preserving_gate_pass": false
+    }
+  ],
+  "int8_native_parity": [
+    {
+      "fixture": "synthetic",
+      "frames": 200,
+      "waveform_snr_db": 32.63228199675432,
+      "waveform_max_abs": 6.018090061843395e-06,
+      "spectrum_max_abs": 0.0006979554891586304,
+      "state_max_abs": 0.08453108370304108,
+      "spectrum_gate_pass": true,
+      "state_gate_pass": false,
+      "quality_preserving_gate_pass": false
+    }
+  ],
+  "timings": {
+    "original_onnx": [
+      {
+        "mean_ms": 5.489990369999999,
+        "p50_ms": 5.443379,
+        "p95_ms": 5.884544,
+        "p99_ms": 6.224539,
+        "max_ms": 6.227905,
+        "over_10ms": 0
+      }
+    ],
+    "previous_hybrid": [
+      {
+        "mean_ms": 3.6136927399999994,
+        "p50_ms": 3.5829675,
+        "p95_ms": 3.848877,
+        "p99_ms": 3.9977660900000016,
+        "max_ms": 4.25864,
+        "over_10ms": 0
+      }
+    ],
+    "full_c_fp32": [
+      {
+        "mean_ms": 3.42128641,
+        "p50_ms": 3.3976119999999996,
+        "p95_ms": 3.63439405,
+        "p99_ms": 3.66424399,
+        "max_ms": 3.66652,
+        "over_10ms": 0
+      }
+    ],
+    "full_c_fp16_weights": [
+      {
+        "mean_ms": 3.5829387399999995,
+        "p50_ms": 3.313859,
+        "p95_ms": 5.327565,
+        "p99_ms": 7.329710180000003,
+        "max_ms": 7.900859,
+        "over_10ms": 0
+      }
+    ],
+    "full_c_int8": [
+      {
+        "mean_ms": 3.17238825,
+        "p50_ms": 3.1511535,
+        "p95_ms": 3.36344005,
+        "p99_ms": 4.113811210000003,
+        "max_ms": 4.735156,
+        "over_10ms": 0
+      }
+    ],
+    "hybrid_int8": [
+      {
+        "mean_ms": 3.4325508099999995,
+        "p50_ms": 3.390561,
+        "p95_ms": 3.75391805,
+        "p99_ms": 3.9165300000000003,
+        "max_ms": 3.916629,
+        "over_10ms": 0
+      }
+    ]
+  }
+}

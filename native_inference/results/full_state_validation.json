@@ -1,0 +1,17 @@
+{
+  "fp32": {
+    "streams": 4,
+    "frames_per_stream": 64,
+    "bit_identical_to_serial": true
+  },
+  "fp16": {
+    "streams": 4,
+    "frames_per_stream": 64,
+    "bit_identical_to_serial": true
+  },
+  "int8": {
+    "streams": 4,
+    "frames_per_stream": 64,
+    "bit_identical_to_serial": true
+  }
+}

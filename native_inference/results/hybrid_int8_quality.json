@@ -1,0 +1,109 @@
+{
+  "quantized_model_sha256": "3491687e83b7a977b53fdf02efb2d15a960de5e3e9c0cf5faf87fa257734b9c8",
+  "quantized_nodes": 10,
+  "policy": "FP32 remains default; INT8 needs independent quality evaluation",
+  "fixtures": [
+    {
+      "fixture": "noisy_public_48k.flac",
+      "frames": 1506,
+      "audio_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
+      "lowered_fp32_smoke": {
+        "fixture": "noisy_public_48k.flac",
+        "frames": 100,
+        "spectrum": {
+          "max_abs": 3.0517578125e-05,
+          "error_squared": 9.803276032866902e-09,
+          "reference_squared": 437280.8370486125,
+          "count": 96200,
+          "relative_rms": 1.4972881684966746e-07,
+          "rmse": 3.192258702968914e-07
+        },
+        "state": {
+          "max_abs": 3.2782554626464844e-06,
+          "error_squared": 1.319034439489936e-07,
+          "reference_squared": 136093037.34885374,
+          "count": 9022800,
+          "relative_rms": 3.1132221667984984e-08,
+          "rmse": 1.2090865833601256e-07
+        },
+        "waveform_snr_db": 136.43117257084396,
+        "waveform_max_abs": 2.384185791015625e-07
+      },
+      "waveform_snr_db": 40.38626328290579,
+      "waveform_max_abs": 0.009766221046447754,
+      "spectrum_max_abs": 0.9939842224121094,
+      "state_max_abs": 0.1885836124420166,
+      "spectrum_gate_pass": false,
+      "state_gate_pass": false,
+      "quality_preserving_gate_pass": false
+    },
+    {
+      "fixture": "noisy_cafe_48k.flac",
+      "frames": 1081,
+      "audio_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
+      "lowered_fp32_smoke": {
+        "fixture": "noisy_cafe_48k.flac",
+        "frames": 100,
+        "spectrum": {
+          "max_abs": 3.0517578125e-05,
+          "error_squared": 1.302185845921605e-08,
+          "reference_squared": 468834.94292104733,
+          "count": 96200,
+          "relative_rms": 1.6665812783713451e-07,
+          "rmse": 3.679162323762094e-07
+        },
+        "state": {
+          "max_abs": 2.723187208175659e-06,
+          "error_squared": 1.3676023659556909e-07,
+          "reference_squared": 144458310.40264574,
+          "count": 9022800,
+          "relative_rms": 3.07686652030911e-08,
+          "rmse": 1.231145143570969e-07
+        },
+        "waveform_snr_db": 135.72455759054068,
+        "waveform_max_abs": 2.682209014892578e-07
+      },
+      "waveform_snr_db": 40.558253269359206,
+      "waveform_max_abs": 0.0075234174728393555,
+      "spectrum_max_abs": 1.1795673370361328,
+      "state_max_abs": 0.18778660893440247,
+      "spectrum_gate_pass": false,
+      "state_gate_pass": false,
+      "quality_preserving_gate_pass": false
+    },
+    {
+      "fixture": "noisy_keyboard_48k.flac",
+      "frames": 1081,
+      "audio_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
+      "lowered_fp32_smoke": {
+        "fixture": "noisy_keyboard_48k.flac",
+        "frames": 100,
+        "spectrum": {
+          "max_abs": 7.62939453125e-06,
+          "error_squared": 8.847569460568635e-10,
+          "reference_squared": 54146.2186355858,
+          "count": 96200,
+          "relative_rms": 1.278285681182967e-07,
+          "rmse": 9.590129118692171e-08
+        },
+        "state": {
+          "max_abs": 2.4139881134033203e-06,
+          "error_squared": 1.285089596176533e-07,
+          "reference_squared": 137364454.4002904,
+          "count": 9022800,
+          "relative_rms": 3.058648150337092e-08,
+          "rmse": 1.1934274927679732e-07
+        },
+        "waveform_snr_db": 137.648611013597,
+        "waveform_max_abs": 7.450580596923828e-08
+      },
+      "waveform_snr_db": 43.575941356984,
+      "waveform_max_abs": 0.002435571514070034,
+      "spectrum_max_abs": 0.2100200653076172,
+      "state_max_abs": 0.17883312702178955,
+      "spectrum_gate_pass": false,
+      "state_gate_pass": false,
+      "quality_preserving_gate_pass": false
+    }
+  ]
+}

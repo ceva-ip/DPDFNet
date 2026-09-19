@@ -1,0 +1,69 @@
+{
+  "environment": {
+    "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36"
+  },
+  "config": {
+    "frames": 200,
+    "warmup": 100,
+    "repeats": 1,
+    "threads": 1
+  },
+  "weights_sha256": "5a5bb67a8619090c54dc2793536fe813fe38123b236d445f3433aafe3075529d",
+  "parity": [
+    {
+      "fixture": "synthetic",
+      "frames": 300,
+      "spectrum": {
+        "max_abs": 1.4901161193847656e-07,
+        "error_squared": 1.9457421311421872e-11,
+        "reference_squared": 0.00982238991037247,
+        "count": 288600,
+        "relative_rms": 4.450758771593806e-05,
+        "rmse": 8.210970238900458e-09
+      },
+      "state": {
+        "max_abs": 3.606081008911133e-05,
+        "error_squared": 3.8440098474472e-06,
+        "reference_squared": 341495286.41413194,
+        "count": 27068400,
+        "relative_rms": 1.0609621459345282e-07,
+        "rmse": 3.768434342755803e-07
+      },
+      "waveform_snr_db": 89.20686868902543,
+      "waveform_max_abs": 2.051820047199726e-09
+    }
+  ],
+  "timings": {
+    "onnx": [
+      {
+        "mean_ms": 5.712287315000001,
+        "p50_ms": 5.62605,
+        "p95_ms": 6.305342999999999,
+        "p99_ms": 6.869568039999999,
+        "max_ms": 7.942811,
+        "over_10ms": 0
+      }
+    ],
+    "native_hybrid": [
+      {
+        "mean_ms": 3.7747621300000005,
+        "p50_ms": 3.674398,
+        "p95_ms": 4.24246305,
+        "p99_ms": 5.217335079999997,
+        "max_ms": 5.99156,
+        "over_10ms": 0
+      }
+    ],
+    "full_c": [
+      {
+        "mean_ms": 3.4333365500000004,
+        "p50_ms": 3.3920405000000002,
+        "p95_ms": 3.693889,
+        "p99_ms": 3.8981820199999992,
+        "max_ms": 3.984506,
+        "over_10ms": 0
+      }
+    ]
+  }
+}

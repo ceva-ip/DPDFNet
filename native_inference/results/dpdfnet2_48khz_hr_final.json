@@ -1,0 +1,342 @@
+{
+  "model": "dpdfnet2_48khz_hr",
+  "environment": {
+    "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36"
+  },
+  "precision_scope": "DPRNN + dense/grouped FC + 1x1 CNN; other CNN remains FP32",
+  "config": {
+    "timed_frames": 1000,
+    "warmup": 100,
+    "repeats": 3,
+    "threads": 1
+  },
+  "configs": {
+    "native_fp32": [
+      0,
+      0,
+      0
+    ],
+    "selective_fp16": [
+      3,
+      16,
+      7
+    ],
+    "selective_int8": [
+      4,
+      8,
+      7
+    ]
+  },
+  "artifacts": {
+    "models/dpdfnet2_48khz_hr.onnx": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b",
+    "build/dpdfnet2_extended/libdpdf_full.so": "5d6d077b28ac6a5f46dc9dff67a5ba1aa4f6d095de0449259e64289aff1b5db5",
+    "models/dpdfnet2_extended/weights.f32": "cb7248b8fccbff7b32f254ec2ed0061e604514b2ccd98d997cd081a876424e7b"
+  },
+  "fp32_parity": {
+    "fixture": "synthetic",
+    "frames": 300,
+    "spectrum": {
+      "max_abs": 8.821487426757812e-06,
+      "error_squared": 3.3638058302896436e-10,
+      "reference_squared": 67.08741067846266,
+      "count": 288600,
+      "relative_rms": 2.239210616095905e-06,
+      "rmse": 3.4140297095298504e-08
+    },
+    "state": {
+      "max_abs": 1.52587890625e-05,
+      "error_squared": 4.545749986362556e-07,
+      "reference_squared": 339490878.66088223,
+      "count": 16930800,
+      "relative_rms": 3.659221659357645e-08,
+      "rmse": 1.6385663554920595e-07
+    },
+    "waveform_snr_db": 113.20111383376354,
+    "waveform_max_abs": 7.450580596923828e-08
+  },
+  "continuous": {
+    "original_fp32": [
+      {
+        "mean_ms": 2.143802053,
+        "p50_ms": 2.0571025,
+        "p95_ms": 2.682382,
+        "p99_ms": 3.5936419999999996,
+        "max_ms": 4.357205,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 2.1845404619999997,
+        "p50_ms": 2.066361,
+        "p95_ms": 2.9162499999999993,
+        "p99_ms": 3.7301278,
+        "max_ms": 4.651736,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 2.167454068,
+        "p50_ms": 2.0420145,
+        "p95_ms": 3.1031139999999993,
+        "p99_ms": 3.658296029999999,
+        "max_ms": 5.086861,
+        "over_10ms": 0
+      }
+    ],
+    "native_fp32": [
+      {
+        "mean_ms": 1.7368265120000002,
+        "p50_ms": 1.6557515,
+        "p95_ms": 2.1696269999999998,
+        "p99_ms": 2.9805459999999995,
+        "max_ms": 3.914504,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.788064174,
+        "p50_ms": 1.6936114999999998,
+        "p95_ms": 2.407493849999998,
+        "p99_ms": 2.983248,
+        "max_ms": 3.824004,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.752850257,
+        "p50_ms": 1.669403,
+        "p95_ms": 2.24924195,
+        "p99_ms": 3.180101,
+        "max_ms": 4.712549,
+        "over_10ms": 0
+      }
+    ],
+    "selective_fp16": [
+      {
+        "mean_ms": 1.453847899,
+        "p50_ms": 1.363452,
+        "p95_ms": 2.0201970499999997,
+        "p99_ms": 2.561864999999999,
+        "max_ms": 3.679704,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.443073558,
+        "p50_ms": 1.3765805,
+        "p95_ms": 1.8021059999999998,
+        "p99_ms": 2.6839880000000003,
+        "max_ms": 4.445383,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.498987622,
+        "p50_ms": 1.4453925,
+        "p95_ms": 1.8809749999999998,
+        "p99_ms": 2.756355,
+        "max_ms": 4.44443,
+        "over_10ms": 0
+      }
+    ],
+    "selective_int8": [
+      {
+        "mean_ms": 1.35641579,
+        "p50_ms": 1.2591510000000001,
+        "p95_ms": 1.8768369999999992,
+        "p99_ms": 2.762003009999999,
+        "max_ms": 6.707908,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.3000511300000002,
+        "p50_ms": 1.2580149999999999,
+        "p95_ms": 1.4858299999999998,
+        "p99_ms": 2.3782780299999997,
+        "max_ms": 3.74259,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.319456145,
+        "p50_ms": 1.2569395,
+        "p95_ms": 1.65546795,
+        "p99_ms": 2.3833649999999995,
+        "max_ms": 3.488411,
+        "over_10ms": 0
+      }
+    ]
+  },
+  "paced": {
+    "original_fp32": [
+      {
+        "mean_ms": 2.4679276629999998,
+        "p50_ms": 2.314562,
+        "p95_ms": 3.4835829999999968,
+        "p99_ms": 4.710324,
+        "max_ms": 7.502237,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 2.342655552,
+        "p50_ms": 2.258969,
+        "p95_ms": 2.96368095,
+        "p99_ms": 3.5773510299999995,
+        "max_ms": 5.645792,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 2.2778202380000003,
+        "p50_ms": 2.250575,
+        "p95_ms": 2.5322390499999994,
+        "p99_ms": 3.013287109999999,
+        "max_ms": 3.960421,
+        "over_10ms": 0
+      }
+    ],
+    "native_fp32": [
+      {
+        "mean_ms": 2.086162245,
+        "p50_ms": 1.8796545,
+        "p95_ms": 3.6071149999999994,
+        "p99_ms": 4.6605022699999985,
+        "max_ms": 5.760968,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.975382512,
+        "p50_ms": 1.888641,
+        "p95_ms": 2.7074274499999995,
+        "p99_ms": 3.28092192,
+        "max_ms": 3.754587,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.83829178,
+        "p50_ms": 1.828479,
+        "p95_ms": 2.00041495,
+        "p99_ms": 2.358002,
+        "max_ms": 3.028807,
+        "over_10ms": 0
+      }
+    ],
+    "selective_fp16": [
+      {
+        "mean_ms": 1.7172453109999999,
+        "p50_ms": 1.649841,
+        "p95_ms": 2.210327,
+        "p99_ms": 2.8829489699999997,
+        "max_ms": 3.84771,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.7028626869999999,
+        "p50_ms": 1.6715445,
+        "p95_ms": 1.9695769999999997,
+        "p99_ms": 2.57627901,
+        "max_ms": 3.345189,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.662588441,
+        "p50_ms": 1.6497835,
+        "p95_ms": 1.8155006999999999,
+        "p99_ms": 2.175424029999999,
+        "max_ms": 2.907058,
+        "over_10ms": 0
+      }
+    ],
+    "selective_int8": [
+      {
+        "mean_ms": 1.544579833,
+        "p50_ms": 1.466738,
+        "p95_ms": 2.114027999999999,
+        "p99_ms": 2.6084149899999995,
+        "max_ms": 3.091225,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.498763692,
+        "p50_ms": 1.4270585,
+        "p95_ms": 2.1245339999999997,
+        "p99_ms": 2.5632989999999998,
+        "max_ms": 2.982682,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 1.414117433,
+        "p50_ms": 1.4094935,
+        "p95_ms": 1.529698,
+        "p99_ms": 1.8828958999999998,
+        "max_ms": 2.585274,
+        "over_10ms": 0
+      }
+    ]
+  },
+  "memory": {
+    "native_fp32": [
+      {
+        "rss_before_bytes": 1998848,
+        "rss_after_bytes": 18042880,
+        "rss_delta_bytes": 16044032,
+        "peak_rss_bytes": 24162304,
+        "owned_bytes": 16789391
+      },
+      {
+        "rss_before_bytes": 1916928,
+        "rss_after_bytes": 18006016,
+        "rss_delta_bytes": 16089088,
+        "peak_rss_bytes": 24100864,
+        "owned_bytes": 16789391
+      },
+      {
+        "rss_before_bytes": 1851392,
+        "rss_after_bytes": 17936384,
+        "rss_delta_bytes": 16084992,
+        "peak_rss_bytes": 24068096,
+        "owned_bytes": 16789391
+      }
+    ],
+    "selective_fp16": [
+      {
+        "rss_before_bytes": 1818624,
+        "rss_after_bytes": 13803520,
+        "rss_delta_bytes": 11984896,
+        "peak_rss_bytes": 19980288,
+        "owned_bytes": 11402003
+      },
+      {
+        "rss_before_bytes": 1843200,
+        "rss_after_bytes": 13873152,
+        "rss_delta_bytes": 12029952,
+        "peak_rss_bytes": 20033536,
+        "owned_bytes": 11402003
+      },
+      {
+        "rss_before_bytes": 1818624,
+        "rss_after_bytes": 13803520,
+        "rss_delta_bytes": 11984896,
+        "peak_rss_bytes": 19980288,
+        "owned_bytes": 11402003
+      }
+    ],
+    "selective_int8": [
+      {
+        "rss_before_bytes": 1859584,
+        "rss_after_bytes": 11235328,
+        "rss_delta_bytes": 9375744,
+        "peak_rss_bytes": 17354752,
+        "owned_bytes": 8888691
+      },
+      {
+        "rss_before_bytes": 1880064,
+        "rss_after_bytes": 11239424,
+        "rss_delta_bytes": 9359360,
+        "peak_rss_bytes": 17367040,
+        "owned_bytes": 8888691
+      },
+      {
+        "rss_before_bytes": 1851392,
+        "rss_after_bytes": 11223040,
+        "rss_delta_bytes": 9371648,
+        "peak_rss_bytes": 17379328,
+        "owned_bytes": 8888691
+      }
+    ]
+  },
+  "memory_method": "Fresh exec; /proc/self/status VmRSS and VmHWM"
+}

@@ -1,0 +1,443 @@
+{
+  "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+  "fp16_scope": "DPRNN matrix weights; F16C conversion, FP32 compute/state/bias/norm",
+  "int8_scope": "ten Gemm projections in remaining 256-unit GRUs; dynamic QInt8 reduced range",
+  "fp32_parity": {
+    "fixture": "synthetic",
+    "frames": 1100,
+    "spectrum": {
+      "max_abs": 1.5273690223693848e-07,
+      "error_squared": 7.950504626960731e-11,
+      "reference_squared": 0.01589658881076092,
+      "count": 1058200,
+      "relative_rms": 7.072050886947056e-05,
+      "rmse": 8.667891546225227e-09
+    },
+    "state": {
+      "max_abs": 3.606081008911133e-05,
+      "error_squared": 1.0071649217396065e-05,
+      "reference_squared": 832940441.948507,
+      "count": 99250800,
+      "relative_rms": 1.0996217495629204e-07,
+      "rmse": 3.1855416498633077e-07
+    },
+    "waveform_snr_db": 85.06143096475321,
+    "waveform_max_abs": 1.0826624929904938e-08
+  },
+  "fp16_parity": [
+    {
+      "fixture": "synthetic",
+      "frames": 1100,
+      "waveform_snr_db": 54.25049106147587,
+      "waveform_max_abs": 3.9441511034965515e-06,
+      "spectrum_max_abs": 4.6510249376297e-05,
+      "state_max_abs": 0.0023779720067977905,
+      "spectrum_gate_pass": true,
+      "state_gate_pass": false,
+      "fp32_numerical_equivalence_gate_pass": false
+    },
+    {
+      "fixture": "noisy_public_48k.flac",
+      "frames": 1506,
+      "waveform_snr_db": 83.06348192657451,
+      "waveform_max_abs": 8.779764175415039e-05,
+      "spectrum_max_abs": 0.008220672607421875,
+      "state_max_abs": 0.0028931796550750732,
+      "spectrum_gate_pass": false,
+      "state_gate_pass": false,
+      "fp32_numerical_equivalence_gate_pass": false
+    },
+    {
+      "fixture": "noisy_cafe_48k.flac",
+      "frames": 1081,
+      "waveform_snr_db": 80.66807821443626,
+      "waveform_max_abs": 6.418675184249878e-05,
+      "spectrum_max_abs": 0.013824462890625,
+      "state_max_abs": 0.003298938274383545,
+      "spectrum_gate_pass": false,
+      "state_gate_pass": false,
+      "fp32_numerical_equivalence_gate_pass": false
+    },
+    {
+      "fixture": "noisy_keyboard_48k.flac",
+      "frames": 1081,
+      "waveform_snr_db": 85.79446765956057,
+      "waveform_max_abs": 5.4545700550079346e-05,
+      "spectrum_max_abs": 0.008851051330566406,
+      "state_max_abs": 0.002562105655670166,
+      "spectrum_gate_pass": true,
+      "state_gate_pass": false,
+      "fp32_numerical_equivalence_gate_pass": false
+    }
+  ],
+  "int8_native_parity": [
+    {
+      "fixture": "synthetic",
+      "frames": 1100,
+      "waveform_snr_db": 26.1948621505909,
+      "waveform_max_abs": 6.38395722489804e-05,
+      "spectrum_max_abs": 0.001325245015323162,
+      "state_max_abs": 1.1548595428466797,
+      "spectrum_gate_pass": true,
+      "state_gate_pass": false,
+      "fp32_numerical_equivalence_gate_pass": false
+    },
+    {
+      "fixture": "noisy_public_48k.flac",
+      "frames": 1506,
+      "waveform_snr_db": 48.24522298300981,
+      "waveform_max_abs": 0.00380098819732666,
+      "spectrum_max_abs": 0.5967292785644531,
+      "state_max_abs": 0.2145313024520874,
+      "spectrum_gate_pass": false,
+      "state_gate_pass": false,
+      "fp32_numerical_equivalence_gate_pass": false
+    },
+    {
+      "fixture": "noisy_cafe_48k.flac",
+      "frames": 1081,
+      "waveform_snr_db": 47.391319980321796,
+      "waveform_max_abs": 0.0047493427991867065,
+      "spectrum_max_abs": 0.9550971984863281,
+      "state_max_abs": 0.576382577419281,
+      "spectrum_gate_pass": false,
+      "state_gate_pass": false,
+      "fp32_numerical_equivalence_gate_pass": false
+    },
+    {
+      "fixture": "noisy_keyboard_48k.flac",
+      "frames": 1081,
+      "waveform_snr_db": 51.455326247449776,
+      "waveform_max_abs": 0.0015025689208414406,
+      "spectrum_max_abs": 0.24289727210998535,
+      "state_max_abs": 1.035518765449524,
+      "spectrum_gate_pass": false,
+      "state_gate_pass": false,
+      "fp32_numerical_equivalence_gate_pass": false
+    }
+  ],
+  "timings": {
+    "original_onnx": [
+      {
+        "mean_ms": 5.569024875,
+        "p50_ms": 5.5297675,
+        "p95_ms": 6.008424999999999,
+        "p99_ms": 7.429424019999999,
+        "max_ms": 10.515975,
+        "over_10ms": 1
+      },
+      {
+        "mean_ms": 5.873477555,
+        "p50_ms": 5.6389595,
+        "p95_ms": 7.931431,
+        "p99_ms": 9.193626,
+        "max_ms": 12.133794,
+        "over_10ms": 4
+      },
+      {
+        "mean_ms": 5.575999656,
+        "p50_ms": 5.5572669999999995,
+        "p95_ms": 6.092003999999999,
+        "p99_ms": 6.89882001,
+        "max_ms": 9.007893,
+        "over_10ms": 0
+      }
+    ],
+    "previous_hybrid": [
+      {
+        "mean_ms": 3.6366974520000004,
+        "p50_ms": 3.568053,
+        "p95_ms": 3.96034905,
+        "p99_ms": 4.411203019999999,
+        "max_ms": 7.104705,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.663735553,
+        "p50_ms": 3.6113205,
+        "p95_ms": 4.02478,
+        "p99_ms": 4.437213,
+        "max_ms": 5.214375,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.6830235700000005,
+        "p50_ms": 3.592217,
+        "p95_ms": 4.08385295,
+        "p99_ms": 5.45707801,
+        "max_ms": 8.469075,
+        "over_10ms": 0
+      }
+    ],
+    "full_c_fp32": [
+      {
+        "mean_ms": 3.4005413500000006,
+        "p50_ms": 3.3728445000000002,
+        "p95_ms": 3.6443659999999998,
+        "p99_ms": 4.10791501,
+        "max_ms": 4.638499,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.436544355,
+        "p50_ms": 3.364715,
+        "p95_ms": 3.7616909499999998,
+        "p99_ms": 5.159223019999999,
+        "max_ms": 6.348213,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.589460389,
+        "p50_ms": 3.474334,
+        "p95_ms": 4.556569999999999,
+        "p99_ms": 5.088502009999999,
+        "max_ms": 5.565034,
+        "over_10ms": 0
+      }
+    ],
+    "full_c_fp16_weights": [
+      {
+        "mean_ms": 3.356695758,
+        "p50_ms": 3.2389580000000002,
+        "p95_ms": 4.565877049999999,
+        "p99_ms": 5.145109,
+        "max_ms": 5.921298,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.2460220829999997,
+        "p50_ms": 3.1833105,
+        "p95_ms": 3.569089,
+        "p99_ms": 4.4434260299999995,
+        "max_ms": 9.406726,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.2862014250000002,
+        "p50_ms": 3.1953715000000003,
+        "p95_ms": 3.7479920499999992,
+        "p99_ms": 5.12431401,
+        "max_ms": 6.602351,
+        "over_10ms": 0
+      }
+    ],
+    "full_c_int8": [
+      {
+        "mean_ms": 3.1553682579999998,
+        "p50_ms": 3.121704,
+        "p95_ms": 3.399358,
+        "p99_ms": 3.85498301,
+        "max_ms": 4.773259,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.1945118750000003,
+        "p50_ms": 3.1383055,
+        "p95_ms": 3.612392,
+        "p99_ms": 4.16099101,
+        "max_ms": 4.979761,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.15060907,
+        "p50_ms": 3.116168,
+        "p95_ms": 3.4404359999999996,
+        "p99_ms": 3.709048029999999,
+        "max_ms": 4.118256,
+        "over_10ms": 0
+      }
+    ],
+    "hybrid_int8": [
+      {
+        "mean_ms": 3.410810779,
+        "p50_ms": 3.342612,
+        "p95_ms": 3.8084079999999996,
+        "p99_ms": 4.86694201,
+        "max_ms": 6.815629,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.3360741199999997,
+        "p50_ms": 3.311858,
+        "p95_ms": 3.61260205,
+        "p99_ms": 3.7861050099999995,
+        "max_ms": 5.053264,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.3969968850000005,
+        "p50_ms": 3.3049275,
+        "p95_ms": 3.8906169999999998,
+        "p99_ms": 5.38316702,
+        "max_ms": 6.992874,
+        "over_10ms": 0
+      }
+    ]
+  },
+  "paced_timings": {
+    "original_onnx": [
+      {
+        "mean_ms": 5.9278436899999996,
+        "p50_ms": 5.8524899999999995,
+        "p95_ms": 6.431204049999999,
+        "p99_ms": 7.7234940499999984,
+        "max_ms": 12.353701,
+        "over_10ms": 3
+      },
+      {
+        "mean_ms": 5.7154856060000006,
+        "p50_ms": 5.664739,
+        "p95_ms": 6.04967385,
+        "p99_ms": 8.06765606,
+        "max_ms": 13.478649,
+        "over_10ms": 2
+      },
+      {
+        "mean_ms": 5.721620573999999,
+        "p50_ms": 5.660392,
+        "p95_ms": 6.175037049999999,
+        "p99_ms": 6.989315129999997,
+        "max_ms": 12.20291,
+        "over_10ms": 2
+      }
+    ],
+    "previous_hybrid": [
+      {
+        "mean_ms": 3.929343223,
+        "p50_ms": 3.914629,
+        "p95_ms": 4.302097,
+        "p99_ms": 5.005101049999999,
+        "max_ms": 6.984231,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 4.053135641,
+        "p50_ms": 3.9820539999999998,
+        "p95_ms": 4.56187105,
+        "p99_ms": 5.730059,
+        "max_ms": 9.212955,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.8780959819999996,
+        "p50_ms": 3.8386355,
+        "p95_ms": 4.187151,
+        "p99_ms": 4.94957202,
+        "max_ms": 7.530266,
+        "over_10ms": 0
+      }
+    ],
+    "full_c_fp32": [
+      {
+        "mean_ms": 3.547267628,
+        "p50_ms": 3.5012144999999997,
+        "p95_ms": 3.7777169999999995,
+        "p99_ms": 4.288475069999997,
+        "max_ms": 6.382706,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.6171906639999998,
+        "p50_ms": 3.5337674999999997,
+        "p95_ms": 4.016512,
+        "p99_ms": 4.89999735,
+        "max_ms": 6.056729,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.4987085669999995,
+        "p50_ms": 3.4648165,
+        "p95_ms": 3.6864330499999998,
+        "p99_ms": 4.357230029999999,
+        "max_ms": 5.793595,
+        "over_10ms": 0
+      }
+    ],
+    "full_c_fp16_weights": [
+      {
+        "mean_ms": 3.3547836380000002,
+        "p50_ms": 3.3119555,
+        "p95_ms": 3.5901039499999996,
+        "p99_ms": 3.9851589799999996,
+        "max_ms": 5.887385,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.392777599,
+        "p50_ms": 3.337816,
+        "p95_ms": 3.6676050499999993,
+        "p99_ms": 4.51510202,
+        "max_ms": 5.680467,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.299648569,
+        "p50_ms": 3.2759099999999997,
+        "p95_ms": 3.4230890499999997,
+        "p99_ms": 3.8030140999999973,
+        "max_ms": 5.773793,
+        "over_10ms": 0
+      }
+    ],
+    "full_c_int8": [
+      {
+        "mean_ms": 3.354540302,
+        "p50_ms": 3.30986,
+        "p95_ms": 3.6104240499999998,
+        "p99_ms": 3.9100140399999987,
+        "max_ms": 5.457182,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.3404058300000004,
+        "p50_ms": 3.2995735,
+        "p95_ms": 3.5557689999999997,
+        "p99_ms": 4.051452059999999,
+        "max_ms": 6.411723,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.2952009529999997,
+        "p50_ms": 3.259659,
+        "p95_ms": 3.530864,
+        "p99_ms": 4.137243019999999,
+        "max_ms": 5.247276,
+        "over_10ms": 0
+      }
+    ],
+    "hybrid_int8": [
+      {
+        "mean_ms": 3.677510672,
+        "p50_ms": 3.648768,
+        "p95_ms": 3.940868,
+        "p99_ms": 5.19258902,
+        "max_ms": 6.438708,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.7447163110000004,
+        "p50_ms": 3.6730515,
+        "p95_ms": 4.237443,
+        "p99_ms": 5.57966581,
+        "max_ms": 7.552556,
+        "over_10ms": 0
+      },
+      {
+        "mean_ms": 3.556703714,
+        "p50_ms": 3.5418700000000003,
+        "p95_ms": 3.7585220500000003,
+        "p99_ms": 4.277075,
+        "max_ms": 6.644524,
+        "over_10ms": 0
+      }
+    ]
+  },
+  "gate_interpretation": "Numerical equivalence to FP32 only; not a reduced-precision perceptual quality decision",
+  "int8_native_scope": "128 DPRNN matrices; per-output W8, per-row dynamic asymmetric A8, FP32 state/norm",
+  "config": {
+    "warmup_frames": 100,
+    "timed_frames": 1000,
+    "repeats": 3,
+    "threads": 1
+  }
+}

@@ -1,0 +1,36 @@
+Original output size: 482647215 bytes. Repeated AddressSanitizer:DEADLYSIGNAL lines omitted.
+[OUTPUT] 
+Internal ctest changing into directory: /bench/build/full-sanitize
+
+[HANDLER_OUTPUT] 
+Test project /bench/build/full-sanitize
+
+    Start 1: int8_contract
+1/3 Test #1: int8_contract ....................   Passed    0.04 sec
+    Start 2: full_contract
+2/3 Test #2: full_contract ....................   Passed   29.53 sec
+    Start 3: native_contract
+3/3 Test #3: native_contract ..................***Timeout  59.99 sec
+AddressSanitizer:DEADLYSIGNAL
+AddressSanitizer:DEADLYSIGNAL
+AddressSanitizer:DEADLYSIGNAL
+AddressSanitizer:DEADLYSIGNAL
+AddressSanitizer:DEADLYSIGNAL
+AddressSanitizer:DEADLYSIGNAL
+AddressSanitizer:DEADLYSIGNAL
+AddressSanitizer:DEADLYSIGNAL
+[repetitive output omitted]
+AddressSanitizer:DEADLYSIGNAL
+AddressSanitizer:DEADLYSIGNAL
+AddressSanitizer:DEADLYSIGNAL
+
+
+67% tests passed, 1 tests failed out of 3
+
+Total Test time (real) = 133.07 sec
+
+The following tests FAILED:
+	  3 - native_contract (Timeout)
+[ERROR_MESSAGE] 
+Errors while running CTest
+

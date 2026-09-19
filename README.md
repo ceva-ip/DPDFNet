@@ -55,6 +55,46 @@
 | dpdfnet2_48khz_hr | 2.58 | 2.42 | 11.6 | 10.0 |
 | dpdfnet8_48khz_hr | 3.63 | 7.17 | 18.7 | 14.2 |
 
+### Experimental native FP16 / INT8 results
+
+The final selective native precision configuration has also been evaluated on
+`dpdfnet2_48khz_hr`. It stores DPRNN, dense/grouped FC, and 1×1 CNN weights in
+FP16 or INT8; other convolutions, accumulation, biases, normalization,
+nonlinearities, recurrent state, and complex filtering remain FP32. These modes
+are explicit experiments and are not selected by the packaged ONNX API.
+
+Intel i7-8700, Linux x86-64 under Docker/WSL2, one inference thread. Values are
+the median of three run means with 100 warmup and 1,000 timed 10 ms hops per
+run. Paced tests submit one hop every 10 ms. Memory is native-owned heap, not
+whole-process RSS.
+
+| `dpdfnet2_48khz_hr` backend | Continuous mean | Paced mean | Time saved vs ONNX | Owned heap |
+| --- | ---: | ---: | ---: | ---: |
+| Original ONNX FP32 | 2.167 ms | 2.343 ms | — | — |
+| Native FP32 | 1.753 ms | 1.975 ms | 19.1% | 16.79 MB |
+| Selective FP16 | 1.454 ms | 1.703 ms | 32.9% | 11.40 MB |
+| Selective INT8 | **1.319 ms** | **1.499 ms** | **39.1%** | **8.89 MB** |
+
+All native modes recorded zero calls above 10 ms across 3,000 timed continuous
+and 3,000 timed paced hops per mode. FP16 reduces owned heap by 32.1% and INT8
+by 47.1% relative to native FP32. These development-machine measurements are
+not release or real-time deadline guarantees.
+
+On a seven-mixture, one-speaker quality check, FP16 output-to-original PESQ-WB
+was 4.64382–4.64389 and its clean-reference PESQ change was −0.000045 to
++0.000313. INT8 output-to-original PESQ-WB was 4.61353–4.64191; its
+clean-reference PESQ change was −0.01823 to +0.00236 and STOI change was
+−0.001835 to +0.000102. FP16 is the conservative choice here. INT8 provides
+the best latency and memory result, but the measured quality change means it
+should not be described as lossless.
+
+See the [listening comparison](native_inference/listening_comparison/index.html)
+for noisy, original FP32, FP16, and INT8 audio from both 48 kHz HR models.
+Machine-readable evidence is in the
+[summary](native_inference/results/dpdfnet2_48khz_hr_summary.json),
+[timing and memory results](native_inference/results/dpdfnet2_48khz_hr_final.json),
+and [quality results](native_inference/results/dpdfnet2_48khz_hr_quality.json).
+
 ## Install the PyPI Package
 
 For CPU-only ONNX inference using the packaged CLI and Python API:

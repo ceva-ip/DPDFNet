@@ -1,0 +1,37 @@
+{
+  "environment": {
+    "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36"
+  },
+  "config": {
+    "frames": 200,
+    "warmup": 100,
+    "repeats": 3,
+    "threads": 1
+  },
+  "weights_sha256": "5a5bb67a8619090c54dc2793536fe813fe38123b236d445f3433aafe3075529d",
+  "parity": [
+    {
+      "fixture": "synthetic",
+      "frames": 300,
+      "spectrum": {
+        "max_abs": 1.4528632164001465e-07,
+        "error_squared": 1.9415865117958272e-11,
+        "reference_squared": 0.00982238991037247,
+        "count": 288600,
+        "relative_rms": 4.4460033764547423e-05,
+        "rmse": 8.202197261085918e-09
+      },
+      "state": {
+        "max_abs": 3.0339229851961136e-05,
+        "error_squared": 4.369695068858604e-06,
+        "reference_squared": 341495286.41413194,
+        "count": 27068400,
+        "relative_rms": 1.1311838837533549e-07,
+        "rmse": 4.017855125032036e-07
+      },
+      "waveform_snr_db": 89.22334748696781,
+      "waveform_max_abs": 1.9845174392685294e-09
+    }
+  ]
+}

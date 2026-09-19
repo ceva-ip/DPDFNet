@@ -1,0 +1,19 @@
+Start testing: Sep 18 16:16 UTC
+----------------------------------------------------------
+1/1 Testing: native_contract
+1/1 Test: native_contract
+Command: "/bench/build/sanitize/dpdf_contract" "/bench/native/../models/native_blocks/erb_0.f32"
+Directory: /bench/build/sanitize
+"native_contract" start time: Sep 18 16:16 UTC
+Output:
+----------------------------------------------------------
+Native API, bounds, finite output, and in-place alias tests passed.
+<end of output>
+Test time =   7.69 sec
+----------------------------------------------------------
+Test Passed.
+"native_contract" end time: Sep 18 16:16 UTC
+"native_contract" time elapsed: 00:00:07
+----------------------------------------------------------
+
+End testing: Sep 18 16:16 UTC

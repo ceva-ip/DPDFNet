@@ -1,0 +1,14 @@
+[OUTPUT] 
+Internal ctest changing into directory: /bench/build/full-scalar
+
+[HANDLER_OUTPUT] 
+Test project /bench/build/full-scalar
+
+    Start 1: full_contract
+1/2 Test #1: full_contract ....................   Passed    1.39 sec
+    Start 2: native_contract
+2/2 Test #2: native_contract ..................   Passed    0.42 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   1.84 sec

@@ -1,0 +1,27 @@
+{
+  "compact_fp32": {
+    "streams": 4,
+    "frames": 64,
+    "bit_identical": true
+  },
+  "fc_and_1x1_16": {
+    "streams": 4,
+    "frames": 64,
+    "bit_identical": true
+  },
+  "fc_and_1x1_8": {
+    "streams": 4,
+    "frames": 64,
+    "bit_identical": true
+  },
+  "all_16": {
+    "streams": 4,
+    "frames": 64,
+    "bit_identical": true
+  },
+  "all_8": {
+    "streams": 4,
+    "frames": 64,
+    "bit_identical": true
+  }
+}

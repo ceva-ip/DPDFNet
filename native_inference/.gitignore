@@ -1,0 +1,7 @@
+.venv/
+references/
+models/
+scratch/
+__pycache__/
+build/
+vendor/

@@ -1,0 +1,296 @@
+{
+  "model": "dpdfnet8_partial_int8.fp32_lowered.onnx",
+  "sha256": "c1777921baa66e180c274cbd8aa03c232fa6ce2ed3507f4e3baab12421ec6a1b",
+  "bytes": 14853951,
+  "environment": {
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+    "machine": "x86_64",
+    "logical_cpus": 12,
+    "python": "3.11.16",
+    "numpy": "2.4.6",
+    "onnx": "1.22.0",
+    "onnxruntime": "1.27.0"
+  },
+  "config": {
+    "api": "run",
+    "frames": 1000,
+    "warmup": 200,
+    "repeats": 1,
+    "paced": false,
+    "threads": 1,
+    "hop_ms": 10,
+    "input": "synthetic causal STFT; seed 20260918"
+  },
+  "state_elements": 90228,
+  "inventory": {
+    "nodes": 995,
+    "operators": {
+      "Mul": 54,
+      "Pow": 2,
+      "ReduceSum": 6,
+      "Sqrt": 3,
+      "Add": 211,
+      "Log": 1,
+      "Div": 4,
+      "Slice": 49,
+      "Reshape": 166,
+      "Sub": 23,
+      "Gather": 6,
+      "Unsqueeze": 18,
+      "Concat": 16,
+      "Transpose": 131,
+      "Conv": 30,
+      "Relu": 22,
+      "GRU": 16,
+      "MatMul": 84,
+      "LayerNormalization": 32,
+      "Split": 42,
+      "Sigmoid": 43,
+      "Tanh": 22,
+      "Flatten": 2,
+      "Squeeze": 11,
+      "Pad": 1
+    },
+    "initializer_elements": 3632988,
+    "gru_nodes": [
+      {
+        "name": "/model/enc/dprnn_erb/blocks.0/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.1/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.2/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.3/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.4/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.5/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.6/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_erb/blocks.7/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.0/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.1/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.2/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.3/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.4/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.5/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.6/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      },
+      {
+        "name": "/model/enc/dprnn_df/blocks.7/intra_gru/GRU",
+        "weights": [
+          2,
+          192,
+          64
+        ],
+        "attributes": {
+          "direction": "bidirectional",
+          "hidden_size": 64,
+          "linear_before_reset": 1
+        }
+      }
+    ],
+    "opsets": {
+      "": 17
+    }
+  },
+  "runs": [
+    {
+      "mean_ms": 5.339035159,
+      "rtf_mean": 0.5339035159,
+      "p50_ms": 5.3079184999999995,
+      "p95_ms": 5.6675660500000005,
+      "p99_ms": 5.926527,
+      "max_ms": 7.620986,
+      "over_10ms": 0
+    }
+  ],
+  "reference_sha256": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631",
+  "parity": {
+    "spectrum": {
+      "max_abs": 0.0,
+      "error_squared": 0.0,
+      "reference_squared": 0.01601781039583389,
+      "relative_rms": 0.0
+    },
+    "state": {
+      "max_abs": 0.0,
+      "error_squared": 0.0,
+      "reference_squared": 891000655.5858995,
+      "relative_rms": 0.0
+    }
+  }
+}

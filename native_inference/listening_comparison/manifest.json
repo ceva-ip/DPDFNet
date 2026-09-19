@@ -1,0 +1,210 @@
+{
+  "sample_rate": 48000,
+  "format": "PCM_24",
+  "gain": 1,
+  "removed_model_delay_samples": 2400,
+  "precision_scope": "DPRNN + dense/grouped FC + 1x1 CNN; other CNN remains FP32",
+  "models": [
+    "dpdfnet8_48khz_hr",
+    "dpdfnet2_48khz_hr"
+  ],
+  "files": [
+    {
+      "file": "fan_noisy.wav",
+      "model": null,
+      "variant": "noisy",
+      "frames": 720000,
+      "peak": 0.8912353515625,
+      "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
+      "sha256": "628b15d8e03e11310efeb9a07b4259cafacd2877f52727d18931847cc97e6c7f"
+    },
+    {
+      "file": "fan_original_fp32.wav",
+      "model": "dpdfnet8_48khz_hr",
+      "variant": "original_fp32",
+      "frames": 720000,
+      "peak": 0.7470995187759399,
+      "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
+      "sha256": "a8293fc309f27d2ec2166c0f5897d9161853b079a90bfe8cdd01e3a5dd9c357a"
+    },
+    {
+      "file": "fan_fp16.wav",
+      "model": "dpdfnet8_48khz_hr",
+      "variant": "fp16",
+      "frames": 720000,
+      "peak": 0.7470847964286804,
+      "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
+      "sha256": "c69e1baa8f9d7451990361512cbb249a18dbce5dc7de840d0f21ad84b8a3fe41"
+    },
+    {
+      "file": "fan_int8.wav",
+      "model": "dpdfnet8_48khz_hr",
+      "variant": "int8",
+      "frames": 720000,
+      "peak": 0.7460655570030212,
+      "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
+      "sha256": "b5c9264a7f2cc22610e3eb4bdfc6fe67b0ea38f8261ba31f759b210329d7ecaa"
+    },
+    {
+      "file": "fan_dpdfnet2_48khz_hr_original_fp32.wav",
+      "model": "dpdfnet2_48khz_hr",
+      "variant": "original_fp32",
+      "frames": 720000,
+      "peak": 0.7265915870666504,
+      "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
+      "sha256": "4091cd86fdaaced111f065616ee94598b94bef86c27eccc11498ba6f1d162856"
+    },
+    {
+      "file": "fan_dpdfnet2_48khz_hr_fp16.wav",
+      "model": "dpdfnet2_48khz_hr",
+      "variant": "fp16",
+      "frames": 720000,
+      "peak": 0.7265504598617554,
+      "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
+      "sha256": "2eb8a57b329790b011a190f59df136dd2fe34cdb7b7a54cebdbf8eacd4cb8c5d"
+    },
+    {
+      "file": "fan_dpdfnet2_48khz_hr_int8.wav",
+      "model": "dpdfnet2_48khz_hr",
+      "variant": "int8",
+      "frames": 720000,
+      "peak": 0.7303628325462341,
+      "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
+      "sha256": "017073a0824bea314a060b5a4185488ced4dd847b92924a9d6500c71dbb78a69"
+    },
+    {
+      "file": "cafe_noisy.wav",
+      "model": null,
+      "variant": "noisy",
+      "frames": 516000,
+      "peak": 0.891265869140625,
+      "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
+      "sha256": "7056a5c42db010b443b49e223e55a507282c431f5227a7ad33106b4045e4c404"
+    },
+    {
+      "file": "cafe_original_fp32.wav",
+      "model": "dpdfnet8_48khz_hr",
+      "variant": "original_fp32",
+      "frames": 516000,
+      "peak": 0.7993667125701904,
+      "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
+      "sha256": "499a9fd555e1b086b689cac18348e16080ab573f3111486470126dcf74fa77e0"
+    },
+    {
+      "file": "cafe_fp16.wav",
+      "model": "dpdfnet8_48khz_hr",
+      "variant": "fp16",
+      "frames": 516000,
+      "peak": 0.7992659211158752,
+      "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
+      "sha256": "e3824f6a5857315a0242150c16cb9628f917a5df8e9f837fe738ce5bc3585a35"
+    },
+    {
+      "file": "cafe_int8.wav",
+      "model": "dpdfnet8_48khz_hr",
+      "variant": "int8",
+      "frames": 516000,
+      "peak": 0.8017159700393677,
+      "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
+      "sha256": "02c072526b2488089375a866019dff5d2622f51edba69c1d8345191d73cb4664"
+    },
+    {
+      "file": "cafe_dpdfnet2_48khz_hr_original_fp32.wav",
+      "model": "dpdfnet2_48khz_hr",
+      "variant": "original_fp32",
+      "frames": 516000,
+      "peak": 0.7967690229415894,
+      "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
+      "sha256": "c422e235b120df705cb4ffdecd54a24fb28128fc4e6cb23a1c011de879d10aec"
+    },
+    {
+      "file": "cafe_dpdfnet2_48khz_hr_fp16.wav",
+      "model": "dpdfnet2_48khz_hr",
+      "variant": "fp16",
+      "frames": 516000,
+      "peak": 0.7967896461486816,
+      "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
+      "sha256": "942d14c11f4cb6628374dbad1f2b9e461182ecb45d5e14eaf1ae94b529a0ae71"
+    },
+    {
+      "file": "cafe_dpdfnet2_48khz_hr_int8.wav",
+      "model": "dpdfnet2_48khz_hr",
+      "variant": "int8",
+      "frames": 516000,
+      "peak": 0.7980297803878784,
+      "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
+      "sha256": "cefae6d75c8d1999fd0b001666803fa07a71b5a7abf96145b1c26ecbddf35e98"
+    },
+    {
+      "file": "keyboard_noisy.wav",
+      "model": null,
+      "variant": "noisy",
+      "frames": 516000,
+      "peak": 0.891265869140625,
+      "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
+      "sha256": "13698b4c68a0d5f61aaa89435d18850bd6f2187ab8a63a77047350673fc080dd"
+    },
+    {
+      "file": "keyboard_original_fp32.wav",
+      "model": "dpdfnet8_48khz_hr",
+      "variant": "original_fp32",
+      "frames": 516000,
+      "peak": 0.26987573504447937,
+      "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
+      "sha256": "5e9dc22b00d0d7e54b289cd68dc9e096500fbca1f12e589ba00911a0a1e61191"
+    },
+    {
+      "file": "keyboard_fp16.wav",
+      "model": "dpdfnet8_48khz_hr",
+      "variant": "fp16",
+      "frames": 516000,
+      "peak": 0.26987704634666443,
+      "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
+      "sha256": "e40b9fcd78ed34c06b1af8d7515e1129db9533c1a329625ce333573256f893de"
+    },
+    {
+      "file": "keyboard_int8.wav",
+      "model": "dpdfnet8_48khz_hr",
+      "variant": "int8",
+      "frames": 516000,
+      "peak": 0.27013158798217773,
+      "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
+      "sha256": "887eb7d5b39f694f6b6ec36d96575dcb4714779565723a7184fe71c520a0a917"
+    },
+    {
+      "file": "keyboard_dpdfnet2_48khz_hr_original_fp32.wav",
+      "model": "dpdfnet2_48khz_hr",
+      "variant": "original_fp32",
+      "frames": 516000,
+      "peak": 0.2688305675983429,
+      "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
+      "sha256": "2486871b167f6c7c5b35a04cfa22349147ce4f1f0c9003d84ace695f2f451961"
+    },
+    {
+      "file": "keyboard_dpdfnet2_48khz_hr_fp16.wav",
+      "model": "dpdfnet2_48khz_hr",
+      "variant": "fp16",
+      "frames": 516000,
+      "peak": 0.26883164048194885,
+      "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
+      "sha256": "6cf02983a1c48d7b902523943a1ead6eec06da3115eb86159a6ba3521a20bc12"
+    },
+    {
+      "file": "keyboard_dpdfnet2_48khz_hr_int8.wav",
+      "model": "dpdfnet2_48khz_hr",
+      "variant": "int8",
+      "frames": 516000,
+      "peak": 0.26947879791259766,
+      "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
+      "sha256": "ff9fbec8bdbd2614006b20bad63c4cfc6254ef90b83044ae32b55f58746bef2a"
+    }
+  ],
+  "artifact_sha256": {
+    "models/dpdfnet8_48khz_hr.onnx": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631",
+    "models/extended/weights.f32": "5a5bb67a8619090c54dc2793536fe813fe38123b236d445f3433aafe3075529d",
+    "build/extended/libdpdf_full.so": "cb2461672f8a12c8072f8a148bd2af1f7a6c19d7be549c414c6e534144614bd1",
+    "models/dpdfnet2_48khz_hr.onnx": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b",
+    "models/dpdfnet2_extended/weights.f32": "cb7248b8fccbff7b32f254ec2ed0061e604514b2ccd98d997cd081a876424e7b",
+    "build/dpdfnet2_extended/libdpdf_full.so": "5d6d077b28ac6a5f46dc9dff67a5ba1aa4f6d095de0449259e64289aff1b5db5"
+  }
+}

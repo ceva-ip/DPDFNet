@@ -1,0 +1,18 @@
+[OUTPUT] 
+Internal ctest changing into directory: /bench/build/extended
+
+[HANDLER_OUTPUT] 
+Test project /bench/build/extended
+
+    Start 1: int8_contract
+1/4 Test #1: int8_contract ....................   Passed    0.01 sec
+    Start 2: extended_contract
+2/4 Test #2: extended_contract ................   Passed    1.07 sec
+    Start 3: full_contract
+3/4 Test #3: full_contract ....................   Passed    1.76 sec
+    Start 4: native_contract
+4/4 Test #4: native_contract ..................   Passed    0.37 sec
+
+100% tests passed, 0 tests failed out of 4
+
+Total Test time (real) =   3.26 sec
