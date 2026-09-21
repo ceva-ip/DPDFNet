@@ -3,7 +3,7 @@
 This is NOT a general ONNX runtime. Unsupported operators/shapes/attributes
 fail at export. Source is hash-pinned and regenerated from the audited exporter.
 Integer shape/index tensors are compile-time only. Views alias existing storage;
-all other tensors have fixed, disjoint arena slots for straightforward auditing.
+other tensors use fixed arena slots with conservative node-lifetime reuse.
 """
 import argparse
 from collections import defaultdict
@@ -16,6 +16,7 @@ import numpy as np
 import onnx
 from onnx import numpy_helper
 from export_blocks import export, attributes
+from arena_planner import reuse_arena
 
 
 def strides(shape):
@@ -36,6 +37,23 @@ def broadcast_index(source, dest, index='i'):
         raise ValueError(f'Unsupported broadcast {source} -> {dest}')
     terms = [f'{coord(dest,j,index)}*{s}' for j,(d,s) in enumerate(zip(padded,strides(padded))) if d != 1]
     return '+'.join(terms) or '0'
+
+
+def transpose_code(source_shape, output_shape, perm, x, y):
+    """Emit static nested loops, avoiding a divide/modulo per output element."""
+    axes = [j for j, dim in enumerate(output_shape) if dim > 1]
+    if not axes:
+        return f'{y}[0]={x}[0];'
+    source_strides = strides(source_shape)
+    output_strides = strides(output_shape)
+    contiguous = source_strides[perm[axes[-1]]] == 1
+    loop_axes = axes[:-1] if contiguous else axes
+    loops = ''.join(f'for (int t{j}=0;t{j}<{output_shape[j]};++t{j}) ' for j in loop_axes)
+    lhs = '+'.join(f't{j}*{output_strides[j]}' for j in loop_axes) or '0'
+    rhs = '+'.join(f't{j}*{source_strides[perm[j]]}' for j in loop_axes) or '0'
+    if contiguous:
+        return loops+f'memcpy({y}+({lhs}),{x}+({rhs}),{output_shape[axes[-1]]}*sizeof(float));'
+    return loops+f'{y}[{lhs}]={x}[{rhs}];'
 
 
 def generate(source, folder):
@@ -114,10 +132,9 @@ def generate(source, folder):
             layout=(1 if ins[0] in chained_dprnn_outputs else 0) | (2 if outs[0] in chained_dprnn_outputs else 0)
             calls.append(f'if (dpdf_process_layout(m->blocks[{idx}],{ptr[ins[0]]},{ptr[ins[1]]},{y},{dest[1]},{layout})) return -1;')
         elif op=='Transpose':
-            perm=a['perm']; ss=shape[ins[0]]; st=strides(ss)
+            perm=a['perm']; ss=shape[ins[0]]
             assert sorted(perm)==list(range(len(ss))) and os==[ss[j] for j in perm]
-            index='+'.join(f'{coord(os,j)}*{st[k]}' for j,k in enumerate(perm) if ss[k]>1) or '0'
-            calls.append(f'for (int i=0;i<{size};++i) {y}[i]={ptr[ins[0]]}[{index}];')
+            calls.append(transpose_code(ss,os,perm,ptr[ins[0]],y))
         elif op=='Slice':
             ss=shape[ins[0]]; rank=len(ss); start=[0]*rank; step=[1]*rank
             axes=const[ins[3]].ravel() if len(ins)>3 else range(len(const[ins[1]].ravel()))
@@ -197,9 +214,9 @@ def generate(source, folder):
                 # Fixed scratch slots. Both transposes are outside the MAC loop.
                 scratch_in=f'(m->arena+{arena_count})'; arena_count+=ci*spatial
                 scratch_out=f'(m->arena+{arena_count})'; arena_count+=co*spatial
-                calls.append(f'for (int r=0;r<{spatial};++r) for (int c=0;c<{ci};++c) {scratch_in}[r*{ci}+c]={ptr[ins[0]]}[c*{spatial}+r];')
+                calls.append(f'm->transpose({ptr[ins[0]]},{scratch_in},{ci},{spatial});')
                 calls.append(f'm->affine({scratch_in},{packed},{bias},{scratch_out},{spatial},{ci},{co});')
-                calls.append(f'for (int c=0;c<{co};++c) for (int r=0;r<{spatial};++r) {y}[c*{spatial}+r]={scratch_out}[r*{co}+c];')
+                calls.append(f'm->transpose({scratch_out},{y},{spatial},{co});')
                 continue
             params=[*ss[1:],*os[1:],*a['kernel_shape'],*a['strides'],*a['pads'][:2],a.get('group',1)]
             calls.append(f'dpdf_conv(m->axpy,{ptr[ins[0]]},{ptr[ins[1]]},{bias},{y},'+','.join(map(str,params))+');')
@@ -226,6 +243,7 @@ struct dpdf_model {
     dpdf_block *blocks[DPDF_BLOCK_COUNT];
     dpdf_affine_fn affine;
     dpdf_axpy_fn axpy;
+    dpdf_transpose_fn transpose;
 };
 '''
     code=code.replace('DPDF_BLOCK_COUNT',str(block_count))
@@ -264,9 +282,9 @@ dpdf_model *dpdf_model_create(const float *w,size_t count,int tier) {
     if (!m->weight_allocation || !m->arena) { dpdf_model_destroy(m); return NULL; }
     m->weights=(float *)(((uintptr_t)m->weight_allocation+31)&~(uintptr_t)31);
     memcpy(m->weights,w,count*sizeof(float));
-    m->affine=dpdf_affine_scalar; m->axpy=dpdf_axpy_scalar;
+    m->affine=dpdf_affine_scalar; m->axpy=dpdf_axpy_scalar; m->transpose=dpdf_transpose_scalar;
 #ifdef DPDF_X86_DISPATCH
-    if (tier>=DPDF_AVX2) { m->affine=dpdf_affine_avx2; m->axpy=dpdf_axpy_avx2; }
+    if (tier>=DPDF_AVX2) { m->affine=dpdf_affine_avx2; m->axpy=dpdf_axpy_avx2; m->transpose=dpdf_transpose_avx2; }
 #endif
 '''
     code=code.replace('DPDF_BLOCK_COUNT',str(block_count))
@@ -276,12 +294,15 @@ dpdf_model *dpdf_model_create(const float *w,size_t count,int tier) {
 '''
     code+='\n'.join(calls)+'\n'
     code+=f'memcpy(spec_out,{ptr["spec_e"]},{spectrum_size}*sizeof(float));\nmemcpy(state_out,{ptr["state_out"]},{state_size}*sizeof(float));\nreturn 0;\n}}\n'
+    original_arena_count=arena_count
+    code,tensors,arena_count,arena_plan=reuse_arena(code,tensors,arena_count)
     (folder/'generated_model.c').write_text(code)
     (folder/'manifest.json').write_text(json.dumps({'source_sha256':oracle_manifest['source_sha256'],
         'profile':oracle_manifest['profile'],'state_size':state_size,'spectrum_size':spectrum_size,
         'block_count':block_count,'weights_sha256':sha,
         'weight_floats':int(weight_count),'arena_bytes':int(arena_count*4),'nodes':len(model.graph.node),
-        'tensor_layout':tensors,'weight_layout':weight_layout},indent=2)+'\n')
+        'tensor_layout':tensors,'weight_layout':weight_layout,
+        'arena_plan':arena_plan,'original_arena_bytes':original_arena_count*4},indent=2)+'\n')
     print(f'Generated complete C spectral graph: {weight_count*4} weight bytes, {arena_count*4} arena bytes')
 
 

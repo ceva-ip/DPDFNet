@@ -2,6 +2,7 @@
 import hashlib
 import json
 import shutil
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -16,15 +17,15 @@ MODEL_SPECS = [
     {
         'name': 'dpdfnet8_48khz_hr',
         'model': Path('models/dpdfnet8_48khz_hr.onnx'),
-        'build': Path('build/extended'),
-        'weights': Path('models/extended/weights.f32'),
+        'build': Path('build/followup_final8'),
+        'weights': Path('models/rework8/weights.f32'),
         'filename_prefix': '',
     },
     {
         'name': 'dpdfnet2_48khz_hr',
         'model': Path('models/dpdfnet2_48khz_hr.onnx'),
-        'build': Path('build/dpdfnet2_extended'),
-        'weights': Path('models/dpdfnet2_extended/weights.f32'),
+        'build': Path('build/followup_final2'),
+        'weights': Path('models/rework2/weights.f32'),
         'filename_prefix': 'dpdfnet2_48khz_hr_',
     },
 ]
@@ -53,6 +54,15 @@ def write_verified(destination, samples, rate):
 def main():
     folder = Path('listening_comparison')
     folder.mkdir(exist_ok=True)
+    previous_path = folder / 'manifest.json'
+    previous = json.loads(previous_path.read_text()) if previous_path.exists() else {}
+    previous_hashes = {item['file']: item['sha256'] for item in previous.get('files', [])}
+    comparison = json.loads(Path('results/onnx_latest_summary.json').read_text())
+    # Refuse to present measurements from a different binary or weight/model file.
+    for spec in MODEL_SPECS:
+        recorded = comparison['models'][spec['name']]['artifacts']
+        for path in (spec['model'], spec['weights'], spec['build'] / 'libdpdf_full.so'):
+            assert recorded[str(path)] == hashlib.sha256(path.read_bytes()).hexdigest(), path
     models = []
     for spec in MODEL_SPECS:
         reference = session(spec['model'])
@@ -69,6 +79,10 @@ def main():
         'gain': 1,
         'removed_model_delay_samples': 2400,
         'precision_scope': 'DPRNN + dense/grouped FC + 1x1 CNN; other CNN remains FP32',
+        'generated_at': datetime.now(timezone.utc).isoformat(),
+        'runtime_revision': 'exact convolution, quantization and gate follow-up',
+        'comparison': comparison,
+        'previous_manifest_sha256': hashlib.sha256(previous_path.read_bytes()).hexdigest() if previous else None,
         'models': [spec['name'] for spec in MODEL_SPECS],
         'files': [],
         'artifact_sha256': {},
@@ -118,6 +132,31 @@ def main():
     for _, _, variants in models:
         variants['fp16'].close()
         variants['int8'].close()
+    for item in report['files']:
+        prior = previous_hashes.get(item['file'])
+        item['previous_sha256'] = prior
+        item['matches_previous_wav'] = item['sha256'] == prior if prior else None
+    native_files = [item for item in report['files'] if item['variant'] in ('fp16', 'int8')]
+    report['all_native_wavs_identical_to_previous'] = all(item['matches_previous_wav'] is True for item in native_files)
+    rows = []
+    labels = {'original_fp32': 'Original ONNX FP32', 'native_fp32': 'Native FP32',
+              'selective_fp16': 'Native selective FP16', 'selective_int8': 'Native selective INT8'}
+    for spec in MODEL_SPECS:
+        for mode, values in comparison['models'][spec['name']]['modes'].items():
+            rows.append(f'<tr><td>{spec["name"]}</td><td>{labels[mode]}</td>'
+                        f'<td>{values["paced_mean_ms"]:.2f} ms</td>'
+                        f'<td>{values["latency_saving_percent"]:.1f}%</td>'
+                        f'<td>{values["rss_delta_bytes"] / 1048576:.2f} MiB</td>'
+                        f'<td>{values["memory_saving_percent"]:.1f}%</td></tr>')
+    measurement_html = '<h2>Latest measured runtimes</h2><div class="table-scroll"><table><thead><tr><th>Model</th><th>Runtime</th><th>Time / hop</th><th>Time saved</th><th>Model RAM</th><th>RAM saved</th></tr></thead><tbody>' + ''.join(rows) + '</tbody></table></div>'
+    measurement_html += ('<p>Intel i7-8700, Linux Docker/WSL2, one inference thread. Median of four run means, '
+                         '1,000 measured hops/run at 10 ms cadence. Savings are against each original ONNX model. '
+                         'Model RAM is warmed incremental resident memory above an identical imported-runtime baseline '
+                         'in fresh processes; it excludes that shared baseline. These are model compute times; '
+                         'the 50 ms model delay is unchanged. <a href="manifest.json">Measurements and artifact hashes</a>.</p>')
+    audio_check = ('All 12 regenerated FP16/INT8 WAVs have identical file hashes to the previous listening set.'
+                   if report['all_native_wavs_identical_to_previous'] else
+                   'Per-file comparisons with the previous listening set are recorded in the manifest.')
     (folder / 'manifest.json').write_text(json.dumps(report, indent=2) + '\n')
     shutil.copyfile('references/HushMic/docs/demo/ASSETS.md', folder / 'ASSETS.md')
     (folder / 'index.html').write_text('''<!doctype html><html lang="en"><meta charset="utf-8">
@@ -125,12 +164,14 @@ def main():
 <style>body{font:16px system-ui;background:#131b27;color:#edf3ff;max-width:1200px;margin:40px auto;padding:0 24px}
 h1{font-size:30px}p{line-height:1.6;color:#c2d0df}section{margin:40px 0}.model{margin:20px 0}.model>h3{color:#9ed2ff}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}.card{background:#202d40;padding:16px;border-radius:12px}
-.noisy{max-width:360px}audio{width:100%}a{color:#83caff}.card h3{font-size:16px}</style>
+.noisy{max-width:360px}audio{width:100%}a{color:#83caff}.card h3{font-size:16px}
+.table-scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:10px;border-bottom:1px solid #3a4a60;white-space:nowrap}</style>
 <h1>DPDFNet 48 kHz HR listening comparison</h1><p>The same noisy recordings through the original FP32,
 selective FP16, and selective INT8 versions of both high-resolution models. DPRNN, dense/grouped FC,
-and 1×1 CNN weights use reduced precision; other convolutions remain FP32.</p><p>48 kHz mono, lossless 24-bit WAV.
+and 1×1 CNN weights use reduced precision; other convolutions remain FP32. Reduced-precision outputs
+are approximate relative to the original ONNX FP32 model.</p><p>48 kHz mono, lossless 24-bit WAV.
 No loudness normalization or gain changes. The same 50 ms model delay is removed from every enhanced version.
-Playing a clip pauses the others.</p>''' + ''.join(sections) + '''
+Playing a clip pauses the others.</p>''' + f'<p>Regenerated {report["generated_at"][:10]} with the latest convolution, quantization and gate optimizations. {audio_check}</p>' + measurement_html + ''.join(sections) + '''
 <p>Sources and licenses: <a href="ASSETS.md">HushMic asset credits</a>.
 Fan: Gravity Sound; keyboard: C40115 (both CC BY 4.0). Speech: LibriVox, public domain.
 Café ambience: stephan / pdsounds.org, public domain.</p>

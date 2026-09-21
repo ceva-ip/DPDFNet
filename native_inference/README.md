@@ -1,6 +1,26 @@
 # DPDFNet native inference investigation
 
-**Latest:** the [`dpdfnet8_48khz_hr` architecture-first optimization](native/DPDFNET8_ARCHITECTURE.md)
+**Latest measurements against original ONNX:** the [matched comparison](native/ONNX_LATEST_COMPARISON.md)
+measures selective INT8 at **5.57 → 2.38 ms/hop (57.3% less)** for DPDFNet-8
+and **2.12 → 1.02 ms/hop (52.1% less)** for DPDFNet-2. Warmed incremental model
+RAM falls **80.2% / 78.8%**, respectively. These are single-thread i7-8700
+Linux/WSL2 results; the model's 50 ms audio delay is unchanged. The report also
+includes native FP32 and selective FP16, memory methodology, and cadence tails.
+The [listening comparison](listening_comparison/index.html) uses these latest builds.
+
+**Latest kernels:** the [convolution, quantization and gate follow-up](native/LATENCY_FOLLOWUP.md)
+continues from the completed latency/memory pass, with additional exact kernel
+optimizations and direct comparisons against both the preceding and original
+builds. It keeps the existing CPU requirements and scalar fallback.
+
+The preceding [latency and memory optimization](native/LATENCY_REWORK.md)
+reduces tensor-layout work, reuses temporary storage, and accelerates exact
+normalization and batched INT8 operations. It includes balanced latency and
+tail measurements for both models, with unchanged CPU requirements and
+byte-identical output/state in each tested precision mode. This supersedes the
+small [AVX2 register-lifetime optimization](native/AVX2_OPTIMIZATION.md) result.
+
+The preceding [`dpdfnet8_48khz_hr` architecture-first optimization](native/DPDFNET8_ARCHITECTURE.md)
 reduces final selective INT8 latency by 7.8% continuously and 5.3% at real
 cadence, with bit-identical output and recurrent state. The preceding
 [FC/CNN precision and memory experiments](native/EXTENDED_PRECISION.md) extend
@@ -32,7 +52,11 @@ package, exporters, model definitions, and downloaded source weights are unchang
 
 - [Detailed findings and implementation plan](FEASIBILITY.md)
 - [Complete C model, FP16 and native INT8](native/FULL_MODEL.md)
+- [Convolution, quantization and gate follow-up](native/LATENCY_FOLLOWUP.md)
+- [Exact latency and memory optimization, both models](native/LATENCY_REWORK.md)
 - [`dpdfnet8_48khz_hr` architecture and exact optimization results](native/DPDFNET8_ARCHITECTURE.md)
+- [Optional Linux assembly kernels: feasibility and compiler audit](native/ASSEMBLY_FEASIBILITY.md)
+- [Implemented AVX2 optimization and assembly comparison](native/AVX2_OPTIMIZATION.md)
 - [Implemented C kernels and native hybrid results](native/README.md)
 - [Raw benchmark results](results/)
 - [Graph inventory, timing, profiling and numerical comparison](benchmark.py)

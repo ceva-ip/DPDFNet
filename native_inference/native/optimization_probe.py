@@ -2,14 +2,13 @@
 import argparse
 import hashlib
 import json
+import platform
 from pathlib import Path
 from statistics import median
 
-import numpy as np
-
 from extended_probe import ExtendedModel, CONFIGS
 from full_probe import timings
-from probe import initial_state, session, spectra
+from probe import cpu_name, initial_state, session, spectra
 
 
 def exact_recurrent_parity(left, right, frames):
@@ -18,9 +17,9 @@ def exact_recurrent_parity(left, right, frames):
     for index, frame in enumerate(frames):
         left_output, left_state = left.run(None, {'spec': frame, 'state_in': left_state})
         right_output, right_state = right.run(None, {'spec': frame, 'state_in': right_state})
-        if not np.array_equal(left_output, right_output):
+        if left_output.tobytes() != right_output.tobytes():
             raise AssertionError(f'Output differs at frame {index}')
-        if not np.array_equal(left_state, right_state):
+        if left_state.tobytes() != right_state.tobytes():
             raise AssertionError(f'State differs at frame {index}')
     return {'frames': len(frames), 'output_and_state_bit_identical': True}
 
@@ -56,15 +55,19 @@ def main():
         'baseline': ExtendedModel(reference, *config, build=args.baseline_build, weights=args.weights),
         'candidate': ExtendedModel(reference, *config, build=args.candidate_build, weights=args.weights),
     }
+    parity = exact_recurrent_parity(models['baseline'], models['candidate'], spectra(500))
     continuous = timings(models, spectra(1100), args.repeats, False)
     paced = timings(models, spectra(1100), args.paced_repeats, True)
     report = {
         'config': args.config,
+        'environment': {'cpu': cpu_name(), 'platform': platform.platform(), 'threads': 1},
+        'model_sha256': hashlib.sha256(args.model.read_bytes()).hexdigest(),
+        'weights_sha256': hashlib.sha256(args.weights.read_bytes()).hexdigest(),
         'artifacts': {
             name: hashlib.sha256((build / 'libdpdf_full.so').read_bytes()).hexdigest()
             for name, build in [('baseline', args.baseline_build), ('candidate', args.candidate_build)]
         },
-        'parity': exact_recurrent_parity(models['baseline'], models['candidate'], spectra(500)),
+        'parity': parity,
         'summary': {'continuous': summarize(continuous), 'paced': summarize(paced)},
         'continuous': continuous,
         'paced': paced,

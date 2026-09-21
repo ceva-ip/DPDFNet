@@ -1,0 +1,86 @@
+{
+  "pie": [
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": "timeout",
+      "stderr": "Command '['/bench/scratch/avx2_experiment/asan_empty_pie']' timed out after 2 seconds"
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": "timeout",
+      "stderr": "Command '['/bench/scratch/avx2_experiment/asan_empty_pie']' timed out after 2 seconds"
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    }
+  ],
+  "no_pie": [
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    },
+    {
+      "returncode": 0,
+      "stderr": ""
+    }
+  ]
+}

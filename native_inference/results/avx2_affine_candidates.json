@@ -1,0 +1,617 @@
+{
+  "iterations": 20000,
+  "warmup": 1000,
+  "repeats": 7,
+  "rows": [
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 0,
+      "repeat": 0,
+      "ns_per_call": 253.814
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 1,
+      "repeat": 0,
+      "ns_per_call": 245.044
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 2,
+      "repeat": 0,
+      "ns_per_call": 236.239
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 1,
+      "repeat": 1,
+      "ns_per_call": 246.279
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 2,
+      "repeat": 1,
+      "ns_per_call": 233.929
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 0,
+      "repeat": 1,
+      "ns_per_call": 255.539
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 2,
+      "repeat": 2,
+      "ns_per_call": 234.379
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 0,
+      "repeat": 2,
+      "ns_per_call": 295.34
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 1,
+      "repeat": 2,
+      "ns_per_call": 250.554
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 0,
+      "repeat": 3,
+      "ns_per_call": 256.474
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 1,
+      "repeat": 3,
+      "ns_per_call": 242.199
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 2,
+      "repeat": 3,
+      "ns_per_call": 230.124
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 1,
+      "repeat": 4,
+      "ns_per_call": 291.315
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 2,
+      "repeat": 4,
+      "ns_per_call": 400.796
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 0,
+      "repeat": 4,
+      "ns_per_call": 420.982
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 2,
+      "repeat": 5,
+      "ns_per_call": 395.646
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 0,
+      "repeat": 5,
+      "ns_per_call": 262.589
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 1,
+      "repeat": 5,
+      "ns_per_call": 246.284
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 0,
+      "repeat": 6,
+      "ns_per_call": 255.844
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 1,
+      "repeat": 6,
+      "ns_per_call": 253.224
+    },
+    {
+      "k": 64,
+      "n": 192,
+      "backend": 2,
+      "repeat": 6,
+      "ns_per_call": 234.664
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 0,
+      "repeat": 0,
+      "ns_per_call": 189.453
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 1,
+      "repeat": 0,
+      "ns_per_call": 175.078
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 2,
+      "repeat": 0,
+      "ns_per_call": 178.208
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 1,
+      "repeat": 1,
+      "ns_per_call": 172.113
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 2,
+      "repeat": 1,
+      "ns_per_call": 169.438
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 0,
+      "repeat": 1,
+      "ns_per_call": 318.86
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 2,
+      "repeat": 2,
+      "ns_per_call": 176.943
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 0,
+      "repeat": 2,
+      "ns_per_call": 184.763
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 1,
+      "repeat": 2,
+      "ns_per_call": 170.408
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 0,
+      "repeat": 3,
+      "ns_per_call": 187.333
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 1,
+      "repeat": 3,
+      "ns_per_call": 170.468
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 2,
+      "repeat": 3,
+      "ns_per_call": 167.708
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 1,
+      "repeat": 4,
+      "ns_per_call": 170.013
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 2,
+      "repeat": 4,
+      "ns_per_call": 170.678
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 0,
+      "repeat": 4,
+      "ns_per_call": 198.103
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 2,
+      "repeat": 5,
+      "ns_per_call": 173.668
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 0,
+      "repeat": 5,
+      "ns_per_call": 189.118
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 1,
+      "repeat": 5,
+      "ns_per_call": 176.623
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 0,
+      "repeat": 6,
+      "ns_per_call": 191.618
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 1,
+      "repeat": 6,
+      "ns_per_call": 171.363
+    },
+    {
+      "k": 128,
+      "n": 64,
+      "backend": 2,
+      "repeat": 6,
+      "ns_per_call": 169.863
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 0,
+      "repeat": 0,
+      "ns_per_call": 3552.742
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 1,
+      "repeat": 0,
+      "ns_per_call": 3346.224
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 2,
+      "repeat": 0,
+      "ns_per_call": 3302.273
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 1,
+      "repeat": 1,
+      "ns_per_call": 3290.388
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 2,
+      "repeat": 1,
+      "ns_per_call": 3189.106
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 0,
+      "repeat": 1,
+      "ns_per_call": 3511.986
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 2,
+      "repeat": 2,
+      "ns_per_call": 3263.617
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 0,
+      "repeat": 2,
+      "ns_per_call": 3526.636
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 1,
+      "repeat": 2,
+      "ns_per_call": 3338.923
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 0,
+      "repeat": 3,
+      "ns_per_call": 3511.676
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 1,
+      "repeat": 3,
+      "ns_per_call": 3301.693
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 2,
+      "repeat": 3,
+      "ns_per_call": 3210.381
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 1,
+      "repeat": 4,
+      "ns_per_call": 3304.768
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 2,
+      "repeat": 4,
+      "ns_per_call": 3247.722
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 0,
+      "repeat": 4,
+      "ns_per_call": 3592.943
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 2,
+      "repeat": 5,
+      "ns_per_call": 3328.918
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 0,
+      "repeat": 5,
+      "ns_per_call": 4016.274
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 1,
+      "repeat": 5,
+      "ns_per_call": 3901.772
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 0,
+      "repeat": 6,
+      "ns_per_call": 3557.397
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 1,
+      "repeat": 6,
+      "ns_per_call": 3399.239
+    },
+    {
+      "k": 256,
+      "n": 768,
+      "backend": 2,
+      "repeat": 6,
+      "ns_per_call": 3310.893
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 0,
+      "repeat": 0,
+      "ns_per_call": 7549.861
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 1,
+      "repeat": 0,
+      "ns_per_call": 8109.295
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 2,
+      "repeat": 0,
+      "ns_per_call": 6999.092
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 1,
+      "repeat": 1,
+      "ns_per_call": 7609.712
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 2,
+      "repeat": 1,
+      "ns_per_call": 7109.929
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 0,
+      "repeat": 1,
+      "ns_per_call": 7061.913
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 2,
+      "repeat": 2,
+      "ns_per_call": 6975.287
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 0,
+      "repeat": 2,
+      "ns_per_call": 6923.556
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 1,
+      "repeat": 2,
+      "ns_per_call": 7577.836
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 0,
+      "repeat": 3,
+      "ns_per_call": 7158.925
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 1,
+      "repeat": 3,
+      "ns_per_call": 7541.911
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 2,
+      "repeat": 3,
+      "ns_per_call": 6564.615
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 1,
+      "repeat": 4,
+      "ns_per_call": 7539.206
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 2,
+      "repeat": 4,
+      "ns_per_call": 6598.166
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 0,
+      "repeat": 4,
+      "ns_per_call": 6851.19
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 2,
+      "repeat": 5,
+      "ns_per_call": 6951.731
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 0,
+      "repeat": 5,
+      "ns_per_call": 6954.386
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 1,
+      "repeat": 5,
+      "ns_per_call": 7859.236
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 0,
+      "repeat": 6,
+      "ns_per_call": 8927.723
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 1,
+      "repeat": 6,
+      "ns_per_call": 7765.679
+    },
+    {
+      "k": 512,
+      "n": 768,
+      "backend": 2,
+      "repeat": 6,
+      "ns_per_call": 6834.019
+    }
+  ],
+  "metadata": {
+    "cpu": "Intel Core i7-8700",
+    "execution": "Linux Docker/WSL2, one inference thread",
+    "compiler": "GCC 12.2.0-14+deb12u1",
+    "backends": {
+      "0": {
+        "name": "baseline",
+        "library_sha256": "824afab6ffe2f1af654753c0632f3646162c01d86130234885bd556458f06938",
+        "int8_source_sha256": "2e5f19a6d990a54dad64c3f6e71a2cd591d61e1ed61e302bd64c792e88010732"
+      },
+      "1": {
+        "name": "intrinsics",
+        "library_sha256": "605335c4c17ff2ce024a16135eab06700d435e9646a76cfc29760359a63e78ff",
+        "int8_source_sha256": "75dd725a71f575008dd10a2850a2ef1e9afef0a681882969b9fe7bc72f61a484"
+      },
+      "2": {
+        "name": "assembly",
+        "library_sha256": "b5208f3e02348a04652bfa5228a4767b143eef6c56590e59c04d1f8c5d4fafab",
+        "int8_source_sha256": "5995d6cd1216f781b8b44a50e9174d21099f325bb44cf20be7d87a7a5668d140"
+      }
+    }
+  }
+}

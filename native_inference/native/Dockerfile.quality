@@ -1,2 +1,2 @@
 FROM dpdfnet-native-dev
-RUN pip install --no-cache-dir scipy==1.17.1 pystoi==0.4.1 pesq==0.0.4
+RUN pip install --no-cache-dir scipy==1.17.1 pystoi==0.4.1 pesq==0.0.4 librosa==0.11.0

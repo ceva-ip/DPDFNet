@@ -1,0 +1,738 @@
+{
+  "environment": {
+    "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "method": "Per-hop AB/BA paired calls, CPU-time and unfiltered wall-time distributions; paired paced duty is two models per hop.",
+  "config": "fc_and_1x1_8",
+  "timed_frames_per_run": 1000,
+  "warmup": 100,
+  "parity": {
+    "frames": 500,
+    "output_and_state_bit_identical": true
+  },
+  "artifacts": {
+    "baseline": "a3706d7a82eac6d0199299d28c3fcee9ad85fd361f7a625409c54f99d0a52ce6",
+    "candidate": "0f0627a5984688ddf3ac994ba1e014519e0de516f2d6509c0d95243585c0ac04"
+  },
+  "owned_bytes": {
+    "baseline": 8888691,
+    "candidate": 5406675
+  },
+  "continuous": [
+    {
+      "repeat": 0,
+      "paced": false,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.309735495,
+            "p50_ms": 1.2694885,
+            "p95_ms": 1.50391505,
+            "p99_ms": 2.0781870000000002,
+            "max_ms": 2.719083,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.3130422,
+            "p50_ms": 1.2722,
+            "p95_ms": 1.5084,
+            "p99_ms": 2.084426,
+            "max_ms": 2.7289,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.021283000000000163,
+          "calls_with_context_switches": 2,
+          "over_10ms_details": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.077149429,
+            "p50_ms": 1.047582,
+            "p95_ms": 1.2082110499999998,
+            "p99_ms": 1.6707,
+            "max_ms": 2.411473,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.0802478000000002,
+            "p50_ms": 1.0507499999999999,
+            "p95_ms": 1.21325,
+            "p99_ms": 1.6774149999999999,
+            "max_ms": 2.4191,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.008031999999999817,
+          "calls_with_context_switches": 1,
+          "over_10ms_details": []
+        }
+      }
+    },
+    {
+      "repeat": 1,
+      "paced": false,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.261527732,
+            "p50_ms": 1.242238,
+            "p95_ms": 1.3704619999999998,
+            "p99_ms": 1.5569259999999998,
+            "max_ms": 6.681204,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.2645062,
+            "p50_ms": 1.2451500000000002,
+            "p95_ms": 1.373425,
+            "p99_ms": 1.5601999999999998,
+            "max_ms": 6.6867,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.00803799999999999,
+          "calls_with_context_switches": 1,
+          "over_10ms_details": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.0398712639999999,
+            "p50_ms": 1.027531,
+            "p95_ms": 1.120549,
+            "p99_ms": 1.2570670099999997,
+            "max_ms": 1.523847,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.0426905999999998,
+            "p50_ms": 1.0304,
+            "p95_ms": 1.1235199999999999,
+            "p99_ms": 1.2601349999999998,
+            "max_ms": 1.5265,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.030826000000000242,
+          "calls_with_context_switches": 4,
+          "over_10ms_details": []
+        }
+      }
+    },
+    {
+      "repeat": 2,
+      "paced": false,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.248805116,
+            "p50_ms": 1.2357375,
+            "p95_ms": 1.340946,
+            "p99_ms": 1.4841720099999998,
+            "max_ms": 1.97456,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.2516830000000003,
+            "p50_ms": 1.2388,
+            "p95_ms": 1.34371,
+            "p99_ms": 1.475317,
+            "max_ms": 1.9789,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.20948900000000004,
+          "calls_with_context_switches": 2,
+          "over_10ms_details": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.03430043,
+            "p50_ms": 1.0233815,
+            "p95_ms": 1.113728,
+            "p99_ms": 1.264444,
+            "max_ms": 1.535346,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.0371751,
+            "p50_ms": 1.0262,
+            "p95_ms": 1.116685,
+            "p99_ms": 1.2671109999999999,
+            "max_ms": 1.5391,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.023102000000000178,
+          "calls_with_context_switches": 3,
+          "over_10ms_details": []
+        }
+      }
+    },
+    {
+      "repeat": 3,
+      "paced": false,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.2564199880000002,
+            "p50_ms": 1.242837,
+            "p95_ms": 1.3510559999999998,
+            "p99_ms": 1.494019,
+            "max_ms": 2.068663,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.2594866000000002,
+            "p50_ms": 1.2459,
+            "p95_ms": 1.35411,
+            "p99_ms": 1.497279,
+            "max_ms": 2.0731,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.009139000000000008,
+          "calls_with_context_switches": 1,
+          "over_10ms_details": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.0425629689999998,
+            "p50_ms": 1.0292810000000001,
+            "p95_ms": 1.1200439999999998,
+            "p99_ms": 1.2751040099999997,
+            "max_ms": 1.754753,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.0454495000000001,
+            "p50_ms": 1.03225,
+            "p95_ms": 1.1228299999999998,
+            "p99_ms": 1.277969,
+            "max_ms": 1.7594,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.06682499999999991,
+          "calls_with_context_switches": 4,
+          "over_10ms_details": []
+        }
+      }
+    }
+  ],
+  "paced": [
+    {
+      "repeat": 0,
+      "paced": true,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.3672618349999999,
+            "p50_ms": 1.35394,
+            "p95_ms": 1.47124305,
+            "p99_ms": 1.81677401,
+            "max_ms": 2.099861,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.3706956,
+            "p50_ms": 1.3573,
+            "p95_ms": 1.474365,
+            "p99_ms": 1.822106,
+            "max_ms": 2.1036,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.159689402,
+            "p50_ms": 1.148934,
+            "p95_ms": 1.273132,
+            "p99_ms": 1.419829,
+            "max_ms": 1.659349,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.1629491,
+            "p50_ms": 1.1521,
+            "p95_ms": 1.27646,
+            "p99_ms": 1.425368,
+            "max_ms": 1.6652,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.1641838650605223,
+        "p50_ms": 0.1872100001492072,
+        "p95_ms": 0.20753180012889058,
+        "p99_ms": 0.2319907702008095,
+        "max_ms": 0.3135510000902286,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 1,
+      "paced": true,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.383035676,
+            "p50_ms": 1.368343,
+            "p95_ms": 1.4906898499999999,
+            "p99_ms": 1.7348639999999997,
+            "max_ms": 2.409175,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.3862959000000001,
+            "p50_ms": 1.3714,
+            "p95_ms": 1.4936549999999997,
+            "p99_ms": 1.741196,
+            "max_ms": 2.4136,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.1425743830000001,
+            "p50_ms": 1.1289855,
+            "p95_ms": 1.2400841499999997,
+            "p99_ms": 1.4440300199999996,
+            "max_ms": 1.741058,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.1458002,
+            "p50_ms": 1.13205,
+            "p95_ms": 1.2428499999999998,
+            "p99_ms": 1.4468939999999995,
+            "max_ms": 1.7513,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.007109999999999728,
+          "calls_with_context_switches": 3,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.16792184201199234,
+        "p50_ms": 0.1869105000196214,
+        "p95_ms": 0.21983865001402592,
+        "p99_ms": 0.23118196990026263,
+        "max_ms": 0.24993399983941345,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 2,
+      "paced": true,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.3869709360000002,
+            "p50_ms": 1.365842,
+            "p95_ms": 1.5446680499999998,
+            "p99_ms": 1.936174,
+            "max_ms": 2.24577,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.390317,
+            "p50_ms": 1.3689,
+            "p95_ms": 1.548285,
+            "p99_ms": 1.940917,
+            "max_ms": 2.2493,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.144016294,
+            "p50_ms": 1.1291365,
+            "p95_ms": 1.2495432,
+            "p99_ms": 1.54562299,
+            "max_ms": 1.782555,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.1473508,
+            "p50_ms": 1.13245,
+            "p95_ms": 1.253125,
+            "p99_ms": 1.554238,
+            "max_ms": 1.7897,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.17043968397342724,
+        "p50_ms": 0.1879280000594008,
+        "p95_ms": 0.21858749988723503,
+        "p99_ms": 0.23720760007336136,
+        "max_ms": 0.30353199986166146,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 3,
+      "paced": true,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.394872244,
+            "p50_ms": 1.379692,
+            "p95_ms": 1.5386970499999997,
+            "p99_ms": 1.767625,
+            "max_ms": 2.066763,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.3982324,
+            "p50_ms": 1.3829,
+            "p95_ms": 1.5421449999999999,
+            "p99_ms": 1.771698,
+            "max_ms": 2.0702,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.0064429999999999765,
+          "calls_with_context_switches": 1,
+          "over_10ms_details": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.1312585389999998,
+            "p50_ms": 1.125884,
+            "p95_ms": 1.2343029999999997,
+            "p99_ms": 1.4094699999999998,
+            "max_ms": 1.785254,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.1345335,
+            "p50_ms": 1.1292499999999999,
+            "p95_ms": 1.237515,
+            "p99_ms": 1.4144349999999997,
+            "max_ms": 1.7929,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.16580789595991519,
+        "p50_ms": 0.18720549996942282,
+        "p95_ms": 0.21002190003400745,
+        "p99_ms": 0.23230996980828422,
+        "max_ms": 0.2739149999797519,
+        "over_10ms": 0
+      }
+    }
+  ],
+  "standalone_paced": [
+    {
+      "repeat": 0,
+      "paced": true,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.310850304,
+            "p50_ms": 1.2909899999999999,
+            "p95_ms": 1.46768,
+            "p99_ms": 1.727399,
+            "max_ms": 2.100564,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.3146819,
+            "p50_ms": 1.29455,
+            "p95_ms": 1.4728149999999998,
+            "p99_ms": 1.7355180000000001,
+            "max_ms": 2.107,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.16177806703990427,
+        "p50_ms": 0.18633900003806048,
+        "p95_ms": 0.19866404994672845,
+        "p99_ms": 0.22809212014863078,
+        "max_ms": 0.3171000000747881,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 0,
+      "paced": true,
+      "implementations": {
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.0457363450000001,
+            "p50_ms": 1.020031,
+            "p95_ms": 1.2488419999999998,
+            "p99_ms": 1.4248069999999997,
+            "max_ms": 1.742553,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.0492433,
+            "p50_ms": 1.0235500000000002,
+            "p95_ms": 1.25345,
+            "p99_ms": 1.430888,
+            "max_ms": 1.7494,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.14424899999999985,
+          "calls_with_context_switches": 1,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.1566005099789436,
+        "p50_ms": 0.1855054999850836,
+        "p95_ms": 0.21172725000724313,
+        "p99_ms": 0.23035471004277494,
+        "max_ms": 0.26244299988320563,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 1,
+      "paced": true,
+      "implementations": {
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.0658504800000002,
+            "p50_ms": 1.017181,
+            "p95_ms": 1.3197849999999998,
+            "p99_ms": 1.5256650099999998,
+            "max_ms": 1.887157,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.0696027,
+            "p50_ms": 1.02075,
+            "p95_ms": 1.3241299999999998,
+            "p99_ms": 1.5295289999999997,
+            "max_ms": 1.8941,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.15828044898762528,
+        "p50_ms": 0.1853704999348338,
+        "p95_ms": 0.1991390500052148,
+        "p99_ms": 0.2291013900639882,
+        "max_ms": 0.285130000065692,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 1,
+      "paced": true,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.3075763189999998,
+            "p50_ms": 1.28224,
+            "p95_ms": 1.5315439499999999,
+            "p99_ms": 1.75048299,
+            "max_ms": 2.032264,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.3111655,
+            "p50_ms": 1.2858,
+            "p95_ms": 1.5362249999999997,
+            "p99_ms": 1.754378,
+            "max_ms": 2.04,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.1769085879616341,
+        "p50_ms": 0.18886500004100526,
+        "p95_ms": 0.21874404983464044,
+        "p99_ms": 0.23742485000866506,
+        "max_ms": 0.27316399996379914,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 2,
+      "paced": true,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.3446461939999999,
+            "p50_ms": 1.3159904999999998,
+            "p95_ms": 1.5533161999999998,
+            "p99_ms": 1.84334201,
+            "max_ms": 2.355375,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.3484104,
+            "p50_ms": 1.3196500000000002,
+            "p95_ms": 1.5583099999999999,
+            "p99_ms": 1.8559620000000001,
+            "max_ms": 2.3452,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.010174999999999823,
+          "calls_with_context_switches": 1,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.16943107500037513,
+        "p50_ms": 0.18678750006984046,
+        "p95_ms": 0.2017055000465006,
+        "p99_ms": 0.2315973101053714,
+        "max_ms": 0.2737720001277921,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 2,
+      "paced": true,
+      "implementations": {
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.0235342779999999,
+            "p50_ms": 1.0084305,
+            "p95_ms": 1.1561949499999997,
+            "p99_ms": 1.3345049999999998,
+            "max_ms": 1.67265,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.0272273,
+            "p50_ms": 1.0119,
+            "p95_ms": 1.1602549999999998,
+            "p99_ms": 1.3405839999999998,
+            "max_ms": 1.6795,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.14721893496084704,
+        "p50_ms": 0.17268449994389812,
+        "p95_ms": 0.19757549988526077,
+        "p99_ms": 0.22349726013089818,
+        "max_ms": 0.25047400004041265,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 3,
+      "paced": true,
+      "implementations": {
+        "candidate": {
+          "wall": {
+            "mean_ms": 1.037921949,
+            "p50_ms": 1.015031,
+            "p95_ms": 1.206861,
+            "p99_ms": 1.43587501,
+            "max_ms": 2.065863,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.0416203,
+            "p50_ms": 1.0185499999999998,
+            "p95_ms": 1.2106299999999999,
+            "p99_ms": 1.438958,
+            "max_ms": 2.0769,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0,
+          "calls_with_context_switches": 0,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.17324543895392708,
+        "p50_ms": 0.18726399991919607,
+        "p95_ms": 0.20896554995033506,
+        "p99_ms": 0.22999108997510118,
+        "max_ms": 0.26507999996283615,
+        "over_10ms": 0
+      }
+    },
+    {
+      "repeat": 3,
+      "paced": true,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 1.3503992050000002,
+            "p50_ms": 1.303089,
+            "p95_ms": 1.6583150499999981,
+            "p99_ms": 2.0209699999999993,
+            "max_ms": 2.301969,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 1.3542169000000002,
+            "p50_ms": 1.30645,
+            "p95_ms": 1.666259999999998,
+            "p99_ms": 2.0318019999999994,
+            "max_ms": 2.3101,
+            "over_10ms": 0
+          },
+          "off_cpu_ms_total": 0.10406000000000004,
+          "calls_with_context_switches": 1,
+          "over_10ms_details": []
+        }
+      },
+      "paired_start_lateness": {
+        "mean_ms": 0.15799832506559142,
+        "p50_ms": 0.1853915000538109,
+        "p95_ms": 0.2056501501442653,
+        "p99_ms": 0.2295561700543658,
+        "max_ms": 0.34783500018420455,
+        "over_10ms": 0
+      }
+    }
+  ]
+}

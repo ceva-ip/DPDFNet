@@ -1,5 +1,9 @@
 # `dpdfnet8_48khz_hr` architecture and optimization map
 
+**Latest follow-up:** [exact latency and memory optimization](LATENCY_REWORK.md)
+profiles the selective INT8 path directly and implements layout, arena,
+normalization, and batched-kernel improvements for both models.
+
 This note records the architecture-first analysis used for the next native
 optimization pass. The audited artifact is
 `dpdfnet8_48khz_hr.onnx`, SHA-256
@@ -119,9 +123,10 @@ The next experiments are ordered by expected gain and semantic risk:
    transposes `C x F -> F x C` at entry and reverses it at exit for every block.
    Each branch needs only one conversion at the stack boundary. This is exact
    and also aligns the last stack output with the following flatten operation.
-4. **Vectorize/fuse LayerNorm plus residual for reduced-precision modes.** This
-   removes scalar double-precision passes over 64 channels. It is not bit-exact,
-   so it requires recurrent parity and the full quality gate.
+4. **Vectorize LayerNorm plus residual.** Reassociating channel reductions or
+   replacing double accumulation with FP32 would change results. The later
+   [exact implementation](LATENCY_REWORK.md) instead vectors across independent
+   rows, preserving the ordered double calculation within each row.
 5. **Fuse known transpose/pointwise-convolution pairs.** Two of the largest
    non-DPRNN nodes are decoder layout conversions. Generating the consumer's
    preferred layout can avoid those copies without changing model math.

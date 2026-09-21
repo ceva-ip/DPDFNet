@@ -4,7 +4,146 @@
   "gain": 1,
   "removed_model_delay_samples": 2400,
   "precision_scope": "DPRNN + dense/grouped FC + 1x1 CNN; other CNN remains FP32",
-  "dpdfnet8_optimized_output_bit_identical": true,
+  "generated_at": "2026-09-21T11:41:23.557758+00:00",
+  "runtime_revision": "exact convolution, quantization and gate follow-up",
+  "comparison": {
+    "generated_at": "2026-09-21T07:50:55.883693+00:00",
+    "latency_method": "Median of four run means; 100 warmup + 1000 timed hops/run, one inference thread; standalone 10 ms cadence, rotating mode order. Includes output allocation and Python call overhead. No outliers removed.",
+    "memory_method": "Median of four fresh processes per mode: warmed RSS minus RSS after identical Python/NumPy/ORT imports, before model loading. Includes model/session, allocator retention, native library and stream buffers; excludes common imported runtime baseline. Not total application RSS or model file size.",
+    "models": {
+      "dpdfnet8_48khz_hr": {
+        "environment": {
+          "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+          "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36"
+        },
+        "artifacts": {
+          "models/dpdfnet8_48khz_hr.onnx": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631",
+          "build/followup_final8/libdpdf_full.so": "c40127779bd90e04a1954ff4b7d3b68438fc5361e6ea8f53905d7ba78d19586a",
+          "models/rework8/weights.f32": "5a5bb67a8619090c54dc2793536fe813fe38123b236d445f3433aafe3075529d"
+        },
+        "modes": {
+          "original_fp32": {
+            "paced_mean_ms": 5.5714408695,
+            "continuous_mean_ms": 5.372622893000001,
+            "paced_p99_range_ms": [
+              6.26908602,
+              7.055481089999997
+            ],
+            "paced_over_10ms": 1,
+            "rss_delta_bytes": 39854080.0,
+            "owned_bytes": null,
+            "latency_saving_percent": 0.0,
+            "memory_saving_percent": 0.0
+          },
+          "native_fp32": {
+            "paced_mean_ms": 3.2066519744999997,
+            "continuous_mean_ms": 3.059617332,
+            "paced_p99_range_ms": [
+              3.66765734,
+              3.8449420299999995
+            ],
+            "paced_over_10ms": 0,
+            "rss_delta_bytes": 18063360.0,
+            "owned_bytes": 17684375,
+            "latency_saving_percent": 42.444835194171674,
+            "memory_saving_percent": 54.67625899280575
+          },
+          "selective_fp16": {
+            "paced_mean_ms": 2.8313352535,
+            "continuous_mean_ms": 2.5680709845,
+            "paced_p99_range_ms": [
+              3.04769303,
+              3.4836732499999967
+            ],
+            "paced_over_10ms": 0,
+            "rss_delta_bytes": 11460608.0,
+            "owned_bytes": 10195367,
+            "latency_saving_percent": 49.1812742911854,
+            "memory_saving_percent": 71.24357656731758
+          },
+          "selective_int8": {
+            "paced_mean_ms": 2.381041893,
+            "continuous_mean_ms": 2.1277013504999998,
+            "paced_p99_range_ms": [
+              2.6526338099999998,
+              2.931987039999999
+            ],
+            "paced_over_10ms": 0,
+            "rss_delta_bytes": 7899136.0,
+            "owned_bytes": 6738951,
+            "latency_saving_percent": 57.26344497283191,
+            "memory_saving_percent": 80.17985611510792
+          }
+        }
+      },
+      "dpdfnet2_48khz_hr": {
+        "environment": {
+          "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+          "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.36"
+        },
+        "artifacts": {
+          "models/dpdfnet2_48khz_hr.onnx": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b",
+          "build/followup_final2/libdpdf_full.so": "d052c146cd7cfc295bafd6e0659957e4673e9c0fa96ecc2b09280e5a705a9550",
+          "models/rework2/weights.f32": "cb7248b8fccbff7b32f254ec2ed0061e604514b2ccd98d997cd081a876424e7b"
+        },
+        "modes": {
+          "original_fp32": {
+            "paced_mean_ms": 2.1242368715,
+            "continuous_mean_ms": 2.031984709,
+            "paced_p99_range_ms": [
+              2.804731849999999,
+              3.5507680099999996
+            ],
+            "paced_over_10ms": 0,
+            "rss_delta_bytes": 29747200.0,
+            "owned_bytes": null,
+            "latency_saving_percent": 0.0,
+            "memory_saving_percent": 0.0
+          },
+          "native_fp32": {
+            "paced_mean_ms": 1.500120441,
+            "continuous_mean_ms": 1.362042298,
+            "paced_p99_range_ms": [
+              1.9274090099999999,
+              2.20715158
+            ],
+            "paced_over_10ms": 0,
+            "rss_delta_bytes": 13348864.0,
+            "owned_bytes": 13307375,
+            "latency_saving_percent": 29.38073615393414,
+            "memory_saving_percent": 55.12564543889845
+          },
+          "selective_fp16": {
+            "paced_mean_ms": 1.1563597115,
+            "continuous_mean_ms": 1.0236108045,
+            "paced_p99_range_ms": [
+              1.5360220399999998,
+              1.6198239899999998
+            ],
+            "paced_over_10ms": 0,
+            "rss_delta_bytes": 8816640.0,
+            "owned_bytes": 7919987,
+            "latency_saving_percent": 45.56352321088124,
+            "memory_saving_percent": 70.36144578313252
+          },
+          "selective_int8": {
+            "paced_mean_ms": 1.0179633375,
+            "continuous_mean_ms": 0.9030313795,
+            "paced_p99_range_ms": [
+              1.3051069999999998,
+              1.83865599
+            ],
+            "paced_over_10ms": 0,
+            "rss_delta_bytes": 6320128.0,
+            "owned_bytes": 5406675,
+            "latency_saving_percent": 52.078633453849264,
+            "memory_saving_percent": 78.75387263339071
+          }
+        }
+      }
+    }
+  },
+  "previous_manifest_sha256": "76643d146e32ee324c88330ab89aa921d42a4c2af2e3ad3156a7fbb98eed6b1a",
   "models": [
     "dpdfnet8_48khz_hr",
     "dpdfnet2_48khz_hr"
@@ -17,7 +156,9 @@
       "frames": 720000,
       "peak": 0.8912353515625,
       "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
-      "sha256": "628b15d8e03e11310efeb9a07b4259cafacd2877f52727d18931847cc97e6c7f"
+      "sha256": "628b15d8e03e11310efeb9a07b4259cafacd2877f52727d18931847cc97e6c7f",
+      "previous_sha256": "628b15d8e03e11310efeb9a07b4259cafacd2877f52727d18931847cc97e6c7f",
+      "matches_previous_wav": true
     },
     {
       "file": "fan_original_fp32.wav",
@@ -26,7 +167,9 @@
       "frames": 720000,
       "peak": 0.7470995187759399,
       "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
-      "sha256": "a8293fc309f27d2ec2166c0f5897d9161853b079a90bfe8cdd01e3a5dd9c357a"
+      "sha256": "a8293fc309f27d2ec2166c0f5897d9161853b079a90bfe8cdd01e3a5dd9c357a",
+      "previous_sha256": "a8293fc309f27d2ec2166c0f5897d9161853b079a90bfe8cdd01e3a5dd9c357a",
+      "matches_previous_wav": true
     },
     {
       "file": "fan_fp16.wav",
@@ -35,7 +178,9 @@
       "frames": 720000,
       "peak": 0.7470847964286804,
       "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
-      "sha256": "c69e1baa8f9d7451990361512cbb249a18dbce5dc7de840d0f21ad84b8a3fe41"
+      "sha256": "c69e1baa8f9d7451990361512cbb249a18dbce5dc7de840d0f21ad84b8a3fe41",
+      "previous_sha256": "c69e1baa8f9d7451990361512cbb249a18dbce5dc7de840d0f21ad84b8a3fe41",
+      "matches_previous_wav": true
     },
     {
       "file": "fan_int8.wav",
@@ -44,7 +189,9 @@
       "frames": 720000,
       "peak": 0.7460655570030212,
       "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
-      "sha256": "b5c9264a7f2cc22610e3eb4bdfc6fe67b0ea38f8261ba31f759b210329d7ecaa"
+      "sha256": "b5c9264a7f2cc22610e3eb4bdfc6fe67b0ea38f8261ba31f759b210329d7ecaa",
+      "previous_sha256": "b5c9264a7f2cc22610e3eb4bdfc6fe67b0ea38f8261ba31f759b210329d7ecaa",
+      "matches_previous_wav": true
     },
     {
       "file": "fan_dpdfnet2_48khz_hr_original_fp32.wav",
@@ -53,7 +200,9 @@
       "frames": 720000,
       "peak": 0.7265915870666504,
       "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
-      "sha256": "4091cd86fdaaced111f065616ee94598b94bef86c27eccc11498ba6f1d162856"
+      "sha256": "4091cd86fdaaced111f065616ee94598b94bef86c27eccc11498ba6f1d162856",
+      "previous_sha256": "4091cd86fdaaced111f065616ee94598b94bef86c27eccc11498ba6f1d162856",
+      "matches_previous_wav": true
     },
     {
       "file": "fan_dpdfnet2_48khz_hr_fp16.wav",
@@ -62,7 +211,9 @@
       "frames": 720000,
       "peak": 0.7265504598617554,
       "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
-      "sha256": "2eb8a57b329790b011a190f59df136dd2fe34cdb7b7a54cebdbf8eacd4cb8c5d"
+      "sha256": "2eb8a57b329790b011a190f59df136dd2fe34cdb7b7a54cebdbf8eacd4cb8c5d",
+      "previous_sha256": "2eb8a57b329790b011a190f59df136dd2fe34cdb7b7a54cebdbf8eacd4cb8c5d",
+      "matches_previous_wav": true
     },
     {
       "file": "fan_dpdfnet2_48khz_hr_int8.wav",
@@ -71,7 +222,9 @@
       "frames": 720000,
       "peak": 0.7303628325462341,
       "input_sha256": "30c5b916a2ce56a4a5304a14fc57bf6e8fb160eac82c852349b9ef9b8a2878fb",
-      "sha256": "017073a0824bea314a060b5a4185488ced4dd847b92924a9d6500c71dbb78a69"
+      "sha256": "017073a0824bea314a060b5a4185488ced4dd847b92924a9d6500c71dbb78a69",
+      "previous_sha256": "017073a0824bea314a060b5a4185488ced4dd847b92924a9d6500c71dbb78a69",
+      "matches_previous_wav": true
     },
     {
       "file": "cafe_noisy.wav",
@@ -80,7 +233,9 @@
       "frames": 516000,
       "peak": 0.891265869140625,
       "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
-      "sha256": "7056a5c42db010b443b49e223e55a507282c431f5227a7ad33106b4045e4c404"
+      "sha256": "7056a5c42db010b443b49e223e55a507282c431f5227a7ad33106b4045e4c404",
+      "previous_sha256": "7056a5c42db010b443b49e223e55a507282c431f5227a7ad33106b4045e4c404",
+      "matches_previous_wav": true
     },
     {
       "file": "cafe_original_fp32.wav",
@@ -89,7 +244,9 @@
       "frames": 516000,
       "peak": 0.7993667125701904,
       "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
-      "sha256": "499a9fd555e1b086b689cac18348e16080ab573f3111486470126dcf74fa77e0"
+      "sha256": "499a9fd555e1b086b689cac18348e16080ab573f3111486470126dcf74fa77e0",
+      "previous_sha256": "499a9fd555e1b086b689cac18348e16080ab573f3111486470126dcf74fa77e0",
+      "matches_previous_wav": true
     },
     {
       "file": "cafe_fp16.wav",
@@ -98,7 +255,9 @@
       "frames": 516000,
       "peak": 0.7992659211158752,
       "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
-      "sha256": "e3824f6a5857315a0242150c16cb9628f917a5df8e9f837fe738ce5bc3585a35"
+      "sha256": "e3824f6a5857315a0242150c16cb9628f917a5df8e9f837fe738ce5bc3585a35",
+      "previous_sha256": "e3824f6a5857315a0242150c16cb9628f917a5df8e9f837fe738ce5bc3585a35",
+      "matches_previous_wav": true
     },
     {
       "file": "cafe_int8.wav",
@@ -107,7 +266,9 @@
       "frames": 516000,
       "peak": 0.8017159700393677,
       "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
-      "sha256": "02c072526b2488089375a866019dff5d2622f51edba69c1d8345191d73cb4664"
+      "sha256": "02c072526b2488089375a866019dff5d2622f51edba69c1d8345191d73cb4664",
+      "previous_sha256": "02c072526b2488089375a866019dff5d2622f51edba69c1d8345191d73cb4664",
+      "matches_previous_wav": true
     },
     {
       "file": "cafe_dpdfnet2_48khz_hr_original_fp32.wav",
@@ -116,7 +277,9 @@
       "frames": 516000,
       "peak": 0.7967690229415894,
       "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
-      "sha256": "c422e235b120df705cb4ffdecd54a24fb28128fc4e6cb23a1c011de879d10aec"
+      "sha256": "c422e235b120df705cb4ffdecd54a24fb28128fc4e6cb23a1c011de879d10aec",
+      "previous_sha256": "c422e235b120df705cb4ffdecd54a24fb28128fc4e6cb23a1c011de879d10aec",
+      "matches_previous_wav": true
     },
     {
       "file": "cafe_dpdfnet2_48khz_hr_fp16.wav",
@@ -125,7 +288,9 @@
       "frames": 516000,
       "peak": 0.7967896461486816,
       "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
-      "sha256": "942d14c11f4cb6628374dbad1f2b9e461182ecb45d5e14eaf1ae94b529a0ae71"
+      "sha256": "942d14c11f4cb6628374dbad1f2b9e461182ecb45d5e14eaf1ae94b529a0ae71",
+      "previous_sha256": "942d14c11f4cb6628374dbad1f2b9e461182ecb45d5e14eaf1ae94b529a0ae71",
+      "matches_previous_wav": true
     },
     {
       "file": "cafe_dpdfnet2_48khz_hr_int8.wav",
@@ -134,7 +299,9 @@
       "frames": 516000,
       "peak": 0.7980297803878784,
       "input_sha256": "abb2ea3e5c0da4bcd820e1fc66235601d1dc9e9852917f71e74b607b40e8264b",
-      "sha256": "cefae6d75c8d1999fd0b001666803fa07a71b5a7abf96145b1c26ecbddf35e98"
+      "sha256": "cefae6d75c8d1999fd0b001666803fa07a71b5a7abf96145b1c26ecbddf35e98",
+      "previous_sha256": "cefae6d75c8d1999fd0b001666803fa07a71b5a7abf96145b1c26ecbddf35e98",
+      "matches_previous_wav": true
     },
     {
       "file": "keyboard_noisy.wav",
@@ -143,7 +310,9 @@
       "frames": 516000,
       "peak": 0.891265869140625,
       "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
-      "sha256": "13698b4c68a0d5f61aaa89435d18850bd6f2187ab8a63a77047350673fc080dd"
+      "sha256": "13698b4c68a0d5f61aaa89435d18850bd6f2187ab8a63a77047350673fc080dd",
+      "previous_sha256": "13698b4c68a0d5f61aaa89435d18850bd6f2187ab8a63a77047350673fc080dd",
+      "matches_previous_wav": true
     },
     {
       "file": "keyboard_original_fp32.wav",
@@ -152,7 +321,9 @@
       "frames": 516000,
       "peak": 0.26987573504447937,
       "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
-      "sha256": "5e9dc22b00d0d7e54b289cd68dc9e096500fbca1f12e589ba00911a0a1e61191"
+      "sha256": "5e9dc22b00d0d7e54b289cd68dc9e096500fbca1f12e589ba00911a0a1e61191",
+      "previous_sha256": "5e9dc22b00d0d7e54b289cd68dc9e096500fbca1f12e589ba00911a0a1e61191",
+      "matches_previous_wav": true
     },
     {
       "file": "keyboard_fp16.wav",
@@ -161,7 +332,9 @@
       "frames": 516000,
       "peak": 0.26987704634666443,
       "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
-      "sha256": "e40b9fcd78ed34c06b1af8d7515e1129db9533c1a329625ce333573256f893de"
+      "sha256": "e40b9fcd78ed34c06b1af8d7515e1129db9533c1a329625ce333573256f893de",
+      "previous_sha256": "e40b9fcd78ed34c06b1af8d7515e1129db9533c1a329625ce333573256f893de",
+      "matches_previous_wav": true
     },
     {
       "file": "keyboard_int8.wav",
@@ -170,7 +343,9 @@
       "frames": 516000,
       "peak": 0.27013158798217773,
       "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
-      "sha256": "887eb7d5b39f694f6b6ec36d96575dcb4714779565723a7184fe71c520a0a917"
+      "sha256": "887eb7d5b39f694f6b6ec36d96575dcb4714779565723a7184fe71c520a0a917",
+      "previous_sha256": "887eb7d5b39f694f6b6ec36d96575dcb4714779565723a7184fe71c520a0a917",
+      "matches_previous_wav": true
     },
     {
       "file": "keyboard_dpdfnet2_48khz_hr_original_fp32.wav",
@@ -179,7 +354,9 @@
       "frames": 516000,
       "peak": 0.2688305675983429,
       "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
-      "sha256": "2486871b167f6c7c5b35a04cfa22349147ce4f1f0c9003d84ace695f2f451961"
+      "sha256": "2486871b167f6c7c5b35a04cfa22349147ce4f1f0c9003d84ace695f2f451961",
+      "previous_sha256": "2486871b167f6c7c5b35a04cfa22349147ce4f1f0c9003d84ace695f2f451961",
+      "matches_previous_wav": true
     },
     {
       "file": "keyboard_dpdfnet2_48khz_hr_fp16.wav",
@@ -188,7 +365,9 @@
       "frames": 516000,
       "peak": 0.26883164048194885,
       "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
-      "sha256": "6cf02983a1c48d7b902523943a1ead6eec06da3115eb86159a6ba3521a20bc12"
+      "sha256": "6cf02983a1c48d7b902523943a1ead6eec06da3115eb86159a6ba3521a20bc12",
+      "previous_sha256": "6cf02983a1c48d7b902523943a1ead6eec06da3115eb86159a6ba3521a20bc12",
+      "matches_previous_wav": true
     },
     {
       "file": "keyboard_dpdfnet2_48khz_hr_int8.wav",
@@ -197,15 +376,18 @@
       "frames": 516000,
       "peak": 0.26947879791259766,
       "input_sha256": "3c70c9438cd6f2f9422449c6eec756b3496a26e39613b0acac475838629c8396",
-      "sha256": "ff9fbec8bdbd2614006b20bad63c4cfc6254ef90b83044ae32b55f58746bef2a"
+      "sha256": "ff9fbec8bdbd2614006b20bad63c4cfc6254ef90b83044ae32b55f58746bef2a",
+      "previous_sha256": "ff9fbec8bdbd2614006b20bad63c4cfc6254ef90b83044ae32b55f58746bef2a",
+      "matches_previous_wav": true
     }
   ],
   "artifact_sha256": {
     "models/dpdfnet8_48khz_hr.onnx": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631",
-    "models/extended/weights.f32": "5a5bb67a8619090c54dc2793536fe813fe38123b236d445f3433aafe3075529d",
-    "build/extended/libdpdf_full.so": "cb2461672f8a12c8072f8a148bd2af1f7a6c19d7be549c414c6e534144614bd1",
+    "models/rework8/weights.f32": "5a5bb67a8619090c54dc2793536fe813fe38123b236d445f3433aafe3075529d",
+    "build/followup_final8/libdpdf_full.so": "c40127779bd90e04a1954ff4b7d3b68438fc5361e6ea8f53905d7ba78d19586a",
     "models/dpdfnet2_48khz_hr.onnx": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b",
-    "models/dpdfnet2_extended/weights.f32": "cb7248b8fccbff7b32f254ec2ed0061e604514b2ccd98d997cd081a876424e7b",
-    "build/dpdfnet2_extended/libdpdf_full.so": "5d6d077b28ac6a5f46dc9dff67a5ba1aa4f6d095de0449259e64289aff1b5db5"
-  }
+    "models/rework2/weights.f32": "cb7248b8fccbff7b32f254ec2ed0061e604514b2ccd98d997cd081a876424e7b",
+    "build/followup_final2/libdpdf_full.so": "d052c146cd7cfc295bafd6e0659957e4673e9c0fa96ecc2b09280e5a705a9550"
+  },
+  "all_native_wavs_identical_to_previous": true
 }

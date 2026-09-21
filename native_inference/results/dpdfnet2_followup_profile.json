@@ -1,0 +1,1457 @@
+{
+  "diagnostic_not_release_timing": true,
+  "families_ms": {
+    "DpdfDprnn": 0.4390546,
+    "Conv": 0.316461,
+    "Gemm": 0.0757514,
+    "MatMul": 0.037652399999999996,
+    "Tanh": 0.029761000000000003,
+    "Transpose": 0.0267834,
+    "Relu": 0.020274999999999998,
+    "Concat": 0.018301799999999997,
+    "Add": 0.0110848,
+    "Mul": 0.010159399999999999,
+    "Sigmoid": 0.0097066,
+    "Slice": 0.0027597999999999998,
+    "Log": 0.0014074,
+    "Gather": 0.0011648,
+    "Split": 0.001152,
+    "Reshape": 0.0010086,
+    "Sqrt": 0.0005386000000000001,
+    "Sub": 0.000457,
+    "ReduceSum": 0.0003978,
+    "Div": 0.0003578,
+    "Unsqueeze": 0.0003274,
+    "Squeeze": 0.000198,
+    "Pow": 0.00019580000000000002,
+    "Pad": 6.64e-05,
+    "Flatten": 4.2199999999999996e-05
+  },
+  "dprnn_stages_ms": {
+    "unused": 0.0,
+    "intra_input_pair": 0.0778452,
+    "intra_recurrent": 0.09220160000000001,
+    "intra_gates": 0.0661536,
+    "intra_projection": 0.0327496,
+    "intra_norm": 0.0076886,
+    "inter_input": 0.0436768,
+    "inter_recurrent": 0.043867199999999995,
+    "inter_gates": 0.0259146,
+    "inter_projection": 0.019515400000000002,
+    "inter_norm": 0.007538
+  },
+  "nodes": [
+    [
+      "/* 80: DpdfDprnn /model/enc/dprnn_df/blocks.0/Native */",
+      0.119302
+    ],
+    [
+      "/* 82: DpdfDprnn /model/enc/dprnn_df/blocks.1/Native */",
+      0.11905239999999999
+    ],
+    [
+      "/* 58: DpdfDprnn /model/enc/dprnn_erb/blocks.0/Native */",
+      0.1013218
+    ],
+    [
+      "/* 60: DpdfDprnn /model/enc/dprnn_erb/blocks.1/Native */",
+      0.09937839999999999
+    ],
+    [
+      "/* 222: Conv /model/erb_dec/convt1/convt1.1/Conv */",
+      0.0713944
+    ],
+    [
+      "/* 46: Conv /model/enc/erb_conv0/erb_conv0.1/Conv */",
+      0.02715
+    ],
+    [
+      "/* 210: Conv /model/erb_dec/convt2/convt2.1/Conv */",
+      0.023008599999999997
+    ],
+    [
+      "/* 49: Conv /model/enc/erb_conv1/erb_conv1.1/Conv */",
+      0.0226192
+    ],
+    [
+      "/* 287: Conv /model/df_dec/df_convp/df_convp.1/convs.1/Conv */",
+      0.014523399999999999
+    ],
+    [
+      "/* 286: Conv /model/df_dec/df_convp/df_convp.1/convs.0/Conv */",
+      0.0139092
+    ],
+    [
+      "/* 74: Conv /model/enc/df_conv0/df_conv0.2/Conv */",
+      0.013801200000000001
+    ],
+    [
+      "/* 199: Conv /model/erb_dec/convt3/convt3.1/Conv */",
+      0.011493399999999999
+    ],
+    [
+      "/* 52: Conv /model/enc/erb_conv2/erb_conv2.1/Conv */",
+      0.011382799999999998
+    ],
+    [
+      "/* 48: Conv /model/enc/erb_conv1/erb_conv1.0/Conv */",
+      0.010515799999999999
+    ],
+    [
+      "/* 298: Tanh /model/df_dec/df_out/df_out.1/Tanh */",
+      0.010281
+    ],
+    [
+      "/* 227: Conv /model/erb_dec/conv0_out/conv0_out.0/Conv */",
+      0.0097574
+    ],
+    [
+      "/* 220: Transpose /model/erb_dec/convt1/convt1.0/Transpose */",
+      0.0094404
+    ],
+    [
+      "/* 87: MatMul /model/enc/df_fc_emb/df_fc_emb.0/MatMul */",
+      0.009314
+    ],
+    [
+      "/* 161: Gemm /model/erb_dec/emb_gru/gru.1/grucell/Gemm_1 */",
+      0.008153800000000001
+    ],
+    [
+      "/* 142: Gemm /model/erb_dec/emb_gru/gru.0/grucell/Gemm */",
+      0.008055
+    ],
+    [
+      "/* 352: Mul /Mul_1 */",
+      0.007949
+    ],
+    [
+      "/* 256: Gemm /model/df_dec/df_gru/gru.1/grucell/Gemm */",
+      0.00779
+    ],
+    [
+      "/* 241: Gemm /model/df_dec/df_gru/gru.0/grucell/Gemm_1 */",
+      0.007751
+    ],
+    [
+      "/* 96: MatMul /model/enc/erb_fc_emb/erb_fc_emb.0/MatMul */",
+      0.007689
+    ],
+    [
+      "/* 113: Gemm /model/enc/emb_gru/gru.0/grucell/Gemm_1 */",
+      0.00762
+    ],
+    [
+      "/* 144: Gemm /model/erb_dec/emb_gru/gru.0/grucell/Gemm_1 */",
+      0.007543
+    ],
+    [
+      "/* 258: Gemm /model/df_dec/df_gru/gru.1/grucell/Gemm_1 */",
+      0.0074928
+    ],
+    [
+      "/* 159: Gemm /model/erb_dec/emb_gru/gru.1/grucell/Gemm */",
+      0.007479
+    ],
+    [
+      "/* 224: Conv /model/erb_dec/conv0p/conv0p.0/Conv */",
+      0.0073944
+    ],
+    [
+      "/* 239: Gemm /model/df_dec/df_gru/gru.0/grucell/Gemm */",
+      0.0071481999999999995
+    ],
+    [
+      "/* 351: Concat /model/Concat */",
+      0.006922
+    ],
+    [
+      "/* 111: Gemm /model/enc/emb_gru/gru.0/grucell/Gemm */",
+      0.006718600000000001
+    ],
+    [
+      "/* 77: Conv /model/enc/df_conv1/df_conv1.1/Conv */",
+      0.0065116
+    ],
+    [
+      "/* 51: Conv /model/enc/erb_conv2/erb_conv2.0/Conv */",
+      0.006377600000000001
+    ],
+    [
+      "/* 183: MatMul /model/erb_dec/erb_fc_emb/erb_fc_emb.0/MatMul */",
+      0.006176399999999999
+    ],
+    [
+      "/* 282: Transpose /model/df_dec/df_convp_buffer/Transpose_1 */",
+      0.0060022
+    ],
+    [
+      "/* 71: Conv /model/enc/df_conv0/df_conv0.1/convs.0/Conv */",
+      0.0056542
+    ],
+    [
+      "/* 216: Conv /model/erb_dec/convt1/convt1.0/convs.1/Conv */",
+      0.0055502
+    ],
+    [
+      "/* 55: Conv /model/enc/erb_conv3/erb_conv3.1/Conv */",
+      0.0055386
+    ],
+    [
+      "/* 217: Conv /model/erb_dec/convt1/convt1.0/convs.2/Conv */",
+      0.005514600000000001
+    ],
+    [
+      "/* 215: Conv /model/erb_dec/convt1/convt1.0/convs.0/Conv */",
+      0.0054386
+    ],
+    [
+      "/* 72: Conv /model/enc/df_conv0/df_conv0.1/convs.1/Conv */",
+      0.005349
+    ],
+    [
+      "/* 226: Add /model/erb_dec/Add_3 */",
+      0.005144800000000001
+    ],
+    [
+      "/* 76: Conv /model/enc/df_conv1/df_conv1.0/Conv */",
+      0.0048418
+    ],
+    [
+      "/* 54: Conv /model/enc/erb_conv3/erb_conv3.0/Conv */",
+      0.0045228
+    ],
+    [
+      "/* 223: Relu /model/erb_dec/convt1/convt1.3/Relu */",
+      0.0041782
+    ],
+    [
+      "/* 169: Tanh /model/erb_dec/emb_gru/gru.1/grucell/Tanh */",
+      0.0041526
+    ],
+    [
+      "/* 289: Conv /model/df_dec/df_convp/df_convp.2/Conv */",
+      0.004108
+    ],
+    [
+      "/* 121: Tanh /model/enc/emb_gru/gru.0/grucell/Tanh */",
+      0.0040816
+    ],
+    [
+      "/* 280: Concat /model/df_dec/df_convp_buffer/Concat */",
+      0.0039898
+    ],
+    [
+      "/* 266: Tanh /model/df_dec/df_gru/gru.1/grucell/Tanh */",
+      0.0039672
+    ],
+    [
+      "/* 47: Relu /model/enc/erb_conv0/erb_conv0.3/Relu */",
+      0.0039286
+    ],
+    [
+      "/* 204: Conv /model/erb_dec/convt2/convt2.0/convs.0/Conv */",
+      0.0039286
+    ],
+    [
+      "/* 225: Relu /model/erb_dec/conv0p/conv0p.2/Relu */",
+      0.0037388
+    ],
+    [
+      "/* 152: Tanh /model/erb_dec/emb_gru/gru.0/grucell/Tanh */",
+      0.0037006
+    ],
+    [
+      "/* 205: Conv /model/erb_dec/convt2/convt2.0/convs.1/Conv */",
+      0.0036954
+    ],
+    [
+      "/* 249: Tanh /model/df_dec/df_gru/gru.0/grucell/Tanh */",
+      0.003578
+    ],
+    [
+      "/* 104: MatMul /model/enc/emb_gru/linear_in/linear_in.0/MatMul */",
+      0.0033724000000000002
+    ],
+    [
+      "/* 218: Concat /model/erb_dec/convt1/convt1.0/Concat */",
+      0.0030946
+    ],
+    [
+      "/* 212: Conv /model/erb_dec/conv1p/conv1p.0/Conv */",
+      0.0030721999999999998
+    ],
+    [
+      "/* 193: Conv /model/erb_dec/convt3/convt3.0/convs.0/Conv */",
+      0.0029961999999999996
+    ],
+    [
+      "/* 194: Conv /model/erb_dec/convt3/convt3.0/convs.1/Conv */",
+      0.0028666
+    ],
+    [
+      "/* 294: MatMul /model/df_dec/df_out/df_out.0/MatMul */",
+      0.0023485999999999997
+    ],
+    [
+      "/* 208: Transpose /model/erb_dec/convt2/convt2.0/Transpose */",
+      0.002293
+    ],
+    [
+      "/* 135: MatMul /model/erb_dec/emb_gru/linear_in/linear_in.0/MatMul */",
+      0.0022444
+    ],
+    [
+      "/* 271: MatMul /model/df_dec/df_skip/MatMul */",
+      0.0022151999999999996
+    ],
+    [
+      "/* 201: Conv /model/erb_dec/conv2p/conv2p.0/Conv */",
+      0.001876
+    ],
+    [
+      "/* 190: Conv /model/erb_dec/conv3p/conv3p.0/Conv */",
+      0.0016692
+    ],
+    [
+      "/* 92: Transpose /model/enc/Transpose_1 */",
+      0.0015732
+    ],
+    [
+      "/* 128: MatMul /model/enc/emb_gru/linear_out/linear_out.0/MatMul */",
+      0.001548
+    ],
+    [
+      "/* 189: Transpose /model/erb_dec/Transpose */",
+      0.0015342
+    ],
+    [
+      "/* 228: Sigmoid /model/erb_dec/conv0_out/conv0_out.2/Sigmoid */",
+      0.0015204
+    ],
+    [
+      "/* 232: MatMul /model/df_dec/df_gru/linear_in/linear_in.0/MatMul */",
+      0.0014536
+    ],
+    [
+      "/* 5: Log /model/Log */",
+      0.0014074
+    ],
+    [
+      "/* 214: Add /model/erb_dec/Add_2 */",
+      0.0013442
+    ],
+    [
+      "/* 176: MatMul /model/erb_dec/emb_gru/linear_out/linear_out.0/MatMul */",
+      0.0012908
+    ],
+    [
+      "/* 276: Transpose /model/df_dec/df_convp_buffer/Transpose */",
+      0.0012644000000000002
+    ],
+    [
+      "/* 211: Relu /model/erb_dec/convt2/convt2.3/Relu */",
+      0.001256
+    ],
+    [
+      "/* 329: Slice /model/df_op/Slice */",
+      0.0012102
+    ],
+    [
+      "/* 213: Relu /model/erb_dec/conv1p/conv1p.2/Relu */",
+      0.0011982
+    ],
+    [
+      "/* 50: Relu /model/enc/erb_conv1/erb_conv1.3/Relu */",
+      0.0011975999999999998
+    ],
+    [
+      "/* 327: Transpose /model/df_op/spec_buffer/Transpose_1 */",
+      0.0010854
+    ],
+    [
+      "/* 197: Transpose /model/erb_dec/convt3/convt3.0/Transpose */",
+      0.000966
+    ],
+    [
+      "/* 45: Slice /model/enc/Slice */",
+      0.0009014
+    ],
+    [
+      "/* 116: Sigmoid /model/enc/emb_gru/gru.0/grucell/Sigmoid */",
+      0.0008944
+    ],
+    [
+      "/* 246: Sigmoid /model/df_dec/df_gru/gru.0/grucell/Sigmoid_1 */",
+      0.0008446
+    ],
+    [
+      "/* 149: Sigmoid /model/erb_dec/emb_gru/gru.0/grucell/Sigmoid_1 */",
+      0.0008273999999999999
+    ],
+    [
+      "/* 147: Sigmoid /model/erb_dec/emb_gru/gru.0/grucell/Sigmoid */",
+      0.0008148
+    ],
+    [
+      "/* 166: Sigmoid /model/erb_dec/emb_gru/gru.1/grucell/Sigmoid_1 */",
+      0.000806
+    ],
+    [
+      "/* 164: Sigmoid /model/erb_dec/emb_gru/gru.1/grucell/Sigmoid */",
+      0.0008054
+    ],
+    [
+      "/* 261: Sigmoid /model/df_dec/df_gru/gru.1/grucell/Sigmoid */",
+      0.0008043999999999999
+    ],
+    [
+      "/* 244: Sigmoid /model/df_dec/df_gru/gru.0/grucell/Sigmoid */",
+      0.0008034
+    ],
+    [
+      "/* 118: Sigmoid /model/enc/emb_gru/gru.0/grucell/Sigmoid_1 */",
+      0.0007994
+    ],
+    [
+      "/* 263: Sigmoid /model/df_dec/df_gru/gru.1/grucell/Sigmoid_1 */",
+      0.0007863999999999999
+    ],
+    [
+      "/* 206: Concat /model/erb_dec/convt2/convt2.0/Concat */",
+      0.0007708
+    ],
+    [
+      "/* 75: Relu /model/enc/df_conv0/df_conv0.4/Relu */",
+      0.000756
+    ],
+    [
+      "/* 325: Concat /model/df_op/spec_buffer/Concat */",
+      0.0006967999999999999
+    ],
+    [
+      "/* 200: Relu /model/erb_dec/convt3/convt3.3/Relu */",
+      0.0006842
+    ],
+    [
+      "/* 203: Add /model/erb_dec/Add_1 */",
+      0.0006696
+    ],
+    [
+      "/* 83: Transpose /model/enc/Transpose */",
+      0.0006378
+    ],
+    [
+      "/* 202: Relu /model/erb_dec/conv2p/conv2p.2/Relu */",
+      0.0006366
+    ],
+    [
+      "/* 53: Relu /model/enc/erb_conv2/erb_conv2.3/Relu */",
+      0.0006307999999999999
+    ],
+    [
+      "/* 73: Concat /model/enc/df_conv0/df_conv0.1/Concat */",
+      0.000582
+    ],
+    [
+      "/* 186: Add /model/erb_dec/erb_fc_emb/erb_fc_emb.0/Add */",
+      0.0005592
+    ],
+    [
+      "/* 312: Mul /model/mask/Mul */",
+      0.0005352
+    ],
+    [
+      "/* 195: Concat /model/erb_dec/convt3/convt3.0/Concat */",
+      0.0005056
+    ],
+    [
+      "/* 317: Concat /model/df_op/coefs_buffer/Concat */",
+      0.0004344
+    ],
+    [
+      "/* 308: Concat /model/mask/spec_buffer/Concat */",
+      0.0004104
+    ],
+    [
+      "/* 0: Mul /Mul */",
+      0.0003906
+    ],
+    [
+      "/* 78: Relu /model/enc/df_conv1/df_conv1.3/Relu */",
+      0.0003888
+    ],
+    [
+      "/* 3: Sqrt /model/Sqrt */",
+      0.0003576
+    ],
+    [
+      "/* 187: Relu /model/erb_dec/erb_fc_emb/erb_fc_emb.1/Relu */",
+      0.0003346
+    ],
+    [
+      "/* 192: Add /model/erb_dec/Add */",
+      0.0003326
+    ],
+    [
+      "/* 191: Relu /model/erb_dec/conv3p/conv3p.2/Relu */",
+      0.0003266
+    ],
+    [
+      "/* 56: Relu /model/enc/erb_conv3/erb_conv3.3/Relu */",
+      0.0003002
+    ],
+    [
+      "/* 304: Transpose /model/mask/spec_buffer/Transpose */",
+      0.0002998
+    ],
+    [
+      "/* 321: Transpose /model/df_op/spec_buffer/Transpose */",
+      0.00027780000000000003
+    ],
+    [
+      "/* 313: Transpose /model/df_op/coefs_buffer/Transpose */",
+      0.00027739999999999997
+    ],
+    [
+      "/* 335: Gather /model/df_op/Gather_3 */",
+      0.0002644
+    ],
+    [
+      "/* 331: Gather /model/df_op/Gather_1 */",
+      0.0002564
+    ],
+    [
+      "/* 310: Transpose /model/mask/spec_buffer/Transpose_1 */",
+      0.0002548
+    ],
+    [
+      "/* 330: Gather /model/df_op/Gather */",
+      0.000253
+    ],
+    [
+      "/* 334: Gather /model/df_op/Gather_2 */",
+      0.0002492
+    ],
+    [
+      "/* 291: Transpose /model/df_dec/Transpose */",
+      0.0002426
+    ],
+    [
+      "/* 297: Add /model/df_dec/df_out/df_out.0/Add */",
+      0.0002398
+    ],
+    [
+      "/* 320: Transpose /model/df_op/Transpose */",
+      0.000234
+    ],
+    [
+      "/* 90: Add /model/enc/df_fc_emb/df_fc_emb.0/Add */",
+      0.00019480000000000002
+    ],
+    [
+      "/* 179: Add /model/erb_dec/emb_gru/linear_out/linear_out.0/Add */",
+      0.0001846
+    ],
+    [
+      "/* 41: Concat /model/enc/erb_conv0_buffer/Concat */",
+      0.00018119999999999999
+    ],
+    [
+      "/* 99: Add /model/enc/erb_fc_emb/erb_fc_emb.0/Add */",
+      0.0001764
+    ],
+    [
+      "/* 131: Add /model/enc/emb_gru/linear_out/linear_out.0/Add */",
+      0.00016340000000000001
+    ],
+    [
+      "/* 16: Div /model/erb_norm/Div */",
+      0.00015240000000000002
+    ],
+    [
+      "/* 33: Concat /model/spec_norm/Concat */",
+      0.000152
+    ],
+    [
+      "/* 290: Relu /model/df_dec/df_convp/df_convp.4/Relu */",
+      0.000145
+    ],
+    [
+      "/* 1: Pow /model/Pow */",
+      0.00014480000000000002
+    ],
+    [
+      "/* 346: Concat /model/df_op/Concat */",
+      0.00014319999999999998
+    ],
+    [
+      "/* 43: Transpose /model/enc/erb_conv0_buffer/Transpose_1 */",
+      0.000142
+    ],
+    [
+      "/* 112: Split /model/enc/emb_gru/gru.0/grucell/Split */",
+      0.000141
+    ],
+    [
+      "/* 138: Add /model/erb_dec/emb_gru/linear_in/linear_in.0/Add */",
+      0.000135
+    ],
+    [
+      "/* 301: Add /model/df_dec/Add_1 */",
+      0.0001314
+    ],
+    [
+      "/* 160: Split /model/erb_dec/emb_gru/gru.1/grucell/Split */",
+      0.0001308
+    ],
+    [
+      "/* 162: Split /model/erb_dec/emb_gru/gru.1/grucell/Split_1 */",
+      0.0001274
+    ],
+    [
+      "/* 143: Split /model/erb_dec/emb_gru/gru.0/grucell/Split */",
+      0.0001258
+    ],
+    [
+      "/* 242: Split /model/df_dec/df_gru/gru.0/grucell/Split_1 */",
+      0.0001258
+    ],
+    [
+      "/* 288: Concat /model/df_dec/df_convp/df_convp.1/Concat */",
+      0.0001208
+    ],
+    [
+      "/* 2: ReduceSum /model/ReduceSum */",
+      0.000119
+    ],
+    [
+      "/* 240: Split /model/df_dec/df_gru/gru.0/grucell/Split */",
+      0.0001182
+    ],
+    [
+      "/* 67: Transpose /model/enc/df_conv0_buffer/Transpose_1 */",
+      0.00011740000000000001
+    ],
+    [
+      "/* 6: Div /model/Div */",
+      0.0001132
+    ],
+    [
+      "/* 91: Relu /model/enc/df_fc_emb/df_fc_emb.1/Relu */",
+      0.0001118
+    ],
+    [
+      "/* 145: Split /model/erb_dec/emb_gru/gru.0/grucell/Split_1 */",
+      0.00010559999999999999
+    ],
+    [
+      "/* 259: Split /model/df_dec/df_gru/gru.1/grucell/Split_1 */",
+      0.00010140000000000001
+    ],
+    [
+      "/* 349: Concat /model/df_op/Concat_1 */",
+      0.00010059999999999999
+    ],
+    [
+      "/* 101: Concat /model/enc/combine/Concat */",
+      0.0001002
+    ],
+    [
+      "/* 65: Concat /model/enc/df_conv0_buffer/Concat */",
+      9.740000000000001e-05
+    ],
+    [
+      "/* 107: Add /model/enc/emb_gru/linear_in/linear_in.0/Add */",
+      9.279999999999999e-05
+    ],
+    [
+      "/* 132: Relu /model/enc/emb_gru/linear_out/linear_out.1/Relu */",
+      9.259999999999999e-05
+    ],
+    [
+      "/* 180: Relu /model/erb_dec/emb_gru/linear_out/linear_out.1/Relu */",
+      9.240000000000001e-05
+    ],
+    [
+      "/* 100: Relu /model/enc/erb_fc_emb/erb_fc_emb.1/Relu */",
+      9.159999999999999e-05
+    ],
+    [
+      "/* 26: Sqrt /model/spec_norm/Sqrt_1 */",
+      9.1e-05
+    ],
+    [
+      "/* 11: Mul /model/erb_norm/Mul */",
+      9.02e-05
+    ],
+    [
+      "/* 19: Sqrt /model/spec_norm/Sqrt */",
+      9e-05
+    ],
+    [
+      "/* 7: Mul /model/Mul */",
+      8.840000000000001e-05
+    ],
+    [
+      "/* 257: Split /model/df_dec/df_gru/gru.1/grucell/Split */",
+      8.82e-05
+    ],
+    [
+      "/* 114: Split /model/enc/emb_gru/gru.0/grucell/Split_1 */",
+      8.779999999999999e-05
+    ],
+    [
+      "/* 332: Mul /model/df_op/Mul */",
+      8.7e-05
+    ],
+    [
+      "/* 61: Transpose /model/enc/df_conv0_buffer/Transpose */",
+      8.54e-05
+    ],
+    [
+      "/* 4: Add /model/Add */",
+      8.46e-05
+    ],
+    [
+      "/* 15: Sub /model/erb_norm/Sub */",
+      8.46e-05
+    ],
+    [
+      "/* 339: Mul /model/df_op/Mul_2 */",
+      8.44e-05
+    ],
+    [
+      "/* 235: Add /model/df_dec/df_gru/linear_in/linear_in.0/Add */",
+      8.1e-05
+    ],
+    [
+      "/* 12: Mul /model/erb_norm/Mul_1 */",
+      7.879999999999999e-05
+    ],
+    [
+      "/* 13: Add /model/erb_norm/Add */",
+      7.8e-05
+    ],
+    [
+      "/* 341: Mul /model/df_op/Mul_3 */",
+      7.659999999999999e-05
+    ],
+    [
+      "/* 336: Mul /model/df_op/Mul_1 */",
+      7.48e-05
+    ],
+    [
+      "/* 27: Gather /model/spec_norm/Gather */",
+      7.3e-05
+    ],
+    [
+      "/* 274: Add /model/df_dec/df_skip/Add */",
+      7.28e-05
+    ],
+    [
+      "/* 333: ReduceSum /model/df_op/ReduceSum */",
+      7.28e-05
+    ],
+    [
+      "/* 153: Sub /model/erb_dec/emb_gru/gru.0/grucell/Sub */",
+      7e-05
+    ],
+    [
+      "/* 29: Gather /model/spec_norm/Gather_1 */",
+      6.879999999999999e-05
+    ],
+    [
+      "/* 250: Sub /model/df_dec/df_gru/gru.0/grucell/Sub */",
+      6.759999999999999e-05
+    ],
+    [
+      "/* 150: Mul /model/erb_dec/emb_gru/gru.0/grucell/Mul */",
+      6.740000000000001e-05
+    ],
+    [
+      "/* 229: Pad /model/erb_dec/Pad */",
+      6.64e-05
+    ],
+    [
+      "/* 124: Add /model/enc/emb_gru/gru.0/grucell/Add_3 */",
+      6.62e-05
+    ],
+    [
+      "/* 119: Mul /model/enc/emb_gru/gru.0/grucell/Mul */",
+      6.54e-05
+    ],
+    [
+      "/* 170: Sub /model/erb_dec/emb_gru/gru.1/grucell/Sub */",
+      6.54e-05
+    ],
+    [
+      "/* 252: Add /model/df_dec/df_gru/gru.0/grucell/Add_3 */",
+      6.48e-05
+    ],
+    [
+      "/* 236: Relu /model/df_dec/df_gru/linear_in/linear_in.1/Relu */",
+      6.46e-05
+    ],
+    [
+      "/* 264: Mul /model/df_dec/df_gru/gru.1/grucell/Mul */",
+      6.440000000000001e-05
+    ],
+    [
+      "/* 265: Add /model/df_dec/df_gru/gru.1/grucell/Add_2 */",
+      6.42e-05
+    ],
+    [
+      "/* 117: Add /model/enc/emb_gru/gru.0/grucell/Add_1 */",
+      6.379999999999999e-05
+    ],
+    [
+      "/* 267: Sub /model/df_dec/df_gru/gru.1/grucell/Sub */",
+      6.36e-05
+    ],
+    [
+      "/* 154: Mul /model/erb_dec/emb_gru/gru.0/grucell/Mul_1 */",
+      6.34e-05
+    ],
+    [
+      "/* 167: Mul /model/erb_dec/emb_gru/gru.1/grucell/Mul */",
+      6.34e-05
+    ],
+    [
+      "/* 163: Add /model/erb_dec/emb_gru/gru.1/grucell/Add */",
+      6.32e-05
+    ],
+    [
+      "/* 251: Mul /model/df_dec/df_gru/gru.0/grucell/Mul_1 */",
+      6.3e-05
+    ],
+    [
+      "/* 115: Add /model/enc/emb_gru/gru.0/grucell/Add */",
+      6.26e-05
+    ],
+    [
+      "/* 122: Sub /model/enc/emb_gru/gru.0/grucell/Sub */",
+      6.26e-05
+    ],
+    [
+      "/* 148: Add /model/erb_dec/emb_gru/gru.0/grucell/Add_1 */",
+      6.220000000000001e-05
+    ],
+    [
+      "/* 262: Add /model/df_dec/df_gru/gru.1/grucell/Add_1 */",
+      6.220000000000001e-05
+    ],
+    [
+      "/* 108: Relu /model/enc/emb_gru/linear_in/linear_in.1/Relu */",
+      6.14e-05
+    ],
+    [
+      "/* 171: Mul /model/erb_dec/emb_gru/gru.1/grucell/Mul_1 */",
+      6.14e-05
+    ],
+    [
+      "/* 120: Add /model/enc/emb_gru/gru.0/grucell/Add_2 */",
+      6.1e-05
+    ],
+    [
+      "/* 146: Add /model/erb_dec/emb_gru/gru.0/grucell/Add */",
+      6.1e-05
+    ],
+    [
+      "/* 247: Mul /model/df_dec/df_gru/gru.0/grucell/Mul */",
+      6.1e-05
+    ],
+    [
+      "/* 248: Add /model/df_dec/df_gru/gru.0/grucell/Add_2 */",
+      6.1e-05
+    ],
+    [
+      "/* 260: Add /model/df_dec/df_gru/gru.1/grucell/Add */",
+      6.06e-05
+    ],
+    [
+      "/* 139: Relu /model/erb_dec/emb_gru/linear_in/linear_in.1/Relu */",
+      6.04e-05
+    ],
+    [
+      "/* 151: Add /model/erb_dec/emb_gru/gru.0/grucell/Add_2 */",
+      6e-05
+    ],
+    [
+      "/* 155: Add /model/erb_dec/emb_gru/gru.0/grucell/Add_3 */",
+      5.98e-05
+    ],
+    [
+      "/* 168: Add /model/erb_dec/emb_gru/gru.1/grucell/Add_2 */",
+      5.98e-05
+    ],
+    [
+      "/* 275: Add /model/df_dec/Add */",
+      5.94e-05
+    ],
+    [
+      "/* 268: Mul /model/df_dec/df_gru/gru.1/grucell/Mul_1 */",
+      5.9e-05
+    ],
+    [
+      "/* 245: Add /model/df_dec/df_gru/gru.0/grucell/Add_1 */",
+      5.86e-05
+    ],
+    [
+      "/* 342: ReduceSum /model/df_op/ReduceSum_3 */",
+      5.86e-05
+    ],
+    [
+      "/* 243: Add /model/df_dec/df_gru/gru.0/grucell/Add */",
+      5.7600000000000004e-05
+    ],
+    [
+      "/* 172: Add /model/erb_dec/emb_gru/gru.1/grucell/Add_3 */",
+      5.6200000000000004e-05
+    ],
+    [
+      "/* 37: Transpose /model/enc/erb_conv0_buffer/Transpose */",
+      5.56e-05
+    ],
+    [
+      "/* 165: Add /model/erb_dec/emb_gru/gru.1/grucell/Add_1 */",
+      5.4e-05
+    ],
+    [
+      "/* 123: Mul /model/enc/emb_gru/gru.0/grucell/Mul_1 */",
+      5.22e-05
+    ],
+    [
+      "/* 337: ReduceSum /model/df_op/ReduceSum_1 */",
+      5.22e-05
+    ],
+    [
+      "/* 17: Pow /model/spec_norm/Pow */",
+      5.1e-05
+    ],
+    [
+      "/* 269: Add /model/df_dec/df_gru/gru.1/grucell/Add_3 */",
+      5.0799999999999995e-05
+    ],
+    [
+      "/* 340: ReduceSum /model/df_op/ReduceSum_2 */",
+      4.92e-05
+    ],
+    [
+      "/* 28: Div /model/spec_norm/Div */",
+      4.68e-05
+    ],
+    [
+      "/* 18: ReduceSum /model/spec_norm/ReduceSum */",
+      4.6e-05
+    ],
+    [
+      "/* 30: Div /model/spec_norm/Div_1 */",
+      4.54e-05
+    ],
+    [
+      "/* 25: Add /model/spec_norm/Add_1 */",
+      4.52e-05
+    ],
+    [
+      "/* 24: Add /model/spec_norm/Add */",
+      4.5e-05
+    ],
+    [
+      "/* 22: Mul /model/spec_norm/Mul */",
+      4.46e-05
+    ],
+    [
+      "/* 338: Sub /model/df_op/Sub */",
+      4.32e-05
+    ],
+    [
+      "/* 343: Add /model/df_op/Add */",
+      4.0600000000000004e-05
+    ],
+    [
+      "/* 23: Mul /model/spec_norm/Mul_1 */",
+      3.9200000000000004e-05
+    ],
+    [
+      "/* 106: Reshape /model/enc/emb_gru/linear_in/linear_in.0/Reshape_1 */",
+      3.86e-05
+    ],
+    [
+      "/* 44: Reshape /model/enc/erb_conv0_buffer/Reshape_1 */",
+      2.26e-05
+    ],
+    [
+      "/* 326: Slice /model/df_op/spec_buffer/Slice_2 */",
+      2.22e-05
+    ],
+    [
+      "/* 344: Unsqueeze /model/df_op/Unsqueeze */",
+      2.22e-05
+    ],
+    [
+      "/* 32: Unsqueeze /model/spec_norm/Unsqueeze_1 */",
+      2.2e-05
+    ],
+    [
+      "/* 279: Slice /model/df_dec/df_convp_buffer/Slice_1 */",
+      2.18e-05
+    ],
+    [
+      "/* 345: Unsqueeze /model/df_op/Unsqueeze_1 */",
+      2.18e-05
+    ],
+    [
+      "/* 42: Slice /model/enc/erb_conv0_buffer/Slice_2 */",
+      2.16e-05
+    ],
+    [
+      "/* 221: Reshape /model/erb_dec/convt1/convt1.0/Reshape_1 */",
+      2.16e-05
+    ],
+    [
+      "/* 272: Squeeze /model/df_dec/df_skip/Squeeze */",
+      2.16e-05
+    ],
+    [
+      "/* 130: Reshape /model/enc/emb_gru/linear_out/linear_out.0/Reshape_1 */",
+      2.14e-05
+    ],
+    [
+      "/* 34: Reshape /model/spec_norm/Reshape_1 */",
+      2.12e-05
+    ],
+    [
+      "/* 84: Flatten /model/enc/Flatten */",
+      2.12e-05
+    ],
+    [
+      "/* 188: Reshape /model/erb_dec/Reshape */",
+      2.12e-05
+    ],
+    [
+      "/* 66: Slice /model/enc/df_conv0_buffer/Slice_2 */",
+      2.1e-05
+    ],
+    [
+      "/* 93: Flatten /model/enc/Flatten_1 */",
+      2.1e-05
+    ],
+    [
+      "/* 157: Slice /model/erb_dec/emb_gru/gru.1/Slice */",
+      2.1e-05
+    ],
+    [
+      "/* 69: Slice /model/enc/df_conv0/df_conv0.1/Slice */",
+      2.08e-05
+    ],
+    [
+      "/* 233: Squeeze /model/df_dec/df_gru/linear_in/linear_in.0/Squeeze */",
+      2.08e-05
+    ],
+    [
+      "/* 38: Slice /model/enc/erb_conv0_buffer/Slice */",
+      2.0600000000000003e-05
+    ],
+    [
+      "/* 140: Slice /model/erb_dec/emb_gru/gru.0/Slice */",
+      2.0399999999999998e-05
+    ],
+    [
+      "/* 254: Slice /model/df_dec/df_gru/gru.1/Slice */",
+      2.0399999999999998e-05
+    ],
+    [
+      "/* 303: Unsqueeze /model/mask/Unsqueeze */",
+      2.0399999999999998e-05
+    ],
+    [
+      "/* 63: Reshape /model/enc/df_conv0_buffer/Reshape */",
+      2.02e-05
+    ],
+    [
+      "/* 207: Reshape /model/erb_dec/convt2/convt2.0/Reshape */",
+      2.02e-05
+    ],
+    [
+      "/* 306: Reshape /model/mask/spec_buffer/Reshape */",
+      2.02e-05
+    ],
+    [
+      "/* 133: Reshape /model/erb_dec/emb_gru/linear_in/linear_in.0/Reshape */",
+      2e-05
+    ],
+    [
+      "/* 141: Reshape /model/erb_dec/emb_gru/gru.0/Reshape */",
+      1.98e-05
+    ],
+    [
+      "/* 85: Reshape /model/enc/df_fc_emb/df_fc_emb.0/Reshape */",
+      1.9600000000000002e-05
+    ],
+    [
+      "/* 94: Reshape /model/enc/erb_fc_emb/erb_fc_emb.0/Reshape */",
+      1.9600000000000002e-05
+    ],
+    [
+      "/* 103: Unsqueeze /model/enc/emb_gru/linear_in/linear_in.0/Unsqueeze */",
+      1.9600000000000002e-05
+    ],
+    [
+      "/* 158: Reshape /model/erb_dec/emb_gru/gru.1/Reshape */",
+      1.9399999999999997e-05
+    ],
+    [
+      "/* 273: Reshape /model/df_dec/df_skip/Reshape_1 */",
+      1.9399999999999997e-05
+    ],
+    [
+      "/* 284: Slice /model/df_dec/df_convp/df_convp.1/Slice */",
+      1.9399999999999997e-05
+    ],
+    [
+      "/* 299: Unsqueeze /model/df_dec/Unsqueeze */",
+      1.9399999999999997e-05
+    ],
+    [
+      "/* 348: Slice  */",
+      1.9399999999999997e-05
+    ],
+    [
+      "/* 79: Slice /model/enc/dprnn_df/blocks.0/inter_gru/Slice */",
+      1.92e-05
+    ],
+    [
+      "/* 209: Reshape /model/erb_dec/convt2/convt2.0/Reshape_1 */",
+      1.92e-05
+    ],
+    [
+      "/* 292: Reshape /model/df_dec/df_out/df_out.0/Reshape */",
+      1.92e-05
+    ],
+    [
+      "/* 36: Unsqueeze /model/Unsqueeze_1 */",
+      1.9e-05
+    ],
+    [
+      "/* 57: Slice /model/enc/dprnn_erb/blocks.0/inter_gru/Slice */",
+      1.9e-05
+    ],
+    [
+      "/* 97: Squeeze /model/enc/erb_fc_emb/erb_fc_emb.0/Squeeze */",
+      1.9e-05
+    ],
+    [
+      "/* 230: Reshape /model/df_dec/df_gru/linear_in/linear_in.0/Reshape */",
+      1.9e-05
+    ],
+    [
+      "/* 277: Slice /model/df_dec/df_convp_buffer/Slice */",
+      1.9e-05
+    ],
+    [
+      "/* 324: Slice /model/df_op/spec_buffer/Slice_1 */",
+      1.9e-05
+    ],
+    [
+      "/* 14: Reshape /model/erb_norm/Reshape_1 */",
+      1.88e-05
+    ],
+    [
+      "/* 98: Reshape /model/enc/erb_fc_emb/erb_fc_emb.0/Reshape_1 */",
+      1.88e-05
+    ],
+    [
+      "/* 110: Reshape /model/enc/emb_gru/gru.0/Reshape */",
+      1.88e-05
+    ],
+    [
+      "/* 126: Reshape /model/enc/emb_gru/linear_out/linear_out.0/Reshape */",
+      1.88e-05
+    ],
+    [
+      "/* 136: Squeeze /model/erb_dec/emb_gru/linear_in/linear_in.0/Squeeze */",
+      1.88e-05
+    ],
+    [
+      "/* 156: Reshape /model/erb_dec/emb_gru/gru.0/Reshape_1 */",
+      1.88e-05
+    ],
+    [
+      "/* 196: Reshape /model/erb_dec/convt3/convt3.0/Reshape */",
+      1.88e-05
+    ],
+    [
+      "/* 285: Slice /model/df_dec/df_convp/df_convp.1/Slice_1 */",
+      1.88e-05
+    ],
+    [
+      "/* 8: Slice /model/Slice */",
+      1.86e-05
+    ],
+    [
+      "/* 21: Reshape /model/spec_norm/Reshape */",
+      1.86e-05
+    ],
+    [
+      "/* 309: Slice /model/mask/spec_buffer/Slice_2 */",
+      1.86e-05
+    ],
+    [
+      "/* 311: Reshape /model/mask/spec_buffer/Reshape_1 */",
+      1.86e-05
+    ],
+    [
+      "/* 137: Reshape /model/erb_dec/emb_gru/linear_in/linear_in.0/Reshape_1 */",
+      1.84e-05
+    ],
+    [
+      "/* 314: Slice /model/df_op/coefs_buffer/Slice */",
+      1.84e-05
+    ],
+    [
+      "/* 35: Unsqueeze /model/Unsqueeze */",
+      1.82e-05
+    ],
+    [
+      "/* 39: Reshape /model/enc/erb_conv0_buffer/Reshape */",
+      1.82e-05
+    ],
+    [
+      "/* 64: Slice /model/enc/df_conv0_buffer/Slice_1 */",
+      1.82e-05
+    ],
+    [
+      "/* 102: Reshape /model/enc/emb_gru/linear_in/linear_in.0/Reshape */",
+      1.82e-05
+    ],
+    [
+      "/* 185: Reshape /model/erb_dec/erb_fc_emb/erb_fc_emb.0/Reshape_1 */",
+      1.82e-05
+    ],
+    [
+      "/* 219: Reshape /model/erb_dec/convt1/convt1.0/Reshape */",
+      1.82e-05
+    ],
+    [
+      "/* 20: Slice /model/spec_norm/Slice */",
+      1.8e-05
+    ],
+    [
+      "/* 105: Squeeze /model/enc/emb_gru/linear_in/linear_in.0/Squeeze */",
+      1.8e-05
+    ],
+    [
+      "/* 174: Reshape /model/erb_dec/emb_gru/linear_out/linear_out.0/Reshape */",
+      1.8e-05
+    ],
+    [
+      "/* 237: Slice /model/df_dec/df_gru/gru.0/Slice */",
+      1.8e-05
+    ],
+    [
+      "/* 302: Reshape /model/df_out_transform/Reshape */",
+      1.8e-05
+    ],
+    [
+      "/* 322: Slice /model/df_op/spec_buffer/Slice */",
+      1.8e-05
+    ],
+    [
+      "/* 89: Reshape /model/enc/df_fc_emb/df_fc_emb.0/Reshape_1 */",
+      1.7800000000000002e-05
+    ],
+    [
+      "/* 177: Squeeze /model/erb_dec/emb_gru/linear_out/linear_out.0/Squeeze */",
+      1.7800000000000002e-05
+    ],
+    [
+      "/* 307: Slice /model/mask/spec_buffer/Slice_1 */",
+      1.7800000000000002e-05
+    ],
+    [
+      "/* 9: Slice /model/erb_norm/Slice */",
+      1.76e-05
+    ],
+    [
+      "/* 68: Reshape /model/enc/df_conv0_buffer/Reshape_1 */",
+      1.76e-05
+    ],
+    [
+      "/* 95: Unsqueeze /model/enc/erb_fc_emb/erb_fc_emb.0/Unsqueeze */",
+      1.76e-05
+    ],
+    [
+      "/* 109: Slice /model/enc/emb_gru/gru.0/Slice */",
+      1.76e-05
+    ],
+    [
+      "/* 181: Reshape /model/erb_dec/erb_fc_emb/erb_fc_emb.0/Reshape */",
+      1.76e-05
+    ],
+    [
+      "/* 134: Unsqueeze /model/erb_dec/emb_gru/linear_in/linear_in.0/Unsqueeze */",
+      1.74e-05
+    ],
+    [
+      "/* 295: Squeeze /model/df_dec/df_out/df_out.0/Squeeze */",
+      1.74e-05
+    ],
+    [
+      "/* 328: Reshape /model/df_op/spec_buffer/Reshape_1 */",
+      1.74e-05
+    ],
+    [
+      "/* 10: Reshape /model/erb_norm/Reshape */",
+      1.7199999999999998e-05
+    ],
+    [
+      "/* 31: Unsqueeze /model/spec_norm/Unsqueeze */",
+      1.7199999999999998e-05
+    ],
+    [
+      "/* 81: Slice /model/enc/dprnn_df/blocks.1/inter_gru/Slice */",
+      1.7199999999999998e-05
+    ],
+    [
+      "/* 88: Squeeze /model/enc/df_fc_emb/df_fc_emb.0/Squeeze */",
+      1.7199999999999998e-05
+    ],
+    [
+      "/* 127: Unsqueeze /model/enc/emb_gru/linear_out/linear_out.0/Unsqueeze */",
+      1.7199999999999998e-05
+    ],
+    [
+      "/* 175: Unsqueeze /model/erb_dec/emb_gru/linear_out/linear_out.0/Unsqueeze */",
+      1.7199999999999998e-05
+    ],
+    [
+      "/* 178: Reshape /model/erb_dec/emb_gru/linear_out/linear_out.0/Reshape_1 */",
+      1.7199999999999998e-05
+    ],
+    [
+      "/* 296: Reshape /model/df_dec/df_out/df_out.0/Reshape_1 */",
+      1.7199999999999998e-05
+    ],
+    [
+      "/* 300: Reshape /model/df_dec/Reshape */",
+      1.7199999999999998e-05
+    ],
+    [
+      "/* 40: Slice /model/enc/erb_conv0_buffer/Slice_1 */",
+      1.7e-05
+    ],
+    [
+      "/* 231: Unsqueeze /model/df_dec/df_gru/linear_in/linear_in.0/Unsqueeze */",
+      1.7e-05
+    ],
+    [
+      "/* 315: Reshape /model/df_op/coefs_buffer/Reshape */",
+      1.7e-05
+    ],
+    [
+      "/* 323: Reshape /model/df_op/spec_buffer/Reshape */",
+      1.7e-05
+    ],
+    [
+      "/* 283: Reshape /model/df_dec/df_convp_buffer/Reshape_1 */",
+      1.6800000000000002e-05
+    ],
+    [
+      "/* 316: Slice /model/df_op/coefs_buffer/Slice_1 */",
+      1.6800000000000002e-05
+    ],
+    [
+      "/* 319: Reshape /model/df_op/coefs_buffer/Reshape_1 */",
+      1.66e-05
+    ],
+    [
+      "/* 59: Slice /model/enc/dprnn_erb/blocks.1/inter_gru/Slice */",
+      1.64e-05
+    ],
+    [
+      "/* 173: Reshape /model/erb_dec/emb_gru/gru.1/Reshape_1 */",
+      1.64e-05
+    ],
+    [
+      "/* 318: Slice /model/df_op/coefs_buffer/Slice_2 */",
+      1.64e-05
+    ],
+    [
+      "/* 350: Squeeze /model/Squeeze */",
+      1.64e-05
+    ],
+    [
+      "/* 125: Reshape /model/enc/emb_gru/gru.0/Reshape_1 */",
+      1.62e-05
+    ],
+    [
+      "/* 234: Reshape /model/df_dec/df_gru/linear_in/linear_in.0/Reshape_1 */",
+      1.62e-05
+    ],
+    [
+      "/* 253: Reshape /model/df_dec/df_gru/gru.0/Reshape_1 */",
+      1.62e-05
+    ],
+    [
+      "/* 198: Reshape /model/erb_dec/convt3/convt3.0/Reshape_1 */",
+      1.6e-05
+    ],
+    [
+      "/* 255: Reshape /model/df_dec/df_gru/gru.1/Reshape */",
+      1.6e-05
+    ],
+    [
+      "/* 305: Slice /model/mask/spec_buffer/Slice */",
+      1.6e-05
+    ],
+    [
+      "/* 86: Unsqueeze /model/enc/df_fc_emb/df_fc_emb.0/Unsqueeze */",
+      1.58e-05
+    ],
+    [
+      "/* 129: Squeeze /model/enc/emb_gru/linear_out/linear_out.0/Squeeze */",
+      1.58e-05
+    ],
+    [
+      "/* 238: Reshape /model/df_dec/df_gru/gru.0/Reshape */",
+      1.58e-05
+    ],
+    [
+      "/* 293: Unsqueeze /model/df_dec/df_out/df_out.0/Unsqueeze */",
+      1.58e-05
+    ],
+    [
+      "/* 347: Unsqueeze /model/df_op/Unsqueeze_2 */",
+      1.58e-05
+    ],
+    [
+      "/* 270: Reshape /model/df_dec/df_gru/gru.1/Reshape_1 */",
+      1.56e-05
+    ],
+    [
+      "/* 281: Slice /model/df_dec/df_convp_buffer/Slice_2 */",
+      1.54e-05
+    ],
+    [
+      "/* 62: Slice /model/enc/df_conv0_buffer/Slice */",
+      1.5199999999999998e-05
+    ],
+    [
+      "/* 184: Squeeze /model/erb_dec/erb_fc_emb/erb_fc_emb.0/Squeeze */",
+      1.5199999999999998e-05
+    ],
+    [
+      "/* 278: Reshape /model/df_dec/df_convp_buffer/Reshape */",
+      1.4e-05
+    ],
+    [
+      "/* 182: Unsqueeze /model/erb_dec/erb_fc_emb/erb_fc_emb.0/Unsqueeze */",
+      1.38e-05
+    ],
+    [
+      "/* 70: Slice /model/enc/df_conv0/df_conv0.1/Slice_1 */",
+      1.34e-05
+    ]
+  ]
+}

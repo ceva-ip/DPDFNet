@@ -4,6 +4,7 @@
 #include <stdint.h>
 typedef void (*dpdf_affine_fn)(const float *, const float *, const float *, float *, int, int, int);
 typedef void (*dpdf_gates_fn)(const float *, const float *, const float *, float *, int);
+typedef void (*dpdf_norm_fn)(float *,const float *,const float *,const float *,const float *,float,int);
 void dpdf_affine_scalar(const float *, const float *, const float *, float *, int, int, int);
 void dpdf_gates_scalar(const float *, const float *, const float *, float *, int);
 #ifdef DPDF_X86_DISPATCH
@@ -19,5 +20,6 @@ void dpdf_affine_fp16(const float *, const uint16_t *, const float *, float *, i
 void dpdf_affine_avx2(const float *, const float *, const float *, float *, int, int, int);
 void dpdf_gates_avx2(const float *, const float *, const float *, float *, int);
 void dpdf_activations_avx2(const float *, float *, float *, size_t);
+void dpdf_norm_residual_avx2(float *,const float *,const float *,const float *,const float *,float,int);
 #endif
 #endif

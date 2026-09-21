@@ -1,0 +1,26 @@
+{
+  "model": "models/dpdfnet2_48khz_hr.onnx",
+  "parity": {
+    "compact_fp32": {
+      "frames": 100,
+      "output_and_state_bit_identical": true
+    }
+  },
+  "concurrency": {
+    "compact_fp32": {
+      "streams": 4,
+      "frames_each": 64,
+      "serial_and_concurrent_bit_identical": true,
+      "output_and_state_sha256": [
+        "ea97c7964ebac0421d6bf4b2239dbe3017048c8119dcb8ac4dbc7dc2d4d91c26",
+        "457f27c12079c147f53e8a062523f8fa1b7c1dff03b41f9a2c85aad6e751edef",
+        "a79b40ff7d3e731136dccd04966e2ac3c5079e099e56635d9e0d41256c7f3f30",
+        "e1c07b563ab5a4335802e19b3751e6dbaf54c1421bdd605493dccbf20578a42f"
+      ]
+    }
+  },
+  "artifacts": {
+    "baseline": "bd424367115aec328b6c1c91c322923f22843430bec671eaf2721499f3a17dae",
+    "candidate": "bd424367115aec328b6c1c91c322923f22843430bec671eaf2721499f3a17dae"
+  }
+}

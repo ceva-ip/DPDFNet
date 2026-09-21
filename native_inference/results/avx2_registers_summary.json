@@ -1,0 +1,109 @@
+{
+  "environment": {
+    "cpu": "Intel Core i7-8700",
+    "execution": "Linux Docker/WSL2, one inference thread",
+    "compiler": "GCC 12.2.0-14+deb12u1"
+  },
+  "implementation": "AVX2 intrinsics; separated integer reduction; no new ISA requirements",
+  "validation": {
+    "final_8": {
+      "passed": 4,
+      "failed": 0
+    },
+    "sanitize_8": {
+      "passed": 4,
+      "failed": 0
+    },
+    "scalar_8": {
+      "passed": 3,
+      "failed": 0
+    },
+    "final_2": {
+      "passed": 4,
+      "failed": 0
+    },
+    "sanitize_2": {
+      "passed": 4,
+      "failed": 0
+    },
+    "scalar_2": {
+      "passed": 3,
+      "failed": 0
+    },
+    "sanitizer_note": "Initial PIE executables had intermittent early failures; empty ASan program timed out in 2/10 PIE starts, 0/10 non-PIE starts. Final sanitizer test executables linked with -no-pie; shared libraries unchanged and ASan/UBSan enabled."
+  },
+  "models": {
+    "dpdfnet8_48khz_hr": {
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      },
+      "summary": {
+        "continuous": {
+          "baseline": {
+            "median_mean_ms": 2.7654462279999996,
+            "median_p50_ms": 2.6838165,
+            "over_10ms_total": 0
+          },
+          "candidate": {
+            "median_mean_ms": 2.74221634,
+            "median_p50_ms": 2.6411160000000002,
+            "over_10ms_total": 0
+          },
+          "median_mean_ms_saved_percent": 0.8400050510763168,
+          "median_p50_ms_saved_percent": 1.5910364959750263
+        },
+        "paced": {
+          "baseline": {
+            "median_mean_ms": 3.0172641359999997,
+            "median_p50_ms": 2.9504165,
+            "over_10ms_total": 0
+          },
+          "candidate": {
+            "median_mean_ms": 2.989613757,
+            "median_p50_ms": 2.8752605,
+            "over_10ms_total": 5
+          },
+          "median_mean_ms_saved_percent": 0.9164056494124513,
+          "median_p50_ms_saved_percent": 2.5473013725350375
+        }
+      }
+    },
+    "dpdfnet2_48khz_hr": {
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      },
+      "summary": {
+        "continuous": {
+          "baseline": {
+            "median_mean_ms": 1.310965138,
+            "median_p50_ms": 1.224275,
+            "over_10ms_total": 0
+          },
+          "candidate": {
+            "median_mean_ms": 1.2616194220000003,
+            "median_p50_ms": 1.1898265000000001,
+            "over_10ms_total": 0
+          },
+          "median_mean_ms_saved_percent": 3.7640753800121036,
+          "median_p50_ms_saved_percent": 2.813787751934809
+        },
+        "paced": {
+          "baseline": {
+            "median_mean_ms": 1.632224262,
+            "median_p50_ms": 1.5658855,
+            "over_10ms_total": 0
+          },
+          "candidate": {
+            "median_mean_ms": 1.532120371,
+            "median_p50_ms": 1.50619,
+            "over_10ms_total": 0
+          },
+          "median_mean_ms_saved_percent": 6.132974085150565,
+          "median_p50_ms_saved_percent": 3.8122519175252676
+        }
+      }
+    }
+  }
+}
