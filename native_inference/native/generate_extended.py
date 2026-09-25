@@ -9,10 +9,12 @@ import json
 import re
 from pathlib import Path
 from generate_model import generate
+from generated_api import finalize, validate_prefix
 
 
-def extend(source, folder):
-    generate(source, folder)
+def extend(source, folder, symbol_prefix='dpdf_model'):
+    validate_prefix(symbol_prefix)
+    generate(source, folder, finalize_output=False)
     path=folder/'generated_model.c'; code=path.read_text()
     manifest=json.loads((folder/'manifest.json').read_text())
     block_count=manifest['block_count']
@@ -101,8 +103,11 @@ if (!m) return 0;
     manifest['extended']={'dense_contexts':len(dense),'conv_contexts':len(conv),'compact_constant_bytes':compact*4,'families':families}
     (folder/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     print(f'Extended graph: {len(dense)} dense contexts, {len(conv)} convolution contexts, {compact*4} direct constant bytes')
+    finalize(folder, symbol_prefix, extended=True)
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('source',type=Path);p.add_argument('output',type=Path)
-    a=p.parse_args();extend(a.source,a.output)
+    p.add_argument('--symbol-prefix', default='dpdf_model', type=validate_prefix,
+                   help='C model symbol prefix (default: dpdf_model)')
+    a=p.parse_args();extend(a.source,a.output,a.symbol_prefix)

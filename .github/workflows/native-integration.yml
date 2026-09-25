@@ -1,0 +1,27 @@
+name: Native integration
+on:
+  push:
+    paths: ['native_inference/native/**', 'native_inference/artifacts/**', '.github/workflows/native-integration.yml']
+  pull_request:
+    paths: ['native_inference/native/**', 'native_inference/artifacts/**', '.github/workflows/native-integration.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        config:
+          - '-DCMAKE_BUILD_TYPE=Release'
+          - '-DCMAKE_BUILD_TYPE=Release -DDPDF_ENABLE_AVX2=OFF'
+          - '-DCMAKE_BUILD_TYPE=RelWithDebInfo -DDPDF_SANITIZE=ON -DBUILD_SHARED_LIBS=ON'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify generated sources and weights
+        working-directory: native_inference/artifacts/v1
+        run: sha256sum -c SHA256SUMS
+      - name: Configure without Python or ONNX dependencies
+        run: cmake -S native_inference/native/integration -B build/native ${{ matrix.config }}
+      - run: cmake --build build/native -j 2
+      - run: ctest --test-dir build/native --output-on-failure

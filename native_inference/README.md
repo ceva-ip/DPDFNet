@@ -1,5 +1,10 @@
 # DPDFNet native inference investigation
 
+**HushMic integration:** [C ABI v1 and Python-free build](native/integration/README.md)
+now provide symbol-prefixed models in one library, the named
+`DPDF_PRESET_INT8_SELECTIVE` preset with CPU capability checks, and
+[checksummed generated C, headers and weights for both models](artifacts/v1/).
+
 **Latest measurements against original ONNX:** the [matched comparison](native/ONNX_LATEST_COMPARISON.md)
 measures selective INT8 at **5.57 → 2.38 ms/hop (57.3% less)** for DPDFNet-8
 and **2.12 → 1.02 ms/hop (52.1% less)** for DPDFNet-2. Warmed incremental model

@@ -17,6 +17,7 @@ import onnx
 from onnx import numpy_helper
 from export_blocks import export, attributes
 from arena_planner import reuse_arena
+from generated_api import finalize, validate_prefix
 
 
 def strides(shape):
@@ -56,7 +57,8 @@ def transpose_code(source_shape, output_shape, perm, x, y):
     return loops+f'{y}[{lhs}]={x}[{rhs}];'
 
 
-def generate(source, folder):
+def generate(source, folder, symbol_prefix='dpdf_model', *, finalize_output=True):
+    validate_prefix(symbol_prefix)
     export(source, folder/'oracles')
     oracle_manifest=json.loads((folder/'oracles'/'manifest.json').read_text())
     model=onnx.shape_inference.infer_shapes(onnx.load(str(folder/'oracles/hybrid.onnx')))
@@ -304,9 +306,13 @@ dpdf_model *dpdf_model_create(const float *w,size_t count,int tier) {
         'tensor_layout':tensors,'weight_layout':weight_layout,
         'arena_plan':arena_plan,'original_arena_bytes':original_arena_count*4},indent=2)+'\n')
     print(f'Generated complete C spectral graph: {weight_count*4} weight bytes, {arena_count*4} arena bytes')
+    if finalize_output:
+        finalize(folder, symbol_prefix)
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('source',type=Path); p.add_argument('output',type=Path)
-    a=p.parse_args(); generate(a.source,a.output)
+    p.add_argument('--symbol-prefix', default='dpdf_model', type=validate_prefix,
+                   help='C model symbol prefix (default: dpdf_model)')
+    a=p.parse_args(); generate(a.source,a.output,a.symbol_prefix)

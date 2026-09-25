@@ -1,5 +1,10 @@
 # Complete C model and reduced-precision experiments
 
+**Integration update:** use the [versioned C API and Python-free two-model build](integration/README.md)
+with [checksummed generated artifacts](../artifacts/v1/) for HushMic. The
+generated-source distribution and named selective INT8 preset supersede the
+single-model integration and ignored-artifact instructions in this historical report.
+
 **Follow-up:** [FC/CNN precision and memory experiments](EXTENDED_PRECISION.md)
 now extend these modes and remove retained FP32 weight copies. The measurements
 and memory description below document the earlier complete-model milestone.

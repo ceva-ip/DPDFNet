@@ -1,0 +1,82 @@
+cmake_minimum_required(VERSION 3.18)
+project(dpdf_native_integration VERSION 1.0.0 LANGUAGES C)
+include(CTest)
+option(DPDF_ENABLE_AVX2 "Build runtime-dispatched AVX2/FMA kernels" ON)
+option(DPDF_SANITIZE "Enable ASan/UBSan" OFF)
+set(DPDF_ARTIFACT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../artifacts/v1" CACHE PATH "Checksummed generated C and weights")
+get_filename_component(DPDF_ARTIFACT_DIR "${DPDF_ARTIFACT_DIR}" ABSOLUTE)
+get_filename_component(DPDF_NATIVE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+
+# No Python at configure, build or test time. Fail before compilation if any
+# distributed source, header, weight blob or model manifest has changed.
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${DPDF_ARTIFACT_DIR}/SHA256SUMS")
+file(STRINGS "${DPDF_ARTIFACT_DIR}/SHA256SUMS" checksums)
+set(verified_files "")
+foreach(record IN LISTS checksums)
+  if(NOT record MATCHES "^([0-9a-f]+)  (dpdfnet[28]_48khz_hr/(generated_model\\.[ch]|weights\\.f32|manifest\\.json))$")
+    message(FATAL_ERROR "Invalid artifact checksum record: ${record}")
+  endif()
+  set(expected "${CMAKE_MATCH_1}")
+  set(relative "${CMAKE_MATCH_2}")
+  string(LENGTH "${expected}" digest_length)
+  if(NOT digest_length EQUAL 64 OR relative IN_LIST verified_files)
+    message(FATAL_ERROR "Invalid/duplicate checksum: ${relative}")
+  endif()
+  file(SHA256 "${DPDF_ARTIFACT_DIR}/${relative}" actual)
+  if(NOT actual STREQUAL expected)
+    message(FATAL_ERROR "Artifact checksum mismatch: ${relative}")
+  endif()
+  list(APPEND verified_files "${relative}")
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${DPDF_ARTIFACT_DIR}/${relative}")
+endforeach()
+list(LENGTH verified_files verified_count)
+if(NOT verified_count EQUAL 8)
+  message(FATAL_ERROR "Expected all eight model artifact checksums")
+endif()
+
+add_library(dpdf_native
+  "${DPDF_ARTIFACT_DIR}/dpdfnet2_48khz_hr/generated_model.c"
+  "${DPDF_ARTIFACT_DIR}/dpdfnet8_48khz_hr/generated_model.c"
+  "${DPDF_NATIVE_DIR}/dpdf_dprnn.c"
+  "${DPDF_NATIVE_DIR}/full_ops.c"
+  "${DPDF_NATIVE_DIR}/extended_ops.c")
+target_compile_features(dpdf_native PUBLIC c_std_11)
+target_include_directories(dpdf_native PUBLIC "${DPDF_NATIVE_DIR}" "${DPDF_ARTIFACT_DIR}")
+set_target_properties(dpdf_native PROPERTIES POSITION_INDEPENDENT_CODE ON
+  VERSION 1.0.0 SOVERSION 1)
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+  target_compile_options(dpdf_native PRIVATE -Wall -Wextra -Werror -ffp-contract=off)
+  if(DPDF_ENABLE_AVX2 AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|amd64")
+    target_sources(dpdf_native PRIVATE "${DPDF_NATIVE_DIR}/avx2.c" "${DPDF_NATIVE_DIR}/fp16.c" "${DPDF_NATIVE_DIR}/int8.c")
+    target_compile_definitions(dpdf_native PRIVATE DPDF_X86_DISPATCH)
+    set_source_files_properties("${DPDF_NATIVE_DIR}/avx2.c" "${DPDF_NATIVE_DIR}/int8.c"
+      PROPERTIES COMPILE_OPTIONS "-mavx2;-mfma")
+    set_source_files_properties("${DPDF_NATIVE_DIR}/fp16.c"
+      PROPERTIES COMPILE_OPTIONS "-mavx2;-mfma;-mf16c")
+  endif()
+endif()
+if(NOT WIN32)
+  target_link_libraries(dpdf_native PRIVATE m)
+endif()
+if(DPDF_SANITIZE)
+  target_compile_options(dpdf_native PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
+  target_link_options(dpdf_native PUBLIC -fsanitize=address,undefined)
+endif()
+if(BUILD_TESTING)
+  add_executable(dpdf_integration_contract integration_contract.c)
+  target_link_libraries(dpdf_integration_contract PRIVATE dpdf_native)
+  if(NOT WIN32)
+    target_link_libraries(dpdf_integration_contract PRIVATE m)
+  endif()
+  if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(dpdf_integration_contract PRIVATE -Wall -Wextra -Werror -ffp-contract=off)
+  endif()
+  if(DPDF_SANITIZE)
+    target_compile_options(dpdf_integration_contract PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
+  endif()
+  add_test(NAME integration_contract COMMAND dpdf_integration_contract
+    "${DPDF_ARTIFACT_DIR}/dpdfnet2_48khz_hr/weights.f32"
+    "${DPDF_ARTIFACT_DIR}/dpdfnet8_48khz_hr/weights.f32")
+  set_tests_properties(integration_contract PROPERTIES TIMEOUT 120
+    ENVIRONMENT "ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:handle_segv=0;UBSAN_OPTIONS=halt_on_error=1")
+endif()
