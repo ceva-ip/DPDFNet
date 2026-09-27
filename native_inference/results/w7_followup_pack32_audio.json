@@ -1,0 +1,1048 @@
+{
+  "mode": "exact PCM regression",
+  "candidate_build": "/bench/build/w7_followup_pack32",
+  "candidate_sha256": "d0f074947e082efa7cfcb5ff9ffc28932b3347e0b7855de7dbfb81355f88c9ee",
+  "baseline_sha256": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+  "sample_rate": 48000,
+  "note": "All model/PCM processing is 48 kHz. PESQ is explicitly resampled to 16 kHz; STOI internally uses 10 kHz. SIGMOS and SI-SNR use 48 kHz.",
+  "cases": [
+    {
+      "case": {
+        "id": "clean_00033",
+        "scenario": "clean",
+        "input": "/bench/scratch/fullband/robustness/audio/clean_00033/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/clean_00033/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/clean_00033/w7a8.wav",
+        "expected_pcm_sha256": "db28613cc1441982c4a2c285a13fd3cc3906810ed0f4aea86eab6198a476854c"
+      },
+      "samples": 745015,
+      "hops_including_flush": 1559,
+      "input_sha256": "90cff249b18b17d1904f87392d94c001b5368b2ed29b7c65f2536b54685ae934",
+      "baseline_pcm_sha256": "db28613cc1441982c4a2c285a13fd3cc3906810ed0f4aea86eab6198a476854c",
+      "candidate_pcm_sha256": "db28613cc1441982c4a2c285a13fd3cc3906810ed0f4aea86eab6198a476854c",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "clean_00133",
+        "scenario": "clean",
+        "input": "/bench/scratch/fullband/robustness/audio/clean_00133/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/clean_00133/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/clean_00133/w7a8.wav",
+        "expected_pcm_sha256": "29a3808e3a9819ca5d2e4f43c9c886d2e289adc19d31abf2c867467f34b7e53d"
+      },
+      "samples": 871623,
+      "hops_including_flush": 1822,
+      "input_sha256": "b7adeddbfac51f79595ef94f21513303dd5c3c616a157966171e10ec8aa8ac94",
+      "baseline_pcm_sha256": "29a3808e3a9819ca5d2e4f43c9c886d2e289adc19d31abf2c867467f34b7e53d",
+      "candidate_pcm_sha256": "29a3808e3a9819ca5d2e4f43c9c886d2e289adc19d31abf2c867467f34b7e53d",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00084",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00084/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00084/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00084/w7a8.wav",
+        "expected_pcm_sha256": "d0978f5381e7e1ebeff2d1fd75e97e8bcd86e004d17281eb535d985abc611ead"
+      },
+      "samples": 621909,
+      "hops_including_flush": 1302,
+      "input_sha256": "d13a22f31ed6f2549f5024714d33930996b994131440aed3f2e895eda5fa4904",
+      "baseline_pcm_sha256": "d0978f5381e7e1ebeff2d1fd75e97e8bcd86e004d17281eb535d985abc611ead",
+      "candidate_pcm_sha256": "d0978f5381e7e1ebeff2d1fd75e97e8bcd86e004d17281eb535d985abc611ead",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00133",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00133/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00133/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00133/w7a8.wav",
+        "expected_pcm_sha256": "828fb91a0f0e037defcb13ae8f078b9eb32aa4326c2c7b5d71a71053c907b482"
+      },
+      "samples": 871623,
+      "hops_including_flush": 1822,
+      "input_sha256": "bb6687429fd248697a9b73a2dd6001c0168ced404091694048edb292300e75b6",
+      "baseline_pcm_sha256": "828fb91a0f0e037defcb13ae8f078b9eb32aa4326c2c7b5d71a71053c907b482",
+      "candidate_pcm_sha256": "828fb91a0f0e037defcb13ae8f078b9eb32aa4326c2c7b5d71a71053c907b482",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00161",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00161/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00161/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00161/w7a8.wav",
+        "expected_pcm_sha256": "ab6dc2867039fffd26e969d0ec5b2eefec8c276c310a1be9ff30dfb891752521"
+      },
+      "samples": 876883,
+      "hops_including_flush": 1833,
+      "input_sha256": "753e780056c7c02f7b579c6fa9e0bbeb501cb6c5f8f4786565f304d1ec149902",
+      "baseline_pcm_sha256": "ab6dc2867039fffd26e969d0ec5b2eefec8c276c310a1be9ff30dfb891752521",
+      "candidate_pcm_sha256": "ab6dc2867039fffd26e969d0ec5b2eefec8c276c310a1be9ff30dfb891752521",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00350",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00350/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00350/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00350/w7a8.wav",
+        "expected_pcm_sha256": "59474a84054124b47b7595c3ce212bda18aeb06502795ab8965a26e614988895"
+      },
+      "samples": 820179,
+      "hops_including_flush": 1715,
+      "input_sha256": "6384578ed6d207dd69426c26d8bef52c84b56bafd30fc92ae54f44381ac1a742",
+      "baseline_pcm_sha256": "59474a84054124b47b7595c3ce212bda18aeb06502795ab8965a26e614988895",
+      "candidate_pcm_sha256": "59474a84054124b47b7595c3ce212bda18aeb06502795ab8965a26e614988895",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00416",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00416/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00416/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00416/w7a8.wav",
+        "expected_pcm_sha256": "6c47923a32894e4c15128f252898794679b915437fa2b63c1f6539bac480aab3"
+      },
+      "samples": 910525,
+      "hops_including_flush": 1903,
+      "input_sha256": "9498c3bdff3a335811e4b24c3c15c01703b63aa94387194ec78f5135b8ae14c3",
+      "baseline_pcm_sha256": "6c47923a32894e4c15128f252898794679b915437fa2b63c1f6539bac480aab3",
+      "candidate_pcm_sha256": "6c47923a32894e4c15128f252898794679b915437fa2b63c1f6539bac480aab3",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00514",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00514/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00514/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00514/w7a8.wav",
+        "expected_pcm_sha256": "555f4827f4d076e5ccdc7b319c828d5325129e77bf9c12d5993a7943822a9f84"
+      },
+      "samples": 843649,
+      "hops_including_flush": 1764,
+      "input_sha256": "bb4c95612056566589ad3dc433e0bf8b3bef4488ce2f8907ab7c738692c72b2a",
+      "baseline_pcm_sha256": "555f4827f4d076e5ccdc7b319c828d5325129e77bf9c12d5993a7943822a9f84",
+      "candidate_pcm_sha256": "555f4827f4d076e5ccdc7b319c828d5325129e77bf9c12d5993a7943822a9f84",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00525",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00525/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00525/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00525/w7a8.wav",
+        "expected_pcm_sha256": "e655a5d50dc4eb19f47861389e9fc8facd05f27e12dc4c321353abd328d5e845"
+      },
+      "samples": 770194,
+      "hops_including_flush": 1611,
+      "input_sha256": "233811bc04a52d1ddaa9579ae9151fe31257e707dc42bbada920a5fe4f223e2a",
+      "baseline_pcm_sha256": "e655a5d50dc4eb19f47861389e9fc8facd05f27e12dc4c321353abd328d5e845",
+      "candidate_pcm_sha256": "e655a5d50dc4eb19f47861389e9fc8facd05f27e12dc4c321353abd328d5e845",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00568",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00568/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00568/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00568/w7a8.wav",
+        "expected_pcm_sha256": "578e1fb9d402e78f02d623d4b129bee804ad8085613317a82c3c65f56bfca648"
+      },
+      "samples": 529613,
+      "hops_including_flush": 1110,
+      "input_sha256": "33a95a31ac3a64d3240df1ce6e759aecf66c8eedc70ae8f75248e847bbf2a1a3",
+      "baseline_pcm_sha256": "578e1fb9d402e78f02d623d4b129bee804ad8085613317a82c3c65f56bfca648",
+      "candidate_pcm_sha256": "578e1fb9d402e78f02d623d4b129bee804ad8085613317a82c3c65f56bfca648",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00695",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00695/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00695/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00695/w7a8.wav",
+        "expected_pcm_sha256": "34dd5703b2f997fe8852e7db0e2cfc6723816e40b5f2cd03f2ea4559fc26d935"
+      },
+      "samples": 578761,
+      "hops_including_flush": 1212,
+      "input_sha256": "cdfde3faaa9d697ee54b16993979a576f0dd5f35c4f5efe58b61bc49529568b4",
+      "baseline_pcm_sha256": "34dd5703b2f997fe8852e7db0e2cfc6723816e40b5f2cd03f2ea4559fc26d935",
+      "candidate_pcm_sha256": "34dd5703b2f997fe8852e7db0e2cfc6723816e40b5f2cd03f2ea4559fc26d935",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "low_00864",
+        "scenario": "low_level",
+        "input": "/bench/scratch/fullband/robustness/audio/low_00864/input.wav",
+        "clean": "/bench/scratch/fullband/robustness/audio/low_00864/clean.wav",
+        "baseline": "/bench/scratch/fullband/robustness/audio/low_00864/w7a8.wav",
+        "expected_pcm_sha256": "4607b864056c246b4dd0c73bb90a3483cd93336780b8b1c2c9daf8e458ed2f45"
+      },
+      "samples": 990300,
+      "hops_including_flush": 2070,
+      "input_sha256": "2afa901f82109f750d698d5b873918cc461cf08732fb773195b3247fb663d583",
+      "baseline_pcm_sha256": "4607b864056c246b4dd0c73bb90a3483cd93336780b8b1c2c9daf8e458ed2f45",
+      "candidate_pcm_sha256": "4607b864056c246b4dd0c73bb90a3483cd93336780b8b1c2c9daf8e458ed2f45",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mechanical",
+        "scenario": "long_noise",
+        "input": "/bench/scratch/fullband/long_noise/mechanical.wav",
+        "baseline": "/bench/scratch/fullband/long_noise/mechanical_w7a8.wav",
+        "expected_pcm_sha256": "724dc44c5420fd95376cb47524b472fc033e82231b85f067e12411b639174c71"
+      },
+      "samples": 5760000,
+      "hops_including_flush": 12006,
+      "input_sha256": "0bec0aa99cd4093c58c0da9f14cd170ca6516dbb6eb335eabd4336dae2286ecd",
+      "baseline_pcm_sha256": "724dc44c5420fd95376cb47524b472fc033e82231b85f067e12411b639174c71",
+      "candidate_pcm_sha256": "724dc44c5420fd95376cb47524b472fc033e82231b85f067e12411b639174c71",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00033",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00033_8.8dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00033.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p106/00033.wav",
+        "expected_pcm_sha256": "edf70eaa27feefd2c46646cb3ac1f6a89f298e85cf71eaafeb5204a1e648b3c0"
+      },
+      "samples": 745015,
+      "hops_including_flush": 1559,
+      "input_sha256": "3d1e6718053f22b9fc864df6509bf525c3047059bc7c9293c702a7ba08dbe3af",
+      "baseline_pcm_sha256": "edf70eaa27feefd2c46646cb3ac1f6a89f298e85cf71eaafeb5204a1e648b3c0",
+      "candidate_pcm_sha256": "edf70eaa27feefd2c46646cb3ac1f6a89f298e85cf71eaafeb5204a1e648b3c0",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00046",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00046_10.3dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00046.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p105/00046.wav",
+        "expected_pcm_sha256": "7d9eeddb6392b83cf9e0cab238c633386c910b96104f403eca71a51654ad7933"
+      },
+      "samples": 989183,
+      "hops_including_flush": 2067,
+      "input_sha256": "fa5a46ab245a8509fd1178c4ed30967a46cdeb955073b354b1870393bf250ea1",
+      "baseline_pcm_sha256": "7d9eeddb6392b83cf9e0cab238c633386c910b96104f403eca71a51654ad7933",
+      "candidate_pcm_sha256": "7d9eeddb6392b83cf9e0cab238c633386c910b96104f403eca71a51654ad7933",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00084",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00084_10.1dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00084.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p102/00084.wav",
+        "expected_pcm_sha256": "9fde6f45d904269afcd45792b19707b260539bf18a2ed36c8f617324d21bb8b9"
+      },
+      "samples": 621909,
+      "hops_including_flush": 1302,
+      "input_sha256": "52be4eee2e5012812b1e7c72984d63edafbd2b9efc3ad362ca43684eac6bfea1",
+      "baseline_pcm_sha256": "9fde6f45d904269afcd45792b19707b260539bf18a2ed36c8f617324d21bb8b9",
+      "candidate_pcm_sha256": "9fde6f45d904269afcd45792b19707b260539bf18a2ed36c8f617324d21bb8b9",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00101",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00101_0.4dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00101.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p102/00101.wav",
+        "expected_pcm_sha256": "c994097c3babfc0dfe5527f0dfc3ffb130e8f024449713cbf33275c22fb8f77a"
+      },
+      "samples": 408226,
+      "hops_including_flush": 857,
+      "input_sha256": "1dad82fe4872e08434470df63f5e0a5cecfd890d6cb3198422bebc6dfa401003",
+      "baseline_pcm_sha256": "c994097c3babfc0dfe5527f0dfc3ffb130e8f024449713cbf33275c22fb8f77a",
+      "candidate_pcm_sha256": "c994097c3babfc0dfe5527f0dfc3ffb130e8f024449713cbf33275c22fb8f77a",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00133",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00133_-0.7dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00133.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p107/00133.wav",
+        "expected_pcm_sha256": "01d751d1557eb4bc3886a2b873e44cc68079fee8c68dfa75f0429b4e97bca375"
+      },
+      "samples": 871623,
+      "hops_including_flush": 1822,
+      "input_sha256": "f0d97dc52ce8a95be60203e0921d373f3e498ec832439be69863e23731ae427c",
+      "baseline_pcm_sha256": "01d751d1557eb4bc3886a2b873e44cc68079fee8c68dfa75f0429b4e97bca375",
+      "candidate_pcm_sha256": "01d751d1557eb4bc3886a2b873e44cc68079fee8c68dfa75f0429b4e97bca375",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00161",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00161_15.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00161.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p102/00161.wav",
+        "expected_pcm_sha256": "ef53071344a4ef4fa67728def8e529db5c2d7c19a32783c6a4a91662a1650530"
+      },
+      "samples": 876883,
+      "hops_including_flush": 1833,
+      "input_sha256": "c2ad75a1cd9ffcee4f9af3b5b7388fc35022a608a5d84c2215e6b36125e60ae6",
+      "baseline_pcm_sha256": "ef53071344a4ef4fa67728def8e529db5c2d7c19a32783c6a4a91662a1650530",
+      "candidate_pcm_sha256": "ef53071344a4ef4fa67728def8e529db5c2d7c19a32783c6a4a91662a1650530",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00174",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00174_15.9dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00174.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p105/00174.wav",
+        "expected_pcm_sha256": "bc761803e82d97962454af75e83a07843b1cc14e32946991d2df58e676704638"
+      },
+      "samples": 1163880,
+      "hops_including_flush": 2431,
+      "input_sha256": "d64c5bf1f26886bb3599586342edab4e2dd333828987ea1f4164ec539aa00f7f",
+      "baseline_pcm_sha256": "bc761803e82d97962454af75e83a07843b1cc14e32946991d2df58e676704638",
+      "candidate_pcm_sha256": "bc761803e82d97962454af75e83a07843b1cc14e32946991d2df58e676704638",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00181",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00181_-0.1dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00181.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p102/00181.wav",
+        "expected_pcm_sha256": "24d3274f929069af9575da83aa1c76ea43961f408609a302dc49ca54f9de34cf"
+      },
+      "samples": 695575,
+      "hops_including_flush": 1456,
+      "input_sha256": "fc847f96fb163cce92b475c59d8c763d3e494a99f00438a4700077d35983aca6",
+      "baseline_pcm_sha256": "24d3274f929069af9575da83aa1c76ea43961f408609a302dc49ca54f9de34cf",
+      "candidate_pcm_sha256": "24d3274f929069af9575da83aa1c76ea43961f408609a302dc49ca54f9de34cf",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00200",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00200_9.1dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00200.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p103/00200.wav",
+        "expected_pcm_sha256": "b2e8a8b0490a5f373890feacefa192143435844131a74c308bbb2f54693e4a4a"
+      },
+      "samples": 923230,
+      "hops_including_flush": 1930,
+      "input_sha256": "df72bf7e8c593fa29100677edc8d5409d6ae95f06e41d6fe870e205fd88409e1",
+      "baseline_pcm_sha256": "b2e8a8b0490a5f373890feacefa192143435844131a74c308bbb2f54693e4a4a",
+      "candidate_pcm_sha256": "b2e8a8b0490a5f373890feacefa192143435844131a74c308bbb2f54693e4a4a",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00206",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00206_-0.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00206.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p105/00206.wav",
+        "expected_pcm_sha256": "140e2b2e1f597f8d2cff8b31041edaafe47a561c473692fc7ec9370d83168bce"
+      },
+      "samples": 443173,
+      "hops_including_flush": 930,
+      "input_sha256": "add267cb61e5319eb0abdaed58254124dbc7262086522f864f1e2fa5c3e2b64d",
+      "baseline_pcm_sha256": "140e2b2e1f597f8d2cff8b31041edaafe47a561c473692fc7ec9370d83168bce",
+      "candidate_pcm_sha256": "140e2b2e1f597f8d2cff8b31041edaafe47a561c473692fc7ec9370d83168bce",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00207",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00207_5.2dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00207.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p106/00207.wav",
+        "expected_pcm_sha256": "ec4654daa8ce7c1136692823c23c6aed9c05a0d2f6ed3e21845dab4d26d0aedd"
+      },
+      "samples": 760749,
+      "hops_including_flush": 1591,
+      "input_sha256": "695ce4dd38ee55b2cccb2b622c4992de583e6c82fa47a07afdf4690db23808cc",
+      "baseline_pcm_sha256": "ec4654daa8ce7c1136692823c23c6aed9c05a0d2f6ed3e21845dab4d26d0aedd",
+      "candidate_pcm_sha256": "ec4654daa8ce7c1136692823c23c6aed9c05a0d2f6ed3e21845dab4d26d0aedd",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00234",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00234_0.2dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00234.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p103/00234.wav",
+        "expected_pcm_sha256": "d9bdb88796363b72464aaba67c84e48a776be80a07321a82fafdf816568c8e43"
+      },
+      "samples": 917462,
+      "hops_including_flush": 1918,
+      "input_sha256": "f943faeb6111c2d30002c843fbd766c7d25f50fa923a5181e63e8ab49f2a8d63",
+      "baseline_pcm_sha256": "d9bdb88796363b72464aaba67c84e48a776be80a07321a82fafdf816568c8e43",
+      "candidate_pcm_sha256": "d9bdb88796363b72464aaba67c84e48a776be80a07321a82fafdf816568c8e43",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00237",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00237_0.5dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00237.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p107/00237.wav",
+        "expected_pcm_sha256": "842beb2ebe59b9a3d25afd3d861108ffe76b6938d1c07d200f12a94e37ac59d1"
+      },
+      "samples": 1125723,
+      "hops_including_flush": 2352,
+      "input_sha256": "d490fe3e50bd9fa5c0fc55d5dda7ee888122d68cbfcc2552dfd59fc46a74d718",
+      "baseline_pcm_sha256": "842beb2ebe59b9a3d25afd3d861108ffe76b6938d1c07d200f12a94e37ac59d1",
+      "candidate_pcm_sha256": "842beb2ebe59b9a3d25afd3d861108ffe76b6938d1c07d200f12a94e37ac59d1",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00240",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00240_13.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00240.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p106/00240.wav",
+        "expected_pcm_sha256": "da14c0c616a46838ec687d0305a1c84186878630c5e1602bf9a5d8717ba381cb"
+      },
+      "samples": 551543,
+      "hops_including_flush": 1156,
+      "input_sha256": "57fdca48f75fa58a4a32a7ac8f20238765a76703cabe17388354499a4681a0d1",
+      "baseline_pcm_sha256": "da14c0c616a46838ec687d0305a1c84186878630c5e1602bf9a5d8717ba381cb",
+      "candidate_pcm_sha256": "da14c0c616a46838ec687d0305a1c84186878630c5e1602bf9a5d8717ba381cb",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00244",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00244_12.7dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00244.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p107/00244.wav",
+        "expected_pcm_sha256": "4d4684ac00d2d0d600ae1c4ac8905e2c774aaa7087e0c22c076f50af8451008c"
+      },
+      "samples": 617046,
+      "hops_including_flush": 1292,
+      "input_sha256": "2fa4e211f2e89edab1632798e309871c21c7aef3a7c2db4233e18bea76b973fc",
+      "baseline_pcm_sha256": "4d4684ac00d2d0d600ae1c4ac8905e2c774aaa7087e0c22c076f50af8451008c",
+      "candidate_pcm_sha256": "4d4684ac00d2d0d600ae1c4ac8905e2c774aaa7087e0c22c076f50af8451008c",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00271",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00271_1.7dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00271.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p105/00271.wav",
+        "expected_pcm_sha256": "6958449aaa07fa7e2f1cf464c506b570c353981498ee484d751295a3565dbf07"
+      },
+      "samples": 709139,
+      "hops_including_flush": 1484,
+      "input_sha256": "1401566d93f2f8b782003723b3fc19f27249cd8b1c1d6a226735dff4b301e627",
+      "baseline_pcm_sha256": "6958449aaa07fa7e2f1cf464c506b570c353981498ee484d751295a3565dbf07",
+      "candidate_pcm_sha256": "6958449aaa07fa7e2f1cf464c506b570c353981498ee484d751295a3565dbf07",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00290",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00290_-1.4dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00290.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p102/00290.wav",
+        "expected_pcm_sha256": "bacdcb4a187779aea5b0211b67dd898d44d4e0a9e162afa2a12ff910bb392596"
+      },
+      "samples": 440937,
+      "hops_including_flush": 925,
+      "input_sha256": "1cdcb7213bdc31eac3beeb79ab4a36da6bf5abbf0a221f516b4c9106fdb5dfa2",
+      "baseline_pcm_sha256": "bacdcb4a187779aea5b0211b67dd898d44d4e0a9e162afa2a12ff910bb392596",
+      "candidate_pcm_sha256": "bacdcb4a187779aea5b0211b67dd898d44d4e0a9e162afa2a12ff910bb392596",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00305",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00305_3.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00305.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p105/00305.wav",
+        "expected_pcm_sha256": "bec3fd85b2704ae75b8732fd7c0117d28217b129d6ba47ff4c478ebcc72d8f64"
+      },
+      "samples": 1027545,
+      "hops_including_flush": 2147,
+      "input_sha256": "1e705dd4bccc6bfb135cd2be567313d2454ab5648a09dd1219276fc8f1e6ec96",
+      "baseline_pcm_sha256": "bec3fd85b2704ae75b8732fd7c0117d28217b129d6ba47ff4c478ebcc72d8f64",
+      "candidate_pcm_sha256": "bec3fd85b2704ae75b8732fd7c0117d28217b129d6ba47ff4c478ebcc72d8f64",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00339",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00339_0.9dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00339.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p106/00339.wav",
+        "expected_pcm_sha256": "f6b745692cd282b2a79a5419c33b3f90c2e49b35d53eafe736973d6742497a2b"
+      },
+      "samples": 440698,
+      "hops_including_flush": 925,
+      "input_sha256": "4a8726d1a23a9ec0ebd894431137edcfe460e855e6244eb347d694f2ad89bdd0",
+      "baseline_pcm_sha256": "f6b745692cd282b2a79a5419c33b3f90c2e49b35d53eafe736973d6742497a2b",
+      "candidate_pcm_sha256": "f6b745692cd282b2a79a5419c33b3f90c2e49b35d53eafe736973d6742497a2b",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00350",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00350_12.8dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00350.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p107/00350.wav",
+        "expected_pcm_sha256": "c6b9f2b2a0b3fd61418bd9a7b75a586c8391f56dd0e9b8f42c829bb166a0263d"
+      },
+      "samples": 820179,
+      "hops_including_flush": 1715,
+      "input_sha256": "c18b955ed6a98b371d7ff0925b628210c7ac51318b189bef8304e3211720191b",
+      "baseline_pcm_sha256": "c6b9f2b2a0b3fd61418bd9a7b75a586c8391f56dd0e9b8f42c829bb166a0263d",
+      "candidate_pcm_sha256": "c6b9f2b2a0b3fd61418bd9a7b75a586c8391f56dd0e9b8f42c829bb166a0263d",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00364",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00364_4.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00364.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p104/00364.wav",
+        "expected_pcm_sha256": "b41ec9d26ce083bd2b2b439a3e75a9450845fd372105324f9ba9ad1b01390d11"
+      },
+      "samples": 874035,
+      "hops_including_flush": 1827,
+      "input_sha256": "754361bbedc891ffffcd5c2c03a4deb1b888dae108791aa47bb59dcf70dfd4cf",
+      "baseline_pcm_sha256": "b41ec9d26ce083bd2b2b439a3e75a9450845fd372105324f9ba9ad1b01390d11",
+      "candidate_pcm_sha256": "b41ec9d26ce083bd2b2b439a3e75a9450845fd372105324f9ba9ad1b01390d11",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00406",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00406_5.4dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00406.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p104/00406.wav",
+        "expected_pcm_sha256": "1e12f91c328b28f1ac8bb6bb74d0589623b4475b2650a36ef738c2f2383032ac"
+      },
+      "samples": 446053,
+      "hops_including_flush": 936,
+      "input_sha256": "2138fbe62d1e007b417b9ea6ba8b8f886f62d6dd109cd2633453b2a129e86c3c",
+      "baseline_pcm_sha256": "1e12f91c328b28f1ac8bb6bb74d0589623b4475b2650a36ef738c2f2383032ac",
+      "candidate_pcm_sha256": "1e12f91c328b28f1ac8bb6bb74d0589623b4475b2650a36ef738c2f2383032ac",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00410",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00410_3.2dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00410.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p104/00410.wav",
+        "expected_pcm_sha256": "a398a21e550764dbeb8d1ab99bdd40f7626a81674fc46a01c2f2e20d11db76c6"
+      },
+      "samples": 834979,
+      "hops_including_flush": 1746,
+      "input_sha256": "c39c827e2be449da0f4aed4538c540f9593b34c7a9c6ad68b737621e347e98ff",
+      "baseline_pcm_sha256": "a398a21e550764dbeb8d1ab99bdd40f7626a81674fc46a01c2f2e20d11db76c6",
+      "candidate_pcm_sha256": "a398a21e550764dbeb8d1ab99bdd40f7626a81674fc46a01c2f2e20d11db76c6",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00416",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00416_5.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00416.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p106/00416.wav",
+        "expected_pcm_sha256": "c55866d9aba0ecb0d8016001dc0182223cabec8aa34290aebc915a3fe3de8062"
+      },
+      "samples": 910525,
+      "hops_including_flush": 1903,
+      "input_sha256": "301040c21d6e5877762a2b5b3d36a65fd547ce41490cb9b32d3f533a9f412695",
+      "baseline_pcm_sha256": "c55866d9aba0ecb0d8016001dc0182223cabec8aa34290aebc915a3fe3de8062",
+      "candidate_pcm_sha256": "c55866d9aba0ecb0d8016001dc0182223cabec8aa34290aebc915a3fe3de8062",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00440",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00440_10.8dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00440.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p102/00440.wav",
+        "expected_pcm_sha256": "4cfe5279605ee8616ef210131842bd7beb15b8e8d144ff0c515501a7a5d5a629"
+      },
+      "samples": 609911,
+      "hops_including_flush": 1277,
+      "input_sha256": "c41d945fa6fdc3e6d0d2d7a17c5c27c7607550dfd3fbe4920db530de5956d487",
+      "baseline_pcm_sha256": "4cfe5279605ee8616ef210131842bd7beb15b8e8d144ff0c515501a7a5d5a629",
+      "candidate_pcm_sha256": "4cfe5279605ee8616ef210131842bd7beb15b8e8d144ff0c515501a7a5d5a629",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00452",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00452_1.0dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00452.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p103/00452.wav",
+        "expected_pcm_sha256": "2a3eabe7a1bc585505e1b1dd4b742ac29fc3bd17a84fbf5ac7607d58a3780ef9"
+      },
+      "samples": 812420,
+      "hops_including_flush": 1699,
+      "input_sha256": "98b7536257510470002973ed4b48eb20deec4daf48a86b33ef2230671193cd04",
+      "baseline_pcm_sha256": "2a3eabe7a1bc585505e1b1dd4b742ac29fc3bd17a84fbf5ac7607d58a3780ef9",
+      "candidate_pcm_sha256": "2a3eabe7a1bc585505e1b1dd4b742ac29fc3bd17a84fbf5ac7607d58a3780ef9",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00454",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00454_3.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00454.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p107/00454.wav",
+        "expected_pcm_sha256": "9a497d8d184b54588076d9548aa7d1c44374b4e27cb0ac063ec2220a086023f6"
+      },
+      "samples": 1027078,
+      "hops_including_flush": 2146,
+      "input_sha256": "69c0ae3bc26dfcc38080a0fd0e2a43f2f62d0e5f7a7ae0116df41892b610eb33",
+      "baseline_pcm_sha256": "9a497d8d184b54588076d9548aa7d1c44374b4e27cb0ac063ec2220a086023f6",
+      "candidate_pcm_sha256": "9a497d8d184b54588076d9548aa7d1c44374b4e27cb0ac063ec2220a086023f6",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00513",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00513_11.2dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00513.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p103/00513.wav",
+        "expected_pcm_sha256": "9dcd7b983e268b8194a6f2ce060e6831b39d37b797ee9a8305703bd97dd3caea"
+      },
+      "samples": 610819,
+      "hops_including_flush": 1279,
+      "input_sha256": "a1b77d2a3c935805c9ee47642f3d6a5a9f1dcefd6ad21a7c86b50d24fac9f797",
+      "baseline_pcm_sha256": "9dcd7b983e268b8194a6f2ce060e6831b39d37b797ee9a8305703bd97dd3caea",
+      "candidate_pcm_sha256": "9dcd7b983e268b8194a6f2ce060e6831b39d37b797ee9a8305703bd97dd3caea",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00514",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00514_15.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00514.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p105/00514.wav",
+        "expected_pcm_sha256": "41ffda4944918001b09840492f965a364d44ebbf7d84c6e72eefd71e40ca5572"
+      },
+      "samples": 843649,
+      "hops_including_flush": 1764,
+      "input_sha256": "143cd3b037dd8517869c8f96729368e69917afd8d00dc2fad28341ade487bb4c",
+      "baseline_pcm_sha256": "41ffda4944918001b09840492f965a364d44ebbf7d84c6e72eefd71e40ca5572",
+      "candidate_pcm_sha256": "41ffda4944918001b09840492f965a364d44ebbf7d84c6e72eefd71e40ca5572",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00517",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00517_3.0dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00517.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p103/00517.wav",
+        "expected_pcm_sha256": "280d96ff9e13bba9ef5abc91e80299bed341b7a34a9394da8dd76738a9c4a227"
+      },
+      "samples": 997805,
+      "hops_including_flush": 2085,
+      "input_sha256": "b80fc7c87467943005730d97e67f56ca26bed205a231676bfd34482268e7500e",
+      "baseline_pcm_sha256": "280d96ff9e13bba9ef5abc91e80299bed341b7a34a9394da8dd76738a9c4a227",
+      "candidate_pcm_sha256": "280d96ff9e13bba9ef5abc91e80299bed341b7a34a9394da8dd76738a9c4a227",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00519",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00519_8.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00519.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p107/00519.wav",
+        "expected_pcm_sha256": "955c80d5c29db26b13e1aa870983b9934de6c53421d53289a540deb2dea7baba"
+      },
+      "samples": 614103,
+      "hops_including_flush": 1286,
+      "input_sha256": "aa111df3602935be311553162037b3c47c0f132e466e1dbb89d963a1fb40b587",
+      "baseline_pcm_sha256": "955c80d5c29db26b13e1aa870983b9934de6c53421d53289a540deb2dea7baba",
+      "candidate_pcm_sha256": "955c80d5c29db26b13e1aa870983b9934de6c53421d53289a540deb2dea7baba",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00523",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00523_6.3dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00523.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p105/00523.wav",
+        "expected_pcm_sha256": "f773d123a8558d30a28f94d7fa55ecba96b8bb5c7c61332409f27a318b1fa70d"
+      },
+      "samples": 833249,
+      "hops_including_flush": 1742,
+      "input_sha256": "24d79c6a99545876a080eaf347c073c02f3a07b875accc079baf0494122d9a24",
+      "baseline_pcm_sha256": "f773d123a8558d30a28f94d7fa55ecba96b8bb5c7c61332409f27a318b1fa70d",
+      "candidate_pcm_sha256": "f773d123a8558d30a28f94d7fa55ecba96b8bb5c7c61332409f27a318b1fa70d",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00525",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00525_9.2dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00525.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p103/00525.wav",
+        "expected_pcm_sha256": "875d21c9e9cb46b901a0d2def6fc5fd3f8a1b424d339e26a683f0574a5a83866"
+      },
+      "samples": 770194,
+      "hops_including_flush": 1611,
+      "input_sha256": "9d3f505c4e94703c36523086b6b9fd22060e761fe8be4c7ec42d050033ff3e7d",
+      "baseline_pcm_sha256": "875d21c9e9cb46b901a0d2def6fc5fd3f8a1b424d339e26a683f0574a5a83866",
+      "candidate_pcm_sha256": "875d21c9e9cb46b901a0d2def6fc5fd3f8a1b424d339e26a683f0574a5a83866",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00555",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00555_13.4dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00555.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p104/00555.wav",
+        "expected_pcm_sha256": "e5ae9e7c580fd97afdbf81df3e3059d5ceb66d35bd279478caa059bf61e135ef"
+      },
+      "samples": 621343,
+      "hops_including_flush": 1301,
+      "input_sha256": "42c0ded0dc3330b9eaa416b0a1b5767ab195c9ac5507e9f4839c11c30f855ff4",
+      "baseline_pcm_sha256": "e5ae9e7c580fd97afdbf81df3e3059d5ceb66d35bd279478caa059bf61e135ef",
+      "candidate_pcm_sha256": "e5ae9e7c580fd97afdbf81df3e3059d5ceb66d35bd279478caa059bf61e135ef",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00568",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00568_12.2dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00568.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p106/00568.wav",
+        "expected_pcm_sha256": "0e6e675d7ee3023e612c6cccf7a76bd2b591cb4b7ebd618c1e924048eb0e4cab"
+      },
+      "samples": 529613,
+      "hops_including_flush": 1110,
+      "input_sha256": "1995300bae71ea8893911e5c5c8ffe89230d3b981bf10addc526e6db248083d4",
+      "baseline_pcm_sha256": "0e6e675d7ee3023e612c6cccf7a76bd2b591cb4b7ebd618c1e924048eb0e4cab",
+      "candidate_pcm_sha256": "0e6e675d7ee3023e612c6cccf7a76bd2b591cb4b7ebd618c1e924048eb0e4cab",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00603",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00603_6.7dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00603.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p103/00603.wav",
+        "expected_pcm_sha256": "25ac02d532c6b0540e1adb0d617782e9364445a183b6677bfdf2623835d9b902"
+      },
+      "samples": 677956,
+      "hops_including_flush": 1419,
+      "input_sha256": "f8010496a59d98978f29d716a384e361703c0c30fd3076a0b0a017f0bd996cdd",
+      "baseline_pcm_sha256": "25ac02d532c6b0540e1adb0d617782e9364445a183b6677bfdf2623835d9b902",
+      "candidate_pcm_sha256": "25ac02d532c6b0540e1adb0d617782e9364445a183b6677bfdf2623835d9b902",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00628",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00628_5.0dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00628.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p107/00628.wav",
+        "expected_pcm_sha256": "3979af651fb4552e1856279798e0881036da6535164aedea19e2526b0797d402"
+      },
+      "samples": 594653,
+      "hops_including_flush": 1245,
+      "input_sha256": "83c7e35e8778aab67d970d6b6e7a85fcd41ea654dd017c5a4ed51df9e82f96b8",
+      "baseline_pcm_sha256": "3979af651fb4552e1856279798e0881036da6535164aedea19e2526b0797d402",
+      "candidate_pcm_sha256": "3979af651fb4552e1856279798e0881036da6535164aedea19e2526b0797d402",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00647",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00647_11.9dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00647.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p103/00647.wav",
+        "expected_pcm_sha256": "a50e1efcb30e9c4d0473858709f4292f937e3894a8d2406c4760dacccdcbae73"
+      },
+      "samples": 676132,
+      "hops_including_flush": 1415,
+      "input_sha256": "9b478d992b3418971c19a0dbd9703b3ab671bd828d0d17ca4a34027dac1fb9ef",
+      "baseline_pcm_sha256": "a50e1efcb30e9c4d0473858709f4292f937e3894a8d2406c4760dacccdcbae73",
+      "candidate_pcm_sha256": "a50e1efcb30e9c4d0473858709f4292f937e3894a8d2406c4760dacccdcbae73",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00695",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00695_14.5dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00695.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p105/00695.wav",
+        "expected_pcm_sha256": "91ec0294e95961fecb21981dcd2829610d42943b5a546ef1bbaafb5e96ddba63"
+      },
+      "samples": 578761,
+      "hops_including_flush": 1212,
+      "input_sha256": "7b6093e6a6559218de0cf269dcd861eb499c855953a286aaaa958c1795dbf56b",
+      "baseline_pcm_sha256": "91ec0294e95961fecb21981dcd2829610d42943b5a546ef1bbaafb5e96ddba63",
+      "candidate_pcm_sha256": "91ec0294e95961fecb21981dcd2829610d42943b5a546ef1bbaafb5e96ddba63",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00725",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00725_13.5dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00725.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p107/00725.wav",
+        "expected_pcm_sha256": "102db6313e22e7eb55946db04e785234b5f9addd7f79ec24106761307abd9e39"
+      },
+      "samples": 572910,
+      "hops_including_flush": 1200,
+      "input_sha256": "12da2372eec28e4a87bdd70b1baafcc732fcd06ff4b54dffffa681befa01818e",
+      "baseline_pcm_sha256": "102db6313e22e7eb55946db04e785234b5f9addd7f79ec24106761307abd9e39",
+      "candidate_pcm_sha256": "102db6313e22e7eb55946db04e785234b5f9addd7f79ec24106761307abd9e39",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00729",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00729_8.8dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00729.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p106/00729.wav",
+        "expected_pcm_sha256": "e9ead47794bc2027ba9f92eb18bb2a366acc64efdcfe0dfeec878483d640eb51"
+      },
+      "samples": 576152,
+      "hops_including_flush": 1207,
+      "input_sha256": "c0941f8c0e8a058f9b9b9cdf9c09ad0440b56503c6d6192e29839ff169491240",
+      "baseline_pcm_sha256": "e9ead47794bc2027ba9f92eb18bb2a366acc64efdcfe0dfeec878483d640eb51",
+      "candidate_pcm_sha256": "e9ead47794bc2027ba9f92eb18bb2a366acc64efdcfe0dfeec878483d640eb51",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00749",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00749_-2.1dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00749.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p104/00749.wav",
+        "expected_pcm_sha256": "a7bb8a2244b7aa0b7c86f815f5a62cc8b34603f566c076ec34a23cb4ddae0338"
+      },
+      "samples": 919427,
+      "hops_including_flush": 1922,
+      "input_sha256": "def4ddb3d74db05b046732fd8cb06561359c1c0cae587dd55422b5ea2844e598",
+      "baseline_pcm_sha256": "a7bb8a2244b7aa0b7c86f815f5a62cc8b34603f566c076ec34a23cb4ddae0338",
+      "candidate_pcm_sha256": "a7bb8a2244b7aa0b7c86f815f5a62cc8b34603f566c076ec34a23cb4ddae0338",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00766",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00766_3.2dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00766.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p102/00766.wav",
+        "expected_pcm_sha256": "7e9d97a47dcb3ab2ffea531e7ccd7b43defd22702b18bf767304a1f896ac84c2"
+      },
+      "samples": 592589,
+      "hops_including_flush": 1241,
+      "input_sha256": "9bc83546f69dcc9770a818d55599e01cfe6f9dd8fdb2f317e7295c24222e1f5c",
+      "baseline_pcm_sha256": "7e9d97a47dcb3ab2ffea531e7ccd7b43defd22702b18bf767304a1f896ac84c2",
+      "candidate_pcm_sha256": "7e9d97a47dcb3ab2ffea531e7ccd7b43defd22702b18bf767304a1f896ac84c2",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00794",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00794_16.7dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00794.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p104/00794.wav",
+        "expected_pcm_sha256": "fa010081ae0a97ed3c17a7b9ba99848d23d605bd7fb265d6f51b10c73ec9e108"
+      },
+      "samples": 962109,
+      "hops_including_flush": 2011,
+      "input_sha256": "701c8e1dc7836ec40b24fecf0d731d8846ff4dc711aef3a3b27c27a42a0ea6f2",
+      "baseline_pcm_sha256": "fa010081ae0a97ed3c17a7b9ba99848d23d605bd7fb265d6f51b10c73ec9e108",
+      "candidate_pcm_sha256": "fa010081ae0a97ed3c17a7b9ba99848d23d605bd7fb265d6f51b10c73ec9e108",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00829",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00829_16.3dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00829.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p102/00829.wav",
+        "expected_pcm_sha256": "621c1d35445c396ec75e53751bd6926fb3d1c780f4cb95b6327e2497201e7a82"
+      },
+      "samples": 354575,
+      "hops_including_flush": 745,
+      "input_sha256": "d65ec09d5fcb67299965b4743130344da7cd8017e8802e9df3c8a5af05d14b79",
+      "baseline_pcm_sha256": "621c1d35445c396ec75e53751bd6926fb3d1c780f4cb95b6327e2497201e7a82",
+      "candidate_pcm_sha256": "621c1d35445c396ec75e53751bd6926fb3d1c780f4cb95b6327e2497201e7a82",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00843",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00843_-2.0dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00843.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p106/00843.wav",
+        "expected_pcm_sha256": "5eae8bbb1649ca75fd64f0078304e4e1405af67ba725c328e441fd183d0eaa88"
+      },
+      "samples": 581995,
+      "hops_including_flush": 1219,
+      "input_sha256": "94d2267b40d879119d391a3a6912e1d8d4b787b5bd69d88fce38863742767177",
+      "baseline_pcm_sha256": "5eae8bbb1649ca75fd64f0078304e4e1405af67ba725c328e441fd183d0eaa88",
+      "candidate_pcm_sha256": "5eae8bbb1649ca75fd64f0078304e4e1405af67ba725c328e441fd183d0eaa88",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00849",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00849_1.8dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00849.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p105/00849.wav",
+        "expected_pcm_sha256": "1c796f15881ed928a20a85253e27aaecfb2853f5d543b81bd60795c69b26af87"
+      },
+      "samples": 1210867,
+      "hops_including_flush": 2529,
+      "input_sha256": "17b2bff64d313345b3eec1499ee80b20e5eaca54ab7453eea0360ca9bc939988",
+      "baseline_pcm_sha256": "1c796f15881ed928a20a85253e27aaecfb2853f5d543b81bd60795c69b26af87",
+      "candidate_pcm_sha256": "1c796f15881ed928a20a85253e27aaecfb2853f5d543b81bd60795c69b26af87",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00864",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00864_10.2dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00864.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p104/00864.wav",
+        "expected_pcm_sha256": "365f0c1e2bc5186197f8b789f39a55adcc18fd81714d051134750b65d88a0840"
+      },
+      "samples": 990300,
+      "hops_including_flush": 2070,
+      "input_sha256": "f2441b21080bc413f4de84ce9b237695dc8ce542f4ec4ca1dfe0c45b5c2a564c",
+      "baseline_pcm_sha256": "365f0c1e2bc5186197f8b789f39a55adcc18fd81714d051134750b65d88a0840",
+      "candidate_pcm_sha256": "365f0c1e2bc5186197f8b789f39a55adcc18fd81714d051134750b65d88a0840",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00871",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00871_8.4dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00871.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p104/00871.wav",
+        "expected_pcm_sha256": "5b919c7edc1d20b4dd5d2460e1cc7e25bb20ebeaa09f885f46a30509a164bd09"
+      },
+      "samples": 1116439,
+      "hops_including_flush": 2332,
+      "input_sha256": "36175c652745160fe632c051c67ff79d5724ad4e5e7b56a0926fefb0531fab7e",
+      "baseline_pcm_sha256": "5b919c7edc1d20b4dd5d2460e1cc7e25bb20ebeaa09f885f46a30509a164bd09",
+      "candidate_pcm_sha256": "5b919c7edc1d20b4dd5d2460e1cc7e25bb20ebeaa09f885f46a30509a164bd09",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "mixture_00878",
+        "scenario": "mixture",
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00878_14.8dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00878.wav",
+        "baseline": "/bench/scratch/fullband/evaluation/audio/w7a8/p106/00878.wav",
+        "expected_pcm_sha256": "e30b3bd2587d147a2fc7fc0d6771dc95865f326632888b16861eab0d235ad5f5"
+      },
+      "samples": 678506,
+      "hops_including_flush": 1420,
+      "input_sha256": "5285a79f21a2804fa9e24949102a7ff713c559ea63c08783264957cc39e0309c",
+      "baseline_pcm_sha256": "e30b3bd2587d147a2fc7fc0d6771dc95865f326632888b16861eab0d235ad5f5",
+      "candidate_pcm_sha256": "e30b3bd2587d147a2fc7fc0d6771dc95865f326632888b16861eab0d235ad5f5",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "pink",
+        "scenario": "long_noise",
+        "input": "/bench/scratch/fullband/long_noise/pink.wav",
+        "baseline": "/bench/scratch/fullband/long_noise/pink_w7a8.wav",
+        "expected_pcm_sha256": "577e02e596cd164146698e70c7eb7a8dbbdf8dd284a0699e0bff553ba1ad2064"
+      },
+      "samples": 5760000,
+      "hops_including_flush": 12006,
+      "input_sha256": "70da26647cbc2505add6338eb883fbafa6914bcb5e196459e3f6d40b44c9971d",
+      "baseline_pcm_sha256": "577e02e596cd164146698e70c7eb7a8dbbdf8dd284a0699e0bff553ba1ad2064",
+      "candidate_pcm_sha256": "577e02e596cd164146698e70c7eb7a8dbbdf8dd284a0699e0bff553ba1ad2064",
+      "bit_identical": true
+    },
+    {
+      "case": {
+        "id": "white",
+        "scenario": "long_noise",
+        "input": "/bench/scratch/fullband/long_noise/white.wav",
+        "baseline": "/bench/scratch/fullband/long_noise/white_w7a8.wav",
+        "expected_pcm_sha256": "da621bcd73d45258137bb38dea9fc5f066c4ff8b697cb49e29ac939e9036231e"
+      },
+      "samples": 5760000,
+      "hops_including_flush": 12006,
+      "input_sha256": "8dafd3587d1b78797bf8a98e81a7625bf1856e881e022d0389a1424ab6be8a78",
+      "baseline_pcm_sha256": "da621bcd73d45258137bb38dea9fc5f066c4ff8b697cb49e29ac939e9036231e",
+      "candidate_pcm_sha256": "da621bcd73d45258137bb38dea9fc5f066c4ff8b697cb49e29ac939e9036231e",
+      "bit_identical": true
+    }
+  ],
+  "total_audio_seconds": 1339.1487291666667
+}

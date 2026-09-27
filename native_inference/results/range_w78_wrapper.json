@@ -1,0 +1,946 @@
+{
+  "method": "Diagnostic continuous AB/BA comparisons; GC enabled in both allocating and preallocated modes.",
+  "artifacts": {
+    "baseline": "c40127779bd90e04a1954ff4b7d3b68438fc5361e6ea8f53905d7ba78d19586a",
+    "candidate": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2"
+  },
+  "preallocated_parity_frames": 128,
+  "runs": [
+    {
+      "mode": "allocating",
+      "repeat": 0,
+      "implementations": {
+        "baseline": {
+          "mean_ms": 2.2918921840000004,
+          "p50_ms": 2.279425,
+          "p95_ms": 2.41891,
+          "p99_ms": 2.5548950099999996,
+          "max_ms": 3.593518,
+          "over_10ms": 0
+        },
+        "candidate": {
+          "mean_ms": 2.0203181399999997,
+          "p50_ms": 2.0035165,
+          "p95_ms": 2.147161,
+          "p99_ms": 2.3984360099999993,
+          "max_ms": 3.32211,
+          "over_10ms": 0
+        }
+      },
+      "calls_over_4ms": []
+    },
+    {
+      "mode": "allocating",
+      "repeat": 1,
+      "implementations": {
+        "baseline": {
+          "mean_ms": 2.2921371159999997,
+          "p50_ms": 2.252069,
+          "p95_ms": 2.4652646,
+          "p99_ms": 3.4156239999999998,
+          "max_ms": 8.389837,
+          "over_10ms": 0
+        },
+        "candidate": {
+          "mean_ms": 2.01219776,
+          "p50_ms": 1.9796105000000002,
+          "p95_ms": 2.1734625,
+          "p99_ms": 3.069079,
+          "max_ms": 3.292008,
+          "over_10ms": 0
+        }
+      },
+      "calls_over_4ms": [
+        {
+          "name": "baseline",
+          "frame": 392,
+          "wall_ms": 8.389837,
+          "gc_ms": 6.01697
+        }
+      ]
+    },
+    {
+      "mode": "allocating",
+      "repeat": 2,
+      "implementations": {
+        "baseline": {
+          "mean_ms": 2.2505699249999997,
+          "p50_ms": 2.2434135,
+          "p95_ms": 2.3465659999999997,
+          "p99_ms": 2.396618,
+          "max_ms": 3.325794,
+          "over_10ms": 0
+        },
+        "candidate": {
+          "mean_ms": 1.980123218,
+          "p50_ms": 1.9723055,
+          "p95_ms": 2.06476895,
+          "p99_ms": 2.1225089999999995,
+          "max_ms": 3.035886,
+          "over_10ms": 0
+        }
+      },
+      "calls_over_4ms": []
+    },
+    {
+      "mode": "preallocated",
+      "repeat": 0,
+      "implementations": {
+        "baseline": {
+          "mean_ms": 2.225633159,
+          "p50_ms": 2.212874,
+          "p95_ms": 2.3307729999999998,
+          "p99_ms": 2.4645959900000003,
+          "max_ms": 3.450916,
+          "over_10ms": 0
+        },
+        "candidate": {
+          "mean_ms": 1.949444698,
+          "p50_ms": 1.940465,
+          "p95_ms": 2.04693895,
+          "p99_ms": 2.140376,
+          "max_ms": 2.478483,
+          "over_10ms": 0
+        }
+      },
+      "calls_over_4ms": []
+    },
+    {
+      "mode": "preallocated",
+      "repeat": 1,
+      "implementations": {
+        "baseline": {
+          "mean_ms": 2.225159624,
+          "p50_ms": 2.214024,
+          "p95_ms": 2.32848205,
+          "p99_ms": 2.4379839999999997,
+          "max_ms": 3.27791,
+          "over_10ms": 0
+        },
+        "candidate": {
+          "mean_ms": 1.9503545949999999,
+          "p50_ms": 1.939415,
+          "p95_ms": 2.045193,
+          "p99_ms": 2.135917,
+          "max_ms": 3.017701,
+          "over_10ms": 0
+        }
+      },
+      "calls_over_4ms": []
+    },
+    {
+      "mode": "preallocated",
+      "repeat": 2,
+      "implementations": {
+        "baseline": {
+          "mean_ms": 2.218182196,
+          "p50_ms": 2.208724,
+          "p95_ms": 2.30811795,
+          "p99_ms": 2.376727,
+          "max_ms": 3.345412,
+          "over_10ms": 0
+        },
+        "candidate": {
+          "mean_ms": 1.943635571,
+          "p50_ms": 1.9383650000000001,
+          "p95_ms": 2.025203,
+          "p99_ms": 2.07207,
+          "max_ms": 2.187573,
+          "over_10ms": 0
+        }
+      },
+      "calls_over_4ms": []
+    }
+  ],
+  "gc_events": [
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 4
+      },
+      "generation": 0,
+      "duration_ms": 0.081102,
+      "collected": 762
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 49
+      },
+      "generation": 0,
+      "duration_ms": 0.074802,
+      "collected": 724
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 97
+      },
+      "generation": 0,
+      "duration_ms": 0.080103,
+      "collected": 762
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 146
+      },
+      "generation": 0,
+      "duration_ms": 0.083003,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 194
+      },
+      "generation": 0,
+      "duration_ms": 0.082603,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 243
+      },
+      "generation": 0,
+      "duration_ms": 0.081203,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 291
+      },
+      "generation": 0,
+      "duration_ms": 0.088403,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 340
+      },
+      "generation": 0,
+      "duration_ms": 0.093803,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 388
+      },
+      "generation": 0,
+      "duration_ms": 0.085102,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 437
+      },
+      "generation": 0,
+      "duration_ms": 0.088903,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 485
+      },
+      "generation": 0,
+      "duration_ms": 0.085702,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 534
+      },
+      "generation": 1,
+      "duration_ms": 0.095903,
+      "collected": 826
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 582
+      },
+      "generation": 0,
+      "duration_ms": 0.086703,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 631
+      },
+      "generation": 0,
+      "duration_ms": 0.099603,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 679
+      },
+      "generation": 0,
+      "duration_ms": 0.087603,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 728
+      },
+      "generation": 0,
+      "duration_ms": 0.104604,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 776
+      },
+      "generation": 0,
+      "duration_ms": 0.097403,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 825
+      },
+      "generation": 0,
+      "duration_ms": 0.086703,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 873
+      },
+      "generation": 0,
+      "duration_ms": 0.087103,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 922
+      },
+      "generation": 0,
+      "duration_ms": 0.087103,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 970
+      },
+      "generation": 0,
+      "duration_ms": 0.136404,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "candidate",
+        "frame": 1019
+      },
+      "generation": 0,
+      "duration_ms": 0.086503,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 0,
+        "name": "baseline",
+        "frame": 1067
+      },
+      "generation": 0,
+      "duration_ms": 0.087703,
+      "collected": 772
+    },
+    {
+      "context": null,
+      "generation": 1,
+      "duration_ms": 0.093203,
+      "collected": 570
+    },
+    {
+      "context": null,
+      "generation": 0,
+      "duration_ms": 0.068403,
+      "collected": 0
+    },
+    {
+      "context": null,
+      "generation": 0,
+      "duration_ms": 0.052302,
+      "collected": 0
+    },
+    {
+      "context": null,
+      "generation": 0,
+      "duration_ms": 0.036801,
+      "collected": 0
+    },
+    {
+      "context": null,
+      "generation": 0,
+      "duration_ms": 0.025201,
+      "collected": 0
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 6
+      },
+      "generation": 0,
+      "duration_ms": 0.171906,
+      "collected": 407
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 53
+      },
+      "generation": 0,
+      "duration_ms": 0.090503,
+      "collected": 748
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 101
+      },
+      "generation": 0,
+      "duration_ms": 0.137704,
+      "collected": 768
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 150
+      },
+      "generation": 0,
+      "duration_ms": 0.099503,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 198
+      },
+      "generation": 0,
+      "duration_ms": 0.099303,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 247
+      },
+      "generation": 0,
+      "duration_ms": 0.103303,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 295
+      },
+      "generation": 0,
+      "duration_ms": 0.101903,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 344
+      },
+      "generation": 1,
+      "duration_ms": 0.286509,
+      "collected": 808
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 392
+      },
+      "generation": 2,
+      "duration_ms": 6.01697,
+      "collected": 786
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 433
+      },
+      "generation": 0,
+      "duration_ms": 0.082402,
+      "collected": 642
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 479
+      },
+      "generation": 0,
+      "duration_ms": 0.088303,
+      "collected": 728
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 527
+      },
+      "generation": 0,
+      "duration_ms": 0.095803,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 576
+      },
+      "generation": 0,
+      "duration_ms": 0.094303,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 624
+      },
+      "generation": 0,
+      "duration_ms": 0.099103,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 673
+      },
+      "generation": 0,
+      "duration_ms": 0.102803,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 721
+      },
+      "generation": 0,
+      "duration_ms": 0.099602,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 770
+      },
+      "generation": 0,
+      "duration_ms": 0.098603,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 818
+      },
+      "generation": 0,
+      "duration_ms": 0.101202,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 867
+      },
+      "generation": 0,
+      "duration_ms": 0.095703,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 915
+      },
+      "generation": 0,
+      "duration_ms": 0.116604,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "candidate",
+        "frame": 964
+      },
+      "generation": 1,
+      "duration_ms": 0.108703,
+      "collected": 830
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 1012
+      },
+      "generation": 0,
+      "duration_ms": 0.116104,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 1,
+        "name": "baseline",
+        "frame": 1061
+      },
+      "generation": 0,
+      "duration_ms": 0.098003,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 8
+      },
+      "generation": 0,
+      "duration_ms": 0.100103,
+      "collected": 748
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 56
+      },
+      "generation": 0,
+      "duration_ms": 0.095703,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 105
+      },
+      "generation": 0,
+      "duration_ms": 0.092102,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 153
+      },
+      "generation": 0,
+      "duration_ms": 0.094903,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 202
+      },
+      "generation": 0,
+      "duration_ms": 0.095503,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 250
+      },
+      "generation": 0,
+      "duration_ms": 0.102202,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 299
+      },
+      "generation": 0,
+      "duration_ms": 0.099902,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 347
+      },
+      "generation": 0,
+      "duration_ms": 0.096903,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 396
+      },
+      "generation": 0,
+      "duration_ms": 0.094903,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 444
+      },
+      "generation": 1,
+      "duration_ms": 0.116503,
+      "collected": 828
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 493
+      },
+      "generation": 0,
+      "duration_ms": 0.098602,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 541
+      },
+      "generation": 0,
+      "duration_ms": 0.114104,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 590
+      },
+      "generation": 0,
+      "duration_ms": 0.101803,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 638
+      },
+      "generation": 0,
+      "duration_ms": 0.101203,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 687
+      },
+      "generation": 0,
+      "duration_ms": 0.100403,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 735
+      },
+      "generation": 0,
+      "duration_ms": 0.097802,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 784
+      },
+      "generation": 0,
+      "duration_ms": 0.100003,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 832
+      },
+      "generation": 0,
+      "duration_ms": 0.099202,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 881
+      },
+      "generation": 0,
+      "duration_ms": 0.102403,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 929
+      },
+      "generation": 0,
+      "duration_ms": 0.100303,
+      "collected": 772
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "baseline",
+        "frame": 978
+      },
+      "generation": 0,
+      "duration_ms": 0.099303,
+      "collected": 770
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 1026
+      },
+      "generation": 1,
+      "duration_ms": 0.105203,
+      "collected": 826
+    },
+    {
+      "context": {
+        "mode": "allocating",
+        "repeat": 2,
+        "name": "candidate",
+        "frame": 1075
+      },
+      "generation": 0,
+      "duration_ms": 0.098103,
+      "collected": 770
+    }
+  ]
+}

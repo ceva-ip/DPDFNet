@@ -1,5 +1,107 @@
 # DPDFNet native inference investigation
 
+**Progress overview — `dpdfnet8_48khz_hr` (48 kHz).** The latest optimized
+research candidate is **W7A8 + pack32 + fitted degree-5 GRU gates**
+(`build/w7_followup_pack_fit5`). FP16 and INT8 below are the selective native
+precision presets; W7A8 uses 7-bit weights and 8-bit activations in its quantized
+kernels. The production INT8 preset remains unchanged.
+
+**Latency and memory footprint** — Intel i7-8700, one inference thread,
+Linux Docker/WSL2, 10 ms audio hops:
+
+| Version | Inference / hop ↓ | Warmed incremental RSS ↓ | Native owned allocations ↓ |
+| --- | ---: | ---: | ---: |
+| Original ONNX FP32 | 5.571 ms | 38.01 MiB | Not available |
+| Native selective FP16 | 2.831 ms | 10.93 MiB | 9.72 MiB |
+| Native selective INT8 | 2.381 ms | 7.53 MiB | 6.43 MiB |
+| Latest W7A8 + pack32 + fitted gates | 1.921 ms | 7.47 MiB | 6.43 MiB |
+
+The first three rows use the [2026-09-21 matched comparison](native/ONNX_LATEST_COMPARISON.md)
+(median of four run means). The latest row uses the
+[2026-09-27 follow-up](native/W7_LATENCY_FOLLOWUP.md)
+(mean of two standalone cadence run means). Both include Python call overhead
+and output allocation, with 100 warmup and 1,000 timed hops per run. These are
+saved measurements from separate sessions, so the latest-versus-ONNX difference
+is indicative, not a fresh matched speedup. FFT, audio I/O and resampling are
+excluded; the model's **50 ms algorithmic delay is unchanged**. Peak latency
+does not improve uniformly; see the [tail investigation](native/TAIL_LATENCY_INVESTIGATION.md).
+
+RSS is warmed process memory above the common imported-runtime baseline,
+including allocator retention and stream buffers; it is not total application
+RAM or model file size. Native owned allocations count memory owned by the C
+model and are **not interchangeable with RSS**. The latest candidate's allocation
+count is identical to INT8. Its [RSS measurement](results/overview_fitted_rss.json)
+on 2026-09-27 uses the same protocol: median of four fresh processes, each with
+120 warmup hops and source weights unmapped before sampling.
+
+**Output quality** — unweighted means on the **same six EARS-WHAM_v2 mixtures**
+for every row; higher is better in all columns:
+
+| Version | PESQ-WB (16 kHz) ↑ | STOI ↑ | SI-SNR (48 kHz, dB) ↑ | SIGMOS SIG (48 kHz) ↑ | SIGMOS NOISE (48 kHz) ↑ | SIGMOS OVRL (48 kHz) ↑ |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Original ONNX FP32 | 2.53436 | 0.940853 | 16.6703 | 3.84674 | 4.64805 | 3.34049 |
+| Native selective FP16 | 2.53442 | 0.940850 | 16.6702 | 3.84677 | 4.64758 | 3.34038 |
+| Native selective INT8 | 2.53397 | 0.940635 | 16.6565 | 3.81811 | 4.66332 | 3.33587 |
+| Latest W7A8 + pack32 + fitted gates | 2.52099 | 0.940449 | 16.6446 | 3.84506 | 4.63650 | 3.35663 |
+
+The common subset is `00033`, `00046`, `00084`, `00133`, `00200`, `00364`
+(six speakers). The first three rows are recomputed from the saved
+[per-clip results](results/fullband_ears_wham_v2_clips.json); the latest row comes
+from the mixture cases in the [fitted-gate quality screen](results/w7_followup_pack_fit5_audio.json).
+Inference and audio remain at 48 kHz: SI-SNR and SIGMOS are fullband; PESQ-WB
+explicitly resamples to 16 kHz, and STOI internally uses 10 kHz.
+The latest candidate has only this small matched quality screen, not the full
+50-clip evaluation. The [50-clip report](native/FULLBAND_EVALUATION.md) covers
+ONNX, FP16, INT8 and the earlier W7A8 build. These six-clip means show small
+quality differences, not proof of equivalence or an overall quality improvement.
+
+**Progress overview — `dpdfnet2_48khz_hr` (48 kHz).** The same fitted W7A8
+kernel candidate is now built for this model in `build/w7_followup_pack_fit5_2`.
+It remains an experimental candidate, with the production INT8 preset unchanged.
+
+**Latency and memory footprint** — same CPU, single-thread execution and
+10 ms cadence as above:
+
+| Version | Inference / hop ↓ | Warmed incremental RSS ↓ | Native owned allocations ↓ |
+| --- | ---: | ---: | ---: |
+| Original ONNX FP32 | 2.312 ms | 28.37 MiB | Not available |
+| Native selective FP16 | 1.337 ms | 8.41 MiB | 7.55 MiB |
+| Native selective INT8 | 1.069 ms | 6.03 MiB | 5.16 MiB |
+| Latest W7A8 + pack32 + fitted gates | 0.940 ms | 6.03 MiB | 5.16 MiB |
+
+All four latency rows were [remeasured together on 2026-09-27](results/dpdfnet2_overview_timing.json):
+median of four run means, 100 warmup + 1,000 timed hops per run, rotating order,
+including Python overhead and output allocation. The fitted candidate reduces
+this typical latency by **12.1% versus INT8** and **59.3% versus ONNX**.
+Its observed maximum was **7.605 ms**, versus **1.976 ms** for INT8; none of the
+16,000 timed calls exceeded 10 ms. The mean improvement does not imply a lower
+worst-case latency. These timings replace the older DPDFNet-2 values for this
+overview; cross-model timing ratios remain approximate because DPDFNet-8 was
+measured in separate sessions.
+
+ONNX/FP16/INT8 RSS comes from the [original matched memory study](results/onnx_latest_summary.json).
+The [new fitted-candidate RSS measurement](results/overview_fitted_rss.json) uses
+the same four-process protocol on 2026-09-27. Both INT8 variants round to
+6.03 MiB; the small difference between sessions is not evidence of memory savings.
+Memory definitions and the unchanged 50 ms algorithmic delay are as above.
+
+**Output quality** — newly measured on the **same six EARS-WHAM_v2 mixtures**
+listed in the DPDFNet-8 overview, with the same metrics and sample-rate handling:
+
+| Version | PESQ-WB (16 kHz) ↑ | STOI ↑ | SI-SNR (48 kHz, dB) ↑ | SIGMOS SIG (48 kHz) ↑ | SIGMOS NOISE (48 kHz) ↑ | SIGMOS OVRL (48 kHz) ↑ |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Original ONNX FP32 | 2.43120 | 0.935887 | 16.1189 | 3.85311 | 4.66154 | 3.29926 |
+| Native selective FP16 | 2.43123 | 0.935887 | 16.1191 | 3.85261 | 4.66126 | 3.29865 |
+| Native selective INT8 | 2.42767 | 0.935712 | 16.1053 | 3.86265 | 4.66954 | 3.30783 |
+| Latest W7A8 + pack32 + fitted gates | 2.44130 | 0.935874 | 16.0841 | 3.86312 | 4.61457 | 3.28124 |
+
+These are unweighted six-clip means, not a full 50-clip evaluation. Compared
+with ONNX, the fitted candidate changes mean SI-SNR by −0.0348 dB and SIGMOS
+OVRL by −0.0180, while PESQ increases by 0.0101. The mixed small changes do
+not establish equivalence or an overall quality improvement. All outputs and
+states remained finite. See the [per-clip measurements](results/dpdfnet2_overview_quality.json)
+and [validation, memory methodology and reproduction](native/MODEL_OVERVIEW_EVALUATION.md).
+
 **HushMic integration:** [C ABI v1 and Python-free build](native/integration/README.md)
 now provide symbol-prefixed models in one library, the named
 `DPDF_PRESET_INT8_SELECTIVE` preset with CPU capability checks, and
@@ -17,6 +119,38 @@ The [listening comparison](listening_comparison/index.html) uses these latest bu
 continues from the completed latency/memory pass, with additional exact kernel
 optimizations and direct comparisons against both the preceding and original
 builds. It keeps the existing CPU requirements and scalar fallback.
+
+**Further research:** the [INT8 range and handwritten assembly experiments](native/INT8_RANGE_EXPERIMENTS.md)
+compare exact AVX2 scheduling changes with faster W7A8/W8A7 arithmetic,
+including cadence timing, recurrent validation and speech-quality measurements.
+These are isolated research builds; the production W8A8 preset is unchanged.
+
+The [W7A8 latency follow-up](native/W7_LATENCY_FOLLOWUP.md) ranks further
+directions and screens 18 candidate builds. Packing plus fitted GRU activations
+reduces mean inference time another **3.6–4.9% beyond W7A8**, passes the existing
+activation tolerance, and stays close in a small fullband quality screen.
+Exact packing alone saves **1.2–2.7%**, preserving all 65 prior audio outputs
+byte for byte. Tail latency does not improve uniformly; both remain research builds.
+
+The [peak-latency investigation](native/TAIL_LATENCY_INVESTIGATION.md) traces
+30,000 calls across allocating, reusable-buffer and C-only execution, with and
+without CPU affinity. A new streaming runner removes the observed in-call GC
+and page faults; residual peak variation remains, including in C-only runs.
+
+**Fullband quality:** the [50-clip EARS-WHAM_v2 comparison](native/FULLBAND_EVALUATION.md)
+evaluates original ONNX, selective FP16, INT8, and W7A8 with native 48 kHz
+SI-SNR and SIGMOS, plus explicitly labelled PESQ/STOI. W7A8 stays close to
+INT8 on average, with a small PESQ decline; paired intervals and worst cases
+are included.
+
+The [low-level and clean-speech follow-up](native/LOW_LEVEL_CLEAN_EVALUATION.md)
+adds ten mixtures at −50 dBFS speech RMS and two clean controls. W7A8 remains
+close to the existing presets; one quiet-speech outlier exposes a level-sensitive
+suppression issue shared with original ONNX.
+
+The [continuous noise-only tests](native/LONG_NOISE_EVALUATION.md) add three
+two-minute synthetic noise streams. All four variants stayed numerically stable
+with strong suppression throughout; W7A8 attenuated the inputs by 89.74–92.71 dB.
 
 The preceding [latency and memory optimization](native/LATENCY_REWORK.md)
 reduces tensor-layout work, reuses temporary storage, and accelerates exact
@@ -58,6 +192,7 @@ package, exporters, model definitions, and downloaded source weights are unchang
 - [Detailed findings and implementation plan](FEASIBILITY.md)
 - [Complete C model, FP16 and native INT8](native/FULL_MODEL.md)
 - [Convolution, quantization and gate follow-up](native/LATENCY_FOLLOWUP.md)
+- [INT8 range and handwritten assembly experiments](native/INT8_RANGE_EXPERIMENTS.md)
 - [Exact latency and memory optimization, both models](native/LATENCY_REWORK.md)
 - [`dpdfnet8_48khz_hr` architecture and exact optimization results](native/DPDFNET8_ARCHITECTURE.md)
 - [Optional Linux assembly kernels: feasibility and compiler audit](native/ASSEMBLY_FEASIBILITY.md)

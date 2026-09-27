@@ -60,7 +60,7 @@ def paired(models, frames, repeats, paced, warmup):
     return reports
 
 
-def main():
+def main(comparison=exact_recurrent_parity):
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--model',type=Path,required=True)
     p.add_argument('--weights',type=Path,required=True)
@@ -82,7 +82,7 @@ def main():
     models={name:ExtendedModel(ref,*CONFIGS[a.config],build=build,weights=a.weights)
             for name,build in [('baseline',a.baseline_build),('candidate',a.candidate_build)]}
     try:
-        parity=exact_recurrent_parity(models['baseline'],models['candidate'],spectra(500))
+        parity=comparison(models['baseline'],models['candidate'],spectra(500))
         frames=spectra(a.frames+a.warmup)
         report={'environment':{'cpu':cpu_name(),'platform':platform.platform(),'affinity':sorted(os.sched_getaffinity(0))},
                 'method':'Per-hop AB/BA paired calls, CPU-time and unfiltered wall-time distributions; paired paced duty is two models per hop.',

@@ -1,0 +1,227 @@
+"""Per-call tail attribution and controlled buffer/affinity/C-loop experiments.
+
+All samples are retained. A Linux guest context-switch counter cannot identify
+all Windows/Hyper-V stalls. CLOCK_THREAD_CPUTIME_ID is time, not an instruction
+count or a CPU-frequency measurement. No system-wide scheduling settings change.
+"""
+import argparse
+import ctypes as ct
+import gc
+import hashlib
+import json
+import os
+from pathlib import Path
+import resource
+import subprocess
+import sys
+import time
+
+import numpy as np
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT/'native'))
+from extended_probe import ExtendedModel, CONFIGS
+from probe import FP, ptr, initial_state, session, spectra, cpu_name
+from streaming_runner import StreamingRunner
+
+COLUMNS = ['wall_ns', 'thread_cpu_ns', 'wake_lateness_ns', 'finish_from_release_ns',
+           'cpu_before', 'cpu_after', 'voluntary_switches', 'involuntary_switches',
+           'minor_faults', 'major_faults', 'gc_ns', 'gc_collections', 'frame']
+
+
+def distribution(values):
+    x = np.asarray(values)/1e6
+    return {'mean_ms': float(x.mean()), **{f'p{p}_ms': float(np.percentile(x, p)) for p in (50, 95, 99, 99.9)},
+            'max_ms': float(x.max()), 'over_3ms': int((x>3).sum()),
+            'over_4ms': int((x>4).sum()), 'over_10ms': int((x>10).sum())}
+
+
+def describe(records):
+    wall, cpu, gc_ns = records[:, 0], records[:, 1], records[:, 10]
+    switches = records[:, 6]+records[:, 7]
+    flags = {'gc': records[:, 11]>0, 'guest_context_switch': switches>0,
+             'detected_cpu_migration': records[:, 4]!=records[:, 5],
+             'page_fault': (records[:, 8]+records[:, 9])>0}
+    summary = {name: distribution(records[:, col]) for name, col in
+               [('wall', 0), ('thread_cpu', 1), ('wake_lateness', 2), ('finish_from_release', 3)]}
+    summary['samples'] = len(records)
+    summary['observations'] = {key: int(value.sum()) for key, value in flags.items()}
+    summary['gc_total_ms'] = float(gc_ns.sum()/1e6)
+    summary['over_3ms_observations'] = {key: int(np.count_nonzero(value & (wall>3000000))) for key, value in flags.items()}
+    # Flags can overlap; no unsupported assignment of a single root cause.
+    summary['over_3ms_without_any_observed_flag'] = int(np.count_nonzero((wall>3000000) & ~np.logical_or.reduce(list(flags.values()))))
+    indices = np.argsort(wall)[-20:][::-1]
+    summary['slowest_calls'] = [{**dict(zip(COLUMNS, map(int, records[i]))),
+                                 'wall_minus_thread_cpu_ns': int(wall[i]-cpu[i])} for i in indices]
+    return summary
+
+
+def python_loop(model, runner, frames, allocating, records, getcpu):
+    state = initial_state(model)
+    runner.reset()
+    gc_total = gc_count = gc_start = 0
+
+    def observe(phase, info):
+        nonlocal gc_total, gc_count, gc_start
+        if phase == 'start':
+            gc_start = time.perf_counter_ns()
+        else:
+            gc_total += time.perf_counter_ns()-gc_start
+            gc_count += 1
+
+    gc.callbacks.append(observe)
+    start = time.perf_counter_ns()+10000000
+    try:
+        for i, frame in enumerate(frames):
+            deadline = start+i*10000000
+            remaining = deadline-time.perf_counter_ns()
+            if remaining>0:
+                time.sleep(remaining/1e9)
+            release = time.perf_counter_ns()
+            before = resource.getrusage(resource.RUSAGE_THREAD)
+            cpu0 = getcpu()
+            gc0, count0 = gc_total, gc_count
+            wall0 = time.perf_counter_ns()
+            cpu_start = time.thread_time_ns()
+            if allocating:
+                _, state = model.run(None, {'spec': frame, 'state_in': state})
+            else:
+                runner.process(frame)
+            cpu_end = time.thread_time_ns()
+            wall1 = time.perf_counter_ns()
+            # Capture GC before post-call CPU/rusage bookkeeping can allocate.
+            gc1, count1 = gc_total, gc_count
+            cpu1 = getcpu()
+            after = resource.getrusage(resource.RUSAGE_THREAD)
+            records[i] = (wall1-wall0, cpu_end-cpu_start, release-deadline, wall1-deadline,
+                          cpu0, cpu1, after.ru_nvcsw-before.ru_nvcsw, after.ru_nivcsw-before.ru_nivcsw,
+                          after.ru_minflt-before.ru_minflt, after.ru_majflt-before.ru_majflt,
+                          gc1-gc0, count1-count0, i)
+    finally:
+        gc.callbacks.remove(observe)
+
+
+def verify(model, runner, frames, helper):
+    state = initial_state(model)
+    runner.reset()
+    for frame in frames[:256]:
+        expected, state = model.run(None, {'spec': frame, 'state_in': state})
+        actual = runner.process(frame)
+        assert expected.tobytes() == actual.tobytes()
+        assert state.tobytes() == runner.state.tobytes()
+    runner.reset()
+    baseline_state = initial_state(model)
+    for frame in frames[:128]:
+        expected, baseline_state = model.run(None, {'spec': frame, 'state_in': baseline_state})
+    runner.reset()
+    trace = np.zeros((128, 13), np.int64)
+    assert helper(ct.cast(model.lib.dpdf_model_process, ct.c_void_p), model.handle,
+                  ptr(frames), runner._state_ptr, runner._output_ptr, 128, 962, 0,
+                  trace.ctypes.data_as(ct.POINTER(ct.c_int64))) == 0
+    assert expected.tobytes() == runner.output.tobytes()
+    assert baseline_state.tobytes() == runner.state.tobytes()
+    runner.reset()
+    assert runner.state.tobytes() == initial_state(model).tobytes()
+    for bad in (frames[0].astype(np.float64), frames[0].reshape(962)):
+        try:
+            runner.process(bad)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('Invalid spectrum accepted')
+    return {'streaming_output_state_exact_frames': 256, 'C_loop_final_output_state_exact_frames': 128,
+            'reset_and_input_validation_passed': True}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--frames', type=int, default=1500)
+    parser.add_argument('--repeats', type=int, default=2)
+    parser.add_argument('--warmup', type=int, default=100)
+    parser.add_argument('--cpu', type=int)
+    parser.add_argument('--output', type=Path, default=ROOT/'results/w7_tail_latency.json')
+    args = parser.parse_args()
+    assert args.frames>0 and args.repeats>0 and args.warmup>=0
+    work = ROOT/'scratch/tail_latency'
+    work.mkdir(parents=True, exist_ok=True)
+    library = work/'tail_loop.so'
+    subprocess.run(['gcc', '-shared', '-fPIC', '-O2', '-std=c11', '-Wall', '-Wextra', '-Werror',
+                    str(Path(__file__).with_name('tail_loop.c')), '-o', str(library)], check=True)
+    lib = ct.CDLL(str(library))
+    helper = lib.tail_loop
+    helper.argtypes = [ct.c_void_p, ct.c_void_p, FP, FP, FP, ct.c_int, ct.c_int, ct.c_int64, ct.POINTER(ct.c_int64)]
+    helper.restype = ct.c_int
+    getcpu = ct.CDLL(None).sched_getcpu
+    getcpu.argtypes = []
+    getcpu.restype = ct.c_int
+    affinity = os.sched_getaffinity(0)
+    selected = args.cpu if args.cpu is not None else sorted(affinity)[len(affinity)//2]
+    assert selected in affinity
+    ref = session(ROOT/'models/dpdfnet8_48khz_hr.onnx')
+    builds = {'w7a8': ROOT/'build/range_w78', 'fitted': ROOT/'build/w7_followup_pack_fit5'}
+    models = {name: ExtendedModel(ref, *CONFIGS['fc_and_1x1_8'], build=build,
+                                 weights=ROOT/'models/rework8/weights.f32') for name, build in builds.items()}
+    runners = {name: StreamingRunner(model) for name, model in models.items()}
+    frames = np.ascontiguousarray(spectra(max(256, args.frames+args.warmup)))
+    records = np.zeros((args.frames+args.warmup, 13), np.int64)
+    report = {'cpu': cpu_name(), 'affinity_original': sorted(affinity), 'pinned_guest_cpu': selected,
+              'columns': COLUMNS, 'warmup': args.warmup, 'frames_per_run': args.frames,
+              'repeats': args.repeats, 'cadence_ms': 10, 'gc_enabled': gc.isenabled(),
+              'method': 'Standalone 10 ms cadence. Reverse condition order and implementation order across repeats. Setup GC collection precedes each warmup. Affinity changes affect only this process. All samples retained.',
+              'artifacts': {name: hashlib.sha256((build/'libdpdf_full.so').read_bytes()).hexdigest() for name, build in builds.items()},
+              'sources': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in
+                          [Path(__file__), Path(__file__).with_name('tail_loop.c'), ROOT/'native/streaming_runner.py']},
+              'parity': {}, 'runs': []}
+    raw = {}
+    conditions = ['allocating_free', 'buffers_free', 'buffers_pinned', 'native_free', 'native_pinned']
+    try:
+        for name in models:
+            report['parity'][name] = verify(models[name], runners[name], frames, helper)
+        for repeat in range(args.repeats):
+            order = conditions if repeat%2==0 else conditions[::-1]
+            for condition in order:
+                os.sched_setaffinity(0, {selected} if condition.endswith('pinned') else affinity)
+                names = list(models)
+                if (repeat+conditions.index(condition))%2:
+                    names.reverse()
+                for name in names:
+                    runner, model = runners[name], models[name]
+                    runner.reset()
+                    records.fill(0)
+                    gc.collect()
+                    if condition.startswith('native'):
+                        rc = helper(ct.cast(model.lib.dpdf_model_process, ct.c_void_p), model.handle,
+                                    ptr(frames), runner._state_ptr, runner._output_ptr,
+                                    len(records), 962, 10000000, records.ctypes.data_as(ct.POINTER(ct.c_int64)))
+                        assert rc == 0
+                    else:
+                        python_loop(model, runner, frames[:len(records)], condition.startswith('allocating'), records, getcpu)
+                    kept = records[args.warmup:].copy()
+                    key = f'{condition}_{name}_{repeat}'
+                    raw[key] = kept
+                    item = {'condition': condition, 'implementation': name, 'repeat': repeat, **describe(kept)}
+                    report['runs'].append(item)
+                    args.output.write_text(json.dumps(report, indent=2)+'\n')
+                    print(key, json.dumps({'wall': item['wall'], 'observations': item['observations']}), flush=True)
+        # Raw traces remain available for per-call attribution and pooled tails.
+        raw_path = args.output.with_suffix('.npz')
+        np.savez_compressed(raw_path, **raw)
+        report['raw_trace_file'] = str(raw_path)
+        report['pooled'] = {condition: {name: describe(np.concatenate([raw[f'{condition}_{name}_{repeat}'] for repeat in range(args.repeats)]))
+                                        for name in models} for condition in conditions}
+        args.output.write_text(json.dumps(report, indent=2)+'\n')
+    finally:
+        os.sched_setaffinity(0, affinity)
+        for model in models.values():
+            model.close()
+        for runner in runners.values():
+            try:
+                runner.process(frames[0])
+            except RuntimeError:
+                pass
+            else:
+                raise AssertionError('Closed model accepted')
+
+
+if __name__ == '__main__':
+    main()

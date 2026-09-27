@@ -1,0 +1,22 @@
+{
+  "range_u78": {
+    "tests_passed": 5,
+    "library_sha256": "d01b6a266acc443849d4f77b5e1cda1f545a3d8182adc5cba0e71d5fb9a106c3"
+  },
+  "range_u78_asan": {
+    "tests_passed": 5,
+    "library_sha256": "5b4cdbddcfc877e4e747334436eb13bef17ddef0704c380f086e75af2c1fb82d"
+  },
+  "range_w78": {
+    "tests_passed": 5,
+    "library_sha256": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2"
+  },
+  "range_w78_asan": {
+    "tests_passed": 5,
+    "library_sha256": "a28cc869bd1be3d7361a45ce409159c5b3ca6abc36da8b98e9420bffb7f012cb"
+  },
+  "next_asm48": {
+    "tests_passed": 5,
+    "library_sha256": "4d4bfcf9ce4dd121d4daecdac663c77ce1fa74c68830d52b11e15fec2cc5abc1"
+  }
+}

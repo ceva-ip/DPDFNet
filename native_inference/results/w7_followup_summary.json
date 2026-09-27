@@ -1,0 +1,1505 @@
+{
+  "method": "Mean of per-run means and percentiles; percentiles are not pooled. Every timing sample is retained.",
+  "screening": {
+    "pack32": {
+      "baseline": {
+        "mean_ms": 1.9319853166666665,
+        "p50_ms": 1.9161618333333332,
+        "p95_ms": 2.0526213166666665,
+        "p99_ms": 2.2000880199999995,
+        "max_ms": 6.774818,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9350148333333335
+      },
+      "candidate": {
+        "mean_ms": 1.8740158377777778,
+        "p50_ms": 1.8627435,
+        "p95_ms": 1.9740823333333333,
+        "p99_ms": 2.1218506733333333,
+        "max_ms": 2.403277,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.8770200555555556
+      },
+      "mean_reduction_percent": 3.0005134298280223,
+      "per_repeat_mean_reduction_percent": [
+        2.922375847513803,
+        3.1496657501847047,
+        2.928940798317281
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "d0f074947e082efa7cfcb5ff9ffc28932b3347e0b7855de7dbfb81355f88c9ee"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "epilogue": {
+      "baseline": {
+        "mean_ms": 1.9215076727777778,
+        "p50_ms": 1.9004226666666666,
+        "p95_ms": 2.0433186666666665,
+        "p99_ms": 2.2883856299999996,
+        "max_ms": 7.075897,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9245213888888888
+      },
+      "candidate": {
+        "mean_ms": 1.9012084850000002,
+        "p50_ms": 1.8813721666666667,
+        "p95_ms": 2.0216913499999998,
+        "p99_ms": 2.2876307233333315,
+        "max_ms": 3.255991,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9041739444444443
+      },
+      "mean_reduction_percent": 1.056419813740983,
+      "per_repeat_mean_reduction_percent": [
+        0.8178612677815944,
+        1.5316296725742529,
+        0.8218236629435993
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "976685a8bc708db1d0d236abaae1adf5503c08c860ae54ea9bdcb68e3921cc6f"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "reciprocal": {
+      "baseline": {
+        "mean_ms": 2.0296143216666667,
+        "p50_ms": 1.9673978333333333,
+        "p95_ms": 2.4546740166666656,
+        "p99_ms": 2.9597403466666665,
+        "max_ms": 12.746519,
+        "over_10ms": 1,
+        "thread_cpu_mean_ms": 2.033126111111111
+      },
+      "candidate": {
+        "mean_ms": 2.0437174961111113,
+        "p50_ms": 1.9916318333333334,
+        "p95_ms": 2.407893683333333,
+        "p99_ms": 2.936122343333333,
+        "max_ms": 5.664285,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.047250222222222
+      },
+      "mean_reduction_percent": -0.6948696751835737,
+      "per_repeat_mean_reduction_percent": [
+        -1.2295050793938112,
+        -0.9651747530316612,
+        0.11164128007169483
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "47aadbdaa96efd17f0080b99ffe4a5563cb9dee0f063b3557598ec0c354d36ce"
+      },
+      "parity": {
+        "exact": false,
+        "frames": 500,
+        "finite": true,
+        "max_abs_output_state": [
+          0.0019822809263132513,
+          0.4035511165857315
+        ],
+        "rms_output_state": [
+          1.576966760155767e-05,
+          0.002168735167062965
+        ],
+        "note": "Changed FP32 activation approximation on the same W7A8 grid; numerical differences are not a perceptual acceptance test."
+      }
+    },
+    "unroll2": {
+      "baseline": {
+        "mean_ms": 1.957587667222222,
+        "p50_ms": 1.935708,
+        "p95_ms": 2.08909535,
+        "p99_ms": 2.3082283499999994,
+        "max_ms": 7.467158,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.960684
+      },
+      "candidate": {
+        "mean_ms": 1.9536432266666666,
+        "p50_ms": 1.935958,
+        "p95_ms": 2.0711177666666662,
+        "p99_ms": 2.248223663333333,
+        "max_ms": 3.268657,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9566672777777778
+      },
+      "mean_reduction_percent": 0.20149496350028162,
+      "per_repeat_mean_reduction_percent": [
+        -0.30581965353004836,
+        0.5389079236510552,
+        0.369058780253384
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "ff1ae8495e95ed3e37c5ca5458253a5ab3e626c45fa256987fb09182d3c15001"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "unroll4": {
+      "baseline": {
+        "mean_ms": 1.9426069272222222,
+        "p50_ms": 1.9245058333333334,
+        "p95_ms": 2.05690835,
+        "p99_ms": 2.2456176833333332,
+        "max_ms": 7.256882,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9456127222222221
+      },
+      "candidate": {
+        "mean_ms": 1.9340210955555557,
+        "p50_ms": 1.9181888333333335,
+        "p95_ms": 2.0592683666666667,
+        "p99_ms": 2.2113586766666664,
+        "max_ms": 2.722544,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.936949277777778
+      },
+      "mean_reduction_percent": 0.44197472717466546,
+      "per_repeat_mean_reduction_percent": [
+        0.12396390476776542,
+        0.8166491059682035,
+        0.3845723108195531
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "84a07901b77145a80ab48e1206aded69f4181e35ad743d55a126228da9209276"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "gate4": {
+      "baseline": {
+        "mean_ms": 1.9608704266666668,
+        "p50_ms": 1.9424370000000002,
+        "p95_ms": 2.093549683333333,
+        "p99_ms": 2.2748636799999997,
+        "max_ms": 7.151635,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9639798333333334
+      },
+      "candidate": {
+        "mean_ms": 1.9305238322222222,
+        "p50_ms": 1.9164198333333333,
+        "p95_ms": 2.052155033333333,
+        "p99_ms": 2.2025983399999998,
+        "max_ms": 2.945997,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9335775000000002
+      },
+      "mean_reduction_percent": 1.5476083494222248,
+      "per_repeat_mean_reduction_percent": [
+        1.5002247758722498,
+        1.9686511955827934,
+        1.1701657709343505
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "lto": {
+      "baseline": {
+        "mean_ms": 2.114704778333333,
+        "p50_ms": 2.0412178333333335,
+        "p95_ms": 2.557339683333333,
+        "p99_ms": 3.268990336666666,
+        "max_ms": 7.789554,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.1185358333333335
+      },
+      "candidate": {
+        "mean_ms": 2.0763226844444445,
+        "p50_ms": 2.0040496666666665,
+        "p95_ms": 2.616947766666665,
+        "p99_ms": 3.0705853399999996,
+        "max_ms": 3.765723,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.0801303333333334
+      },
+      "mean_reduction_percent": 1.8150095598279514,
+      "per_repeat_mean_reduction_percent": [
+        1.2706559978216903,
+        1.5529768367273267,
+        2.596906066750604
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "73595c2c472ae6ee2d2a75497bd9532f25c0ea1a73f365429ee33617def25bde"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "batch8": {
+      "baseline": {
+        "mean_ms": 2.1081314694444444,
+        "p50_ms": 2.0309006666666667,
+        "p95_ms": 2.441236683333333,
+        "p99_ms": 3.1257056799999994,
+        "max_ms": 8.126672,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.111375388888889
+      },
+      "candidate": {
+        "mean_ms": 2.1531362577777777,
+        "p50_ms": 2.0756193333333335,
+        "p95_ms": 2.4700827,
+        "p99_ms": 3.065474063333332,
+        "max_ms": 4.016234,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.1566757222222224
+      },
+      "mean_reduction_percent": -2.1348188661684198,
+      "per_repeat_mean_reduction_percent": [
+        -2.019777013185897,
+        -1.9038897518567133,
+        -2.481663056211625
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "a0b92d5c4fbeac1e9ec156ee61ba7be209d2377889c33525be50682bb6541e35"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "column_first": {
+      "baseline": {
+        "mean_ms": 2.087434535,
+        "p50_ms": 2.0049001666666664,
+        "p95_ms": 2.536525,
+        "p99_ms": 2.736781439999999,
+        "max_ms": 7.283672,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.090789444444445
+      },
+      "candidate": {
+        "mean_ms": 2.085859216111111,
+        "p50_ms": 2.0098535,
+        "p95_ms": 2.5410996833333335,
+        "p99_ms": 2.667403743333333,
+        "max_ms": 3.728588,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.0891371666666667
+      },
+      "mean_reduction_percent": 0.07546674458410729,
+      "per_repeat_mean_reduction_percent": [
+        -0.24313334041099477,
+        0.3620314104894162,
+        0.09032624289355695
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "8e4999c86700d3c64526cd967de8586f5222b72bac1bc230ac2ed001b40f80a9"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "poly5": {
+      "baseline": {
+        "mean_ms": 2.0912573455555554,
+        "p50_ms": 2.0044161666666667,
+        "p95_ms": 2.6786200666666655,
+        "p99_ms": 3.044610003333333,
+        "max_ms": 7.47324,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.094592888888889
+      },
+      "candidate": {
+        "mean_ms": 2.0009784027777777,
+        "p50_ms": 1.9194468333333334,
+        "p95_ms": 2.5018090499999985,
+        "p99_ms": 2.955511003333333,
+        "max_ms": 3.247404,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.0043262222222222
+      },
+      "mean_reduction_percent": 4.316969547991933,
+      "per_repeat_mean_reduction_percent": [
+        4.170441032608863,
+        4.946603822116391,
+        3.837679627160928
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "6a561a3b934624dbda4e0132e86748e45424f59928cb23dcdda9caffd622ea34"
+      },
+      "parity": {
+        "exact": false,
+        "frames": 500,
+        "finite": true,
+        "max_abs_output_state": [
+          0.003280211240053177,
+          0.2989708334207535
+        ],
+        "rms_output_state": [
+          1.7227768935332965e-05,
+          0.002291939098152415
+        ],
+        "note": "Changed FP32 activation approximation on the same W7A8 grid; numerical differences are not a perceptual acceptance test."
+      }
+    },
+    "combined": {
+      "baseline": {
+        "mean_ms": 1.9538364549999998,
+        "p50_ms": 1.9326983333333334,
+        "p95_ms": 2.0824616833333334,
+        "p99_ms": 2.293736376666666,
+        "max_ms": 7.129342,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9569914444444445
+      },
+      "candidate": {
+        "mean_ms": 1.925401553888889,
+        "p50_ms": 1.906731,
+        "p95_ms": 2.0452770166666663,
+        "p99_ms": 2.300270343333333,
+        "max_ms": 3.293912,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9284970555555556
+      },
+      "mean_reduction_percent": 1.455336808684482,
+      "per_repeat_mean_reduction_percent": [
+        1.3972658601510646,
+        1.4304257022075606,
+        1.539653488393622
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "6c2f53620ccf556a8a71ca09e17c8443c9faf245fe5385c0bdbb8e170abe7e1e"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "combined_lto": {
+      "baseline": {
+        "mean_ms": 1.9237443105555554,
+        "p50_ms": 1.9011476666666665,
+        "p95_ms": 2.0460329666666666,
+        "p99_ms": 2.244912003333333,
+        "max_ms": 7.004638,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9266733333333335
+      },
+      "candidate": {
+        "mean_ms": 1.887990775,
+        "p50_ms": 1.8727298333333333,
+        "p95_ms": 1.9983273499999998,
+        "p99_ms": 2.183445003333333,
+        "max_ms": 2.677489,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.8909203333333335
+      },
+      "mean_reduction_percent": 1.858538858796166,
+      "per_repeat_mean_reduction_percent": [
+        1.6413414134697324,
+        1.9828037752286143,
+        1.950674233252725
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "c69ccc42ae470b6f7424d58cd4aa886d071b263699cd4f7efd830b457de58833"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "pack_gate": {
+      "baseline": {
+        "mean_ms": 1.9411292355555554,
+        "p50_ms": 1.9162355,
+        "p95_ms": 2.0737384333333333,
+        "p99_ms": 2.342109686666666,
+        "max_ms": 7.198696,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9438465555555555
+      },
+      "candidate": {
+        "mean_ms": 1.9150662555555555,
+        "p50_ms": 1.8981183333333334,
+        "p95_ms": 2.0361406499999997,
+        "p99_ms": 2.220335,
+        "max_ms": 3.127785,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9180961666666665
+      },
+      "mean_reduction_percent": 1.342671035117382,
+      "per_repeat_mean_reduction_percent": [
+        1.0646418955425063,
+        1.8479502373820345,
+        1.1171397519013193
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "d0f074947e082efa7cfcb5ff9ffc28932b3347e0b7855de7dbfb81355f88c9ee"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "pack_gate_lto": {
+      "baseline": {
+        "mean_ms": 1.9605839172222224,
+        "p50_ms": 1.9406996666666667,
+        "p95_ms": 2.08950135,
+        "p99_ms": 2.2527063366666664,
+        "max_ms": 7.218042,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.962426722222222
+      },
+      "candidate": {
+        "mean_ms": 1.9013969944444444,
+        "p50_ms": 1.8869316666666667,
+        "p95_ms": 2.0106938166666666,
+        "p99_ms": 2.1883483333333333,
+        "max_ms": 2.888997,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9043246111111112
+      },
+      "mean_reduction_percent": 3.018841593969346,
+      "per_repeat_mean_reduction_percent": [
+        2.7493828456792713,
+        3.368634117850766,
+        2.9390649751515285
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "6b4f1ad5ec423b13046319c0f218a03637721191c6829a402c93634743318bd7"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "exact_all": {
+      "baseline": {
+        "mean_ms": 1.9612009683333333,
+        "p50_ms": 1.9446498333333333,
+        "p95_ms": 2.081934683333333,
+        "p99_ms": 2.20702667,
+        "max_ms": 7.185247,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.964252388888889
+      },
+      "candidate": {
+        "mean_ms": 1.9126655966666668,
+        "p50_ms": 1.9004481666666666,
+        "p95_ms": 2.0117439666666663,
+        "p99_ms": 2.1692290066666664,
+        "max_ms": 2.833998,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9157132222222224
+      },
+      "mean_reduction_percent": 2.474778079877904,
+      "per_repeat_mean_reduction_percent": [
+        2.573749853177465,
+        2.524347221208778,
+        2.326191310989656
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "c69ccc42ae470b6f7424d58cd4aa886d071b263699cd4f7efd830b457de58833"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "pgo": {
+      "baseline": {
+        "mean_ms": 1.9802175844444447,
+        "p50_ms": 1.948882,
+        "p95_ms": 2.130111,
+        "p99_ms": 2.5639930066666663,
+        "max_ms": 7.260742,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.983424888888889
+      },
+      "candidate": {
+        "mean_ms": 1.924002116111111,
+        "p50_ms": 1.89433,
+        "p95_ms": 2.073469333333333,
+        "p99_ms": 2.5258000133333334,
+        "max_ms": 3.29531,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.9272695555555555
+      },
+      "mean_reduction_percent": 2.8388531025546504,
+      "per_repeat_mean_reduction_percent": [
+        2.691572570113465,
+        2.9210141191930883,
+        2.9048766081018584
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "8e12d0f768c8846732eb2c40e69c5dd55048afaa210180ffe85d3be6d732025a"
+      },
+      "parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      }
+    },
+    "pack_poly5": {
+      "baseline": {
+        "mean_ms": 1.9989874516666668,
+        "p50_ms": 1.9679805000000001,
+        "p95_ms": 2.152924666666667,
+        "p99_ms": 2.6028186933333326,
+        "max_ms": 7.500842,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 2.0021664444444447
+      },
+      "candidate": {
+        "mean_ms": 1.8902017744444446,
+        "p50_ms": 1.8646271666666665,
+        "p95_ms": 2.0368356833333334,
+        "p99_ms": 2.503803353333333,
+        "max_ms": 3.598317,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.8934030555555557
+      },
+      "mean_reduction_percent": 5.442039024883405,
+      "per_repeat_mean_reduction_percent": [
+        5.396878298313091,
+        5.705090715798933,
+        5.2255754558423355
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "af7a9c49070f81a6e8b3d91cc3dcab535899e99f3a237fe6be7ac4b3b44bc369"
+      },
+      "parity": {
+        "exact": false,
+        "frames": 500,
+        "finite": true,
+        "max_abs_output_state": [
+          0.003280211240053177,
+          0.2989708334207535
+        ],
+        "rms_output_state": [
+          1.7227768935332965e-05,
+          0.002291939098152415
+        ],
+        "note": "Changed FP32 activation approximation on the same W7A8 grid; numerical differences are not a perceptual acceptance test."
+      }
+    },
+    "pack_fit5": {
+      "baseline": {
+        "mean_ms": 1.9340595544444446,
+        "p50_ms": 1.915345,
+        "p95_ms": 2.048998,
+        "p99_ms": 2.2979006766666665,
+        "max_ms": 7.040225,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.937065777777778
+      },
+      "candidate": {
+        "mean_ms": 1.8396031655555556,
+        "p50_ms": 1.826609,
+        "p95_ms": 1.9578966666666666,
+        "p99_ms": 2.0716010066666666,
+        "max_ms": 2.902992,
+        "over_10ms": 0,
+        "thread_cpu_mean_ms": 1.8426062222222224
+      },
+      "mean_reduction_percent": 4.883840762391689,
+      "per_repeat_mean_reduction_percent": [
+        4.501278434175804,
+        5.111160961743799,
+        5.03738213746786
+      ],
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "bf71a93d37cfca5d69a1ce2ee55341e75c400a539e80425b961793396420e4ee"
+      },
+      "parity": {
+        "exact": false,
+        "frames": 500,
+        "finite": true,
+        "max_abs_output_state": [
+          0.0015080402954481542,
+          0.3323546424508095
+        ],
+        "rms_output_state": [
+          1.3837557695928018e-05,
+          0.002253111228147563
+        ],
+        "note": "Changed FP32 activation approximation on the same W7A8 grid; numerical differences are not a perceptual acceptance test."
+      }
+    }
+  },
+  "final": {
+    "pack32": {
+      "continuous": {
+        "baseline": {
+          "mean_ms": 1.9610296434999999,
+          "p50_ms": 1.93397675,
+          "p95_ms": 2.1128225,
+          "p99_ms": 2.503857292499999,
+          "max_ms": 3.405815,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.9641091499999999
+        },
+        "candidate": {
+          "mean_ms": 1.937244913,
+          "p50_ms": 1.908412625,
+          "p95_ms": 2.0925007375,
+          "p99_ms": 2.5509792575,
+          "max_ms": 7.263046,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.940314925
+        },
+        "mean_reduction_percent": 1.2128695034690717,
+        "per_repeat_mean_reduction_percent": [
+          1.3625781405743775,
+          1.0732536738085385,
+          1.114453114839986,
+          1.3068422660224899
+        ]
+      },
+      "paced": {
+        "baseline": {
+          "mean_ms": 2.0895977395,
+          "p50_ms": 2.074143875,
+          "p95_ms": 2.2287557375000002,
+          "p99_ms": 2.4172620025,
+          "max_ms": 3.641522,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 2.093166
+        },
+        "candidate": {
+          "mean_ms": 2.05645258725,
+          "p50_ms": 2.044605625,
+          "p95_ms": 2.1981207375,
+          "p99_ms": 2.3984430075,
+          "max_ms": 3.483316,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 2.05994575
+        },
+        "mean_reduction_percent": 1.586197746267226,
+        "per_repeat_mean_reduction_percent": [
+          3.199317857622541,
+          3.212793342212028,
+          -0.25297121740956996,
+          0.1662318645363814
+        ]
+      },
+      "standalone_paced": {
+        "baseline": {
+          "mean_ms": 2.0426582765,
+          "p50_ms": 2.0070905,
+          "p95_ms": 2.2898775249999996,
+          "p99_ms": 2.56033052,
+          "max_ms": 3.913826,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 2.0466574
+        },
+        "candidate": {
+          "mean_ms": 1.9874897535000002,
+          "p50_ms": 1.959016,
+          "p95_ms": 2.2006674749999995,
+          "p99_ms": 2.4292203399999996,
+          "max_ms": 3.374081,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.99131925
+        },
+        "mean_reduction_percent": 2.7008199871066285
+      },
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "d0f074947e082efa7cfcb5ff9ffc28932b3347e0b7855de7dbfb81355f88c9ee"
+      },
+      "owned_bytes": {
+        "baseline": 6738951,
+        "candidate": 6738951
+      },
+      "wrapper": {
+        "allocating": {
+          "mean_ms": {
+            "baseline": 1.9658197433333333,
+            "candidate": 1.9076758600000001
+          },
+          "mean_reduction_percent": 2.9577423632312194
+        },
+        "preallocated": {
+          "mean_ms": {
+            "baseline": 1.918704672,
+            "candidate": 1.8610095366666668
+          },
+          "mean_reduction_percent": 3.0069836267815786
+        }
+      }
+    },
+    "pack_poly5": {
+      "continuous": {
+        "baseline": {
+          "mean_ms": 1.97057689975,
+          "p50_ms": 1.9505412500000001,
+          "p95_ms": 2.106249525,
+          "p99_ms": 2.3117462649999996,
+          "max_ms": 9.084907,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.9728639000000001
+        },
+        "candidate": {
+          "mean_ms": 1.88227057925,
+          "p50_ms": 1.8652881250000002,
+          "p95_ms": 2.0078732749999997,
+          "p99_ms": 2.2339059999999997,
+          "max_ms": 3.095,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.88512395
+        },
+        "mean_reduction_percent": 4.481242041921984,
+        "per_repeat_mean_reduction_percent": [
+          4.365808347732514,
+          4.711094469963683,
+          4.49511688071108,
+          4.35154185316069
+        ]
+      },
+      "paced": {
+        "baseline": {
+          "mean_ms": 2.08945889275,
+          "p50_ms": 2.0660065000000003,
+          "p95_ms": 2.2477187625,
+          "p99_ms": 2.6038262624999997,
+          "max_ms": 3.923832,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 2.093177725
+        },
+        "candidate": {
+          "mean_ms": 1.9935286815,
+          "p50_ms": 1.97167825,
+          "p95_ms": 2.1509140249999996,
+          "p99_ms": 2.4360167574999996,
+          "max_ms": 5.334879,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.9972364249999999
+        },
+        "mean_reduction_percent": 4.591150923469167,
+        "per_repeat_mean_reduction_percent": [
+          3.9437623862478954,
+          5.213876499757719,
+          5.927445405408383,
+          3.2618522462706134
+        ]
+      },
+      "standalone_paced": {
+        "baseline": {
+          "mean_ms": 2.0229629535,
+          "p50_ms": 1.9958672499999999,
+          "p95_ms": 2.239802975,
+          "p99_ms": 2.5739985149999995,
+          "max_ms": 3.669822,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 2.02691535
+        },
+        "candidate": {
+          "mean_ms": 1.8995037815,
+          "p50_ms": 1.8716615,
+          "p95_ms": 2.09822045,
+          "p99_ms": 2.43093749,
+          "max_ms": 2.917294,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.9032801499999998
+        },
+        "mean_reduction_percent": 6.1028884284014655
+      },
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "af7a9c49070f81a6e8b3d91cc3dcab535899e99f3a237fe6be7ac4b3b44bc369"
+      },
+      "owned_bytes": {
+        "baseline": 6738951,
+        "candidate": 6738951
+      }
+    },
+    "pack_fit5": {
+      "continuous": {
+        "baseline": {
+          "mean_ms": 1.94117909625,
+          "p50_ms": 1.91725075,
+          "p95_ms": 2.0653745,
+          "p99_ms": 2.4640334999999998,
+          "max_ms": 7.396043,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.944236075
+        },
+        "candidate": {
+          "mean_ms": 1.84910000075,
+          "p50_ms": 1.826147875,
+          "p95_ms": 1.9741502375,
+          "p99_ms": 2.3510407575,
+          "max_ms": 3.31941,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.85209305
+        },
+        "mean_reduction_percent": 4.743462139989029,
+        "per_repeat_mean_reduction_percent": [
+          4.823901542638942,
+          4.777437267285112,
+          4.783328895473571,
+          4.589153396725032
+        ]
+      },
+      "paced": {
+        "baseline": {
+          "mean_ms": 2.07110841175,
+          "p50_ms": 2.05186175,
+          "p95_ms": 2.2319684,
+          "p99_ms": 2.4722970675,
+          "max_ms": 3.818226,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 2.074743925
+        },
+        "candidate": {
+          "mean_ms": 1.9704404067499999,
+          "p50_ms": 1.954409125,
+          "p95_ms": 2.1177017125,
+          "p99_ms": 2.31186406,
+          "max_ms": 3.901629,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.973950475
+        },
+        "mean_reduction_percent": 4.860585975552089,
+        "per_repeat_mean_reduction_percent": [
+          6.717125808281232,
+          2.9086108085874973,
+          3.0442209492793637,
+          6.643576988092792
+        ]
+      },
+      "standalone_paced": {
+        "baseline": {
+          "mean_ms": 1.9915228885,
+          "p50_ms": 1.97068925,
+          "p95_ms": 2.16614945,
+          "p99_ms": 2.3826505099999995,
+          "max_ms": 3.034697,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.9954431499999998
+        },
+        "candidate": {
+          "mean_ms": 1.920611612,
+          "p50_ms": 1.88718575,
+          "p95_ms": 2.1048095,
+          "p99_ms": 2.574771485,
+          "max_ms": 3.976523,
+          "over_10ms": 0,
+          "thread_cpu_mean_ms": 1.92450625
+        },
+        "mean_reduction_percent": 3.5606558633835106
+      },
+      "artifacts": {
+        "baseline": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+        "candidate": "bf71a93d37cfca5d69a1ce2ee55341e75c400a539e80425b961793396420e4ee"
+      },
+      "owned_bytes": {
+        "baseline": 6738951,
+        "candidate": 6738951
+      },
+      "wrapper": {
+        "allocating": {
+          "mean_ms": {
+            "baseline": 1.9937034106666667,
+            "candidate": 1.898924716
+          },
+          "mean_reduction_percent": 4.753901415806572
+        },
+        "preallocated": {
+          "mean_ms": {
+            "baseline": 1.8981712373333333,
+            "candidate": 1.8087411396666666
+          },
+          "mean_reduction_percent": 4.711381982181095
+        }
+      }
+    }
+  },
+  "quality": {
+    "pack32": {
+      "files": 65,
+      "seconds": 1339.1487291666667,
+      "all_pcm_bit_identical": true,
+      "hops": 134332
+    },
+    "pack_poly5": {
+      "activation_accuracy": {
+        "values": 2000008,
+        "range": [
+          -100,
+          100
+        ],
+        "sigmoid_max_absolute_error": 8.39548086051245e-07,
+        "tanh_max_absolute_error": 1.598438902156163e-06
+      },
+      "mixture": {
+        "files": 6,
+        "delta": {
+          "si_snr_48k_db": {
+            "mean": -0.0018855584030917545,
+            "min": -0.005936260109209002,
+            "max": 0.0004959364948149414
+          },
+          "MOS_COL": {
+            "mean": -0.008995771408081055,
+            "min": -0.04448127746582031,
+            "max": 0.008198261260986328
+          },
+          "MOS_DISC": {
+            "mean": 0.01137403647104899,
+            "min": -0.03120708465576172,
+            "max": 0.09655952453613281
+          },
+          "MOS_LOUD": {
+            "mean": 0.006753444671630859,
+            "min": -0.004496574401855469,
+            "max": 0.017560958862304688
+          },
+          "MOS_NOISE": {
+            "mean": 0.008351882298787435,
+            "min": -0.008574485778808594,
+            "max": 0.047512054443359375
+          },
+          "MOS_REVERB": {
+            "mean": 0.006606658299763997,
+            "min": -0.007174015045166016,
+            "max": 0.041210174560546875
+          },
+          "MOS_SIG": {
+            "mean": 2.3603439331054688e-05,
+            "min": -0.012412548065185547,
+            "max": 0.007909774780273438
+          },
+          "MOS_OVRL": {
+            "mean": -0.00020190080006917319,
+            "min": -0.011372089385986328,
+            "max": 0.009598255157470703
+          },
+          "pesq_wb_16k": {
+            "mean": 0.0005005002021789551,
+            "min": -0.0028226375579833984,
+            "max": 0.003235340118408203
+          },
+          "stoi": {
+            "mean": 2.336876013904939e-05,
+            "min": -2.8729134600058437e-05,
+            "max": 0.00013315843888084267
+          }
+        },
+        "minimum_output_difference_snr_db": 45.34542685406465
+      },
+      "low_level": {
+        "files": 2,
+        "delta": {
+          "si_snr_48k_db": {
+            "mean": 0.02434791748945031,
+            "min": 0.004265737977659612,
+            "max": 0.04443009700124101
+          },
+          "MOS_COL": {
+            "mean": 0.01241600513458252,
+            "min": -0.00255584716796875,
+            "max": 0.02738785743713379
+          },
+          "MOS_DISC": {
+            "mean": 0.004833221435546875,
+            "min": 0.002551555633544922,
+            "max": 0.007114887237548828
+          },
+          "MOS_LOUD": {
+            "mean": 0.008568763732910156,
+            "min": 0.005888700485229492,
+            "max": 0.01124882698059082
+          },
+          "MOS_NOISE": {
+            "mean": -0.006538867950439453,
+            "min": -0.008026123046875,
+            "max": -0.005051612854003906
+          },
+          "MOS_REVERB": {
+            "mean": -0.0038442611694335938,
+            "min": -0.0056743621826171875,
+            "max": -0.00201416015625
+          },
+          "MOS_SIG": {
+            "mean": -0.007072806358337402,
+            "min": -0.022542715072631836,
+            "max": 0.008397102355957031
+          },
+          "MOS_OVRL": {
+            "mean": 0.004261493682861328,
+            "min": -0.0012209415435791016,
+            "max": 0.009743928909301758
+          },
+          "pesq_wb_16k": {
+            "mean": -0.0005432963371276855,
+            "min": -0.0018711090087890625,
+            "max": 0.0007845163345336914
+          },
+          "stoi": {
+            "mean": 0.00047682061040699164,
+            "min": 0.00010117992636737849,
+            "max": 0.0008524612944466048
+          }
+        },
+        "minimum_output_difference_snr_db": 45.51746458228799
+      },
+      "clean": {
+        "files": 1,
+        "delta": {
+          "si_snr_48k_db": {
+            "mean": -0.005234674193872024,
+            "min": -0.005234674193872024,
+            "max": -0.005234674193872024
+          },
+          "MOS_COL": {
+            "mean": -0.009671688079833984,
+            "min": -0.009671688079833984,
+            "max": -0.009671688079833984
+          },
+          "MOS_DISC": {
+            "mean": -0.004194736480712891,
+            "min": -0.004194736480712891,
+            "max": -0.004194736480712891
+          },
+          "MOS_LOUD": {
+            "mean": -0.00786733627319336,
+            "min": -0.00786733627319336,
+            "max": -0.00786733627319336
+          },
+          "MOS_NOISE": {
+            "mean": -0.0024399757385253906,
+            "min": -0.0024399757385253906,
+            "max": -0.0024399757385253906
+          },
+          "MOS_REVERB": {
+            "mean": -0.0008463859558105469,
+            "min": -0.0008463859558105469,
+            "max": -0.0008463859558105469
+          },
+          "MOS_SIG": {
+            "mean": -0.006673574447631836,
+            "min": -0.006673574447631836,
+            "max": -0.006673574447631836
+          },
+          "MOS_OVRL": {
+            "mean": -0.002910137176513672,
+            "min": -0.002910137176513672,
+            "max": -0.002910137176513672
+          },
+          "pesq_wb_16k": {
+            "mean": -0.00018739700317382812,
+            "min": -0.00018739700317382812,
+            "max": -0.00018739700317382812
+          },
+          "stoi": {
+            "mean": -1.0546780666698119e-05,
+            "min": -1.0546780666698119e-05,
+            "max": -1.0546780666698119e-05
+          }
+        },
+        "minimum_output_difference_snr_db": 54.28248365711831
+      }
+    },
+    "pack_fit5": {
+      "activation_accuracy": {
+        "values": 2000008,
+        "range": [
+          -100,
+          100
+        ],
+        "sigmoid_max_absolute_error": 1.0091375901577493e-07,
+        "tanh_max_absolute_error": 1.2859761994166163e-07
+      },
+      "mixture": {
+        "files": 6,
+        "delta": {
+          "si_snr_48k_db": {
+            "mean": -0.004667308364627883,
+            "min": -0.011321587041933867,
+            "max": 0.002011276459562339
+          },
+          "MOS_COL": {
+            "mean": 0.0008780161539713541,
+            "min": -0.03058624267578125,
+            "max": 0.017498254776000977
+          },
+          "MOS_DISC": {
+            "mean": 0.0006631612777709961,
+            "min": -0.0427708625793457,
+            "max": 0.03572225570678711
+          },
+          "MOS_LOUD": {
+            "mean": -0.003818472226460775,
+            "min": -0.014651060104370117,
+            "max": 0.004670143127441406
+          },
+          "MOS_NOISE": {
+            "mean": 0.005902687708536784,
+            "min": -0.0019659996032714844,
+            "max": 0.014866828918457031
+          },
+          "MOS_REVERB": {
+            "mean": 0.006428162256876628,
+            "min": -0.005493640899658203,
+            "max": 0.024845123291015625
+          },
+          "MOS_SIG": {
+            "mean": -0.0039548079172770185,
+            "min": -0.01977992057800293,
+            "max": 0.009504079818725586
+          },
+          "MOS_OVRL": {
+            "mean": -0.00030652681986490887,
+            "min": -0.013427019119262695,
+            "max": 0.013547420501708984
+          },
+          "pesq_wb_16k": {
+            "mean": 0.0012923479080200195,
+            "min": 0.0004937648773193359,
+            "max": 0.0034410953521728516
+          },
+          "stoi": {
+            "mean": -2.3628727086074292e-05,
+            "min": -0.00019713186710357267,
+            "max": 6.0722865153906014e-05
+          }
+        },
+        "minimum_output_difference_snr_db": 45.0659639047595
+      },
+      "low_level": {
+        "files": 2,
+        "delta": {
+          "si_snr_48k_db": {
+            "mean": -0.028652568341706708,
+            "min": -0.05982271878668133,
+            "max": 0.0025175821032679124
+          },
+          "MOS_COL": {
+            "mean": -0.004138827323913574,
+            "min": -0.01058340072631836,
+            "max": 0.002305746078491211
+          },
+          "MOS_DISC": {
+            "mean": -0.01312875747680664,
+            "min": -0.03238058090209961,
+            "max": 0.006123065948486328
+          },
+          "MOS_LOUD": {
+            "mean": 0.013803601264953613,
+            "min": 0.009678125381469727,
+            "max": 0.0179290771484375
+          },
+          "MOS_NOISE": {
+            "mean": -0.012682676315307617,
+            "min": -0.019644737243652344,
+            "max": -0.005720615386962891
+          },
+          "MOS_REVERB": {
+            "mean": -0.013297080993652344,
+            "min": -0.030791759490966797,
+            "max": 0.004197597503662109
+          },
+          "MOS_SIG": {
+            "mean": 0.00016450881958007812,
+            "min": -0.0065937042236328125,
+            "max": 0.006922721862792969
+          },
+          "MOS_OVRL": {
+            "mean": 0.012691855430603027,
+            "min": 0.012476444244384766,
+            "max": 0.012907266616821289
+          },
+          "pesq_wb_16k": {
+            "mean": -0.001241922378540039,
+            "min": -0.0027513504028320312,
+            "max": 0.0002675056457519531
+          },
+          "stoi": {
+            "mean": -4.305924781511372e-05,
+            "min": -0.00011568040916853928,
+            "max": 2.9561913538311835e-05
+          }
+        },
+        "minimum_output_difference_snr_db": 44.46090001925762
+      },
+      "clean": {
+        "files": 1,
+        "delta": {
+          "si_snr_48k_db": {
+            "mean": 0.0024126536307811364,
+            "min": 0.0024126536307811364,
+            "max": 0.0024126536307811364
+          },
+          "MOS_COL": {
+            "mean": -0.009933233261108398,
+            "min": -0.009933233261108398,
+            "max": -0.009933233261108398
+          },
+          "MOS_DISC": {
+            "mean": -0.006060123443603516,
+            "min": -0.006060123443603516,
+            "max": -0.006060123443603516
+          },
+          "MOS_LOUD": {
+            "mean": -0.000225067138671875,
+            "min": -0.000225067138671875,
+            "max": -0.000225067138671875
+          },
+          "MOS_NOISE": {
+            "mean": -0.003810405731201172,
+            "min": -0.003810405731201172,
+            "max": -0.003810405731201172
+          },
+          "MOS_REVERB": {
+            "mean": -0.0018258094787597656,
+            "min": -0.0018258094787597656,
+            "max": -0.0018258094787597656
+          },
+          "MOS_SIG": {
+            "mean": 0.0011208057403564453,
+            "min": 0.0011208057403564453,
+            "max": 0.0011208057403564453
+          },
+          "MOS_OVRL": {
+            "mean": -0.0009980201721191406,
+            "min": -0.0009980201721191406,
+            "max": -0.0009980201721191406
+          },
+          "pesq_wb_16k": {
+            "mean": -0.00202178955078125,
+            "min": -0.00202178955078125,
+            "max": -0.00202178955078125
+          },
+          "stoi": {
+            "mean": -1.1359050392845127e-05,
+            "min": -1.1359050392845127e-05,
+            "max": -1.1359050392845127e-05
+          }
+        },
+        "minimum_output_difference_snr_db": 54.31277870766198
+      },
+      "long_noise": {
+        "files": 3,
+        "delta": {
+          "attenuation_db": {
+            "mean": -0.016421912799226373,
+            "min": -0.07254758686629259,
+            "max": 0.017132934164024505
+          },
+          "output_rms_dbfs": {
+            "mean": 0.016421912799221634,
+            "min": -0.017132934164038716,
+            "max": 0.07254758686629259
+          },
+          "output_peak_dbfs": {
+            "mean": -0.013023782276386934,
+            "min": -0.13736201240662638,
+            "max": 0.13657396423427315
+          },
+          "worst_20ms_gain_db": {
+            "mean": -0.0713377431621538,
+            "min": -0.1765761017513512,
+            "max": 0.022246058626116394
+          },
+          "amplified_20ms_windows": {
+            "mean": 0,
+            "min": 0,
+            "max": 0
+          },
+          "last_30s_attenuation_db": {
+            "mean": 0.001168998067749764,
+            "min": -0.0014038020563305054,
+            "max": 0.005294372145357329
+          }
+        },
+        "minimum_output_difference_snr_db": 19.05039621095068
+      }
+    }
+  },
+  "activation_contracts": {
+    "pack32": {
+      "existing_activation_contract_passed": true,
+      "samples": 220002,
+      "sigmoid_max_abs": 5.960464477539063e-08,
+      "tanh_max_abs": 5.960464477539063e-08
+    },
+    "pack_poly5": {
+      "existing_activation_contract_passed": false,
+      "failure": "\nNot equal to tolerance rtol=2e-07, atol=2e-07\n\nMismatched elements: 270 / 220002 (0.123%)\nFirst 5 mismatches are at indices:\n [97569]: 0.0808393582701683 (ACTUAL), 0.0808391347527504 (DESIRED)\n [97570]: 0.08091368526220322 (ACTUAL), 0.08091346174478531 (DESIRED)\n [97571]: 0.08098810166120529 (ACTUAL), 0.08098787069320679 (DESIRED)\n [97572]: 0.08106256276369095 (ACTUAL), 0.08106232434511185 (DESIRED)\n [97573]: 0.08113708347082138 (ACTUAL), 0.08113684505224228 (DESIRED)\nMax absolute difference among violations: 8.046627e-07\nMax relative difference among violations: 2.9411763e-06\n ACTUAL: array([1.645816e-38, 1.645816e-38, 1.645816e-38, ..., 5.024995e-01,\n       5.024998e-01, 5.025000e-01], shape=(220002,), dtype=float32)\n DESIRED: array([3.783506e-44, 3.783506e-44, 3.783506e-44, ..., 5.024995e-01,\n       5.024997e-01, 5.025000e-01], shape=(220002,), dtype=float32)"
+    },
+    "pack_fit5": {
+      "existing_activation_contract_passed": true,
+      "samples": 220002,
+      "sigmoid_max_abs": 1.1920928955078125e-07,
+      "tanh_max_abs": 1.1920928955078125e-07
+    }
+  },
+  "fitted_coefficients": {
+    "domain": [
+      -0.34657359027997264,
+      0.34657359027997264
+    ],
+    "ascending_coefficients_f32": [
+      1.0000001192092896,
+      1.0,
+      0.49998870491981506,
+      0.16666504740715027,
+      0.041917506605386734,
+      0.008369148708879948
+    ]
+  },
+  "sources": {
+    "summarize_w7_followup.py": "8f48944f41472f31115db31ddfa3e8af0870916f441dedf3cfb7d63fe28ad504",
+    "w7_followup.py": "02ef1ce82679911888e74001c015fe57a2346c8f2d1cd8455785f5b3899a8960",
+    "w7_followup_audio.py": "2c2427a1cd203a443e8ec1b72bc0050ec9b1b0ce548255f802c7c6efd33afd8e",
+    "w7_followup_finalize.py": "f09ea0d5619624f508e619dbe7b6e063cfe951b0c5da04493e812c7b7e7831eb"
+  },
+  "libraries": {
+    "w7_followup_batch8": "a0b92d5c4fbeac1e9ec156ee61ba7be209d2377889c33525be50682bb6541e35",
+    "w7_followup_column_first": "8e4999c86700d3c64526cd967de8586f5222b72bac1bc230ac2ed001b40f80a9",
+    "w7_followup_combined": "6c2f53620ccf556a8a71ca09e17c8443c9faf245fe5385c0bdbb8e170abe7e1e",
+    "w7_followup_combined_lto": "c69ccc42ae470b6f7424d58cd4aa886d071b263699cd4f7efd830b457de58833",
+    "w7_followup_epilogue": "976685a8bc708db1d0d236abaae1adf5503c08c860ae54ea9bdcb68e3921cc6f",
+    "w7_followup_exact_all": "c69ccc42ae470b6f7424d58cd4aa886d071b263699cd4f7efd830b457de58833",
+    "w7_followup_gate4": "6e443b7b1716693d08412d3dc679f3a6aa9280b96dce3d2ea4a18271a82e19d2",
+    "w7_followup_lto": "73595c2c472ae6ee2d2a75497bd9532f25c0ea1a73f365429ee33617def25bde",
+    "w7_followup_pack32": "d0f074947e082efa7cfcb5ff9ffc28932b3347e0b7855de7dbfb81355f88c9ee",
+    "w7_followup_pack32_asan": "c7a5bac67765a2655b409f202f3d19f28baf83412b18520440efdc991cf8e7b2",
+    "w7_followup_pack_fit5": "bf71a93d37cfca5d69a1ce2ee55341e75c400a539e80425b961793396420e4ee",
+    "w7_followup_pack_gate": "d0f074947e082efa7cfcb5ff9ffc28932b3347e0b7855de7dbfb81355f88c9ee",
+    "w7_followup_pack_gate_lto": "6b4f1ad5ec423b13046319c0f218a03637721191c6829a402c93634743318bd7",
+    "w7_followup_pack_poly5": "af7a9c49070f81a6e8b3d91cc3dcab535899e99f3a237fe6be7ac4b3b44bc369",
+    "w7_followup_pgo": "8e12d0f768c8846732eb2c40e69c5dd55048afaa210180ffe85d3be6d732025a",
+    "w7_followup_poly5": "6a561a3b934624dbda4e0132e86748e45424f59928cb23dcdda9caffd622ea34",
+    "w7_followup_profile": "d9451fd65364b4b65c1fa4f6497836b0e7854c1eb2b3220b29ca43c6706495ad",
+    "w7_followup_reciprocal": "47aadbdaa96efd17f0080b99ffe4a5563cb9dee0f063b3557598ec0c354d36ce",
+    "w7_followup_unroll2": "ff1ae8495e95ed3e37c5ca5458253a5ab3e626c45fa256987fb09182d3c15001",
+    "w7_followup_unroll4": "84a07901b77145a80ab48e1206aded69f4181e35ad743d55a126228da9209276"
+  },
+  "sources_generated": {
+    "batch8": {
+      "int8.c": "042217f7fa0de341dfa23ee937dd3c8f97a07f438bf9763de257d183c27077b4",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "column_first": {
+      "int8.c": "28d8cde2562868f9743ea58ab959fee2e3e70930b5341ce286a9cfc0a7017d1d",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "combined": {
+      "int8.c": "beac7913ad18ca6bd026e65a3646f17a3647ab8d1384f8fbfbb68fdc4ef5015a",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "combined_lto": {
+      "int8.c": "beac7913ad18ca6bd026e65a3646f17a3647ab8d1384f8fbfbb68fdc4ef5015a",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "epilogue": {
+      "int8.c": "82579ba9b3b3a51c131c71e9a5da8e96bfae647084f04a5af6fae58a631db6f5",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "exact_all": {
+      "int8.c": "beac7913ad18ca6bd026e65a3646f17a3647ab8d1384f8fbfbb68fdc4ef5015a",
+      "avx2.c": "5f701986ea9604c29509f77e6380115788a7755bb6ad3576a16f0dddc9d99678",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "gate4": {
+      "int8.c": "f66a2d8787f4a84ed10fb55c13dca7c46ebedaeb55f1dc0827c842a86ddfd933",
+      "avx2.c": "5f701986ea9604c29509f77e6380115788a7755bb6ad3576a16f0dddc9d99678",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "lto": {
+      "int8.c": "f66a2d8787f4a84ed10fb55c13dca7c46ebedaeb55f1dc0827c842a86ddfd933",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "pack32": {
+      "int8.c": "4b3e4c01cd0d09125decafedca140416bea4f3d66c553d98a218f8ac5c729e88",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "pack_fit5": {
+      "int8.c": "4b3e4c01cd0d09125decafedca140416bea4f3d66c553d98a218f8ac5c729e88",
+      "avx2.c": "ea78768b1239a672b704dd28a3f2a0989f83ae88d8a6bacedfcec4bd61b0224c",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "pack_gate": {
+      "int8.c": "4b3e4c01cd0d09125decafedca140416bea4f3d66c553d98a218f8ac5c729e88",
+      "avx2.c": "5f701986ea9604c29509f77e6380115788a7755bb6ad3576a16f0dddc9d99678",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "pack_gate_lto": {
+      "int8.c": "4b3e4c01cd0d09125decafedca140416bea4f3d66c553d98a218f8ac5c729e88",
+      "avx2.c": "5f701986ea9604c29509f77e6380115788a7755bb6ad3576a16f0dddc9d99678",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "pack_poly5": {
+      "int8.c": "4b3e4c01cd0d09125decafedca140416bea4f3d66c553d98a218f8ac5c729e88",
+      "avx2.c": "4f1bec588b4dcb33e89a64edc6d6efb857e491b6b851056d141d20a3106b91ce",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "pgo": {
+      "int8.c": "beac7913ad18ca6bd026e65a3646f17a3647ab8d1384f8fbfbb68fdc4ef5015a",
+      "avx2.c": "5f701986ea9604c29509f77e6380115788a7755bb6ad3576a16f0dddc9d99678",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "poly5": {
+      "int8.c": "f66a2d8787f4a84ed10fb55c13dca7c46ebedaeb55f1dc0827c842a86ddfd933",
+      "avx2.c": "4f1bec588b4dcb33e89a64edc6d6efb857e491b6b851056d141d20a3106b91ce",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "profile": {
+      "int8.c": "f66a2d8787f4a84ed10fb55c13dca7c46ebedaeb55f1dc0827c842a86ddfd933",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "reciprocal": {
+      "int8.c": "f66a2d8787f4a84ed10fb55c13dca7c46ebedaeb55f1dc0827c842a86ddfd933",
+      "avx2.c": "193be65166a98cfc2b5297f8c9402a47df50c5addaba8adc686e996576dc3dc8",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "unroll2": {
+      "int8.c": "b16f7e5500d1116f8c47f4df7a66866f09d5a6170c4988c9c147738fe56347df",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    },
+    "unroll4": {
+      "int8.c": "3cd35de080f03bf39dd852059ce974b74bfb8761a0b477c1d2f0672e76bbcdd6",
+      "avx2.c": "60aafe280fecb56d7128e44444adb93172efb057dfbc49a3124fd3aeccf1c388",
+      "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839"
+    }
+  }
+}
