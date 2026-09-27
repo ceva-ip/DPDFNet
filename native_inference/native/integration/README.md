@@ -85,6 +85,59 @@ the same model's API; the learned normalization seeds are not all zero.
 Processing allocates no heap memory. Preserve HushMic's existing STFT/iSTFT,
 latency alignment, attenuation, buffering and adaptive model transitions.
 
+## Opt in to the latest W7A8 candidate (both models)
+
+For the first HushMic integration of the optimized candidate, build this
+checked-in source profile. No research scratch directory, Python, ONNX runtime
+or downloaded evaluation audio is needed:
+
+```sh
+cmake -S native_inference/native/integration -B build/native-w7 \
+  -DCMAKE_BUILD_TYPE=Release -DDPDF_EXPERIMENTAL_W7A8=ON
+cmake --build build/native-w7 -j 4
+ctest --test-dir build/native-w7 --output-on-failure
+```
+
+This produces one library containing **both `dpdfnet2_48khz_hr` and
+`dpdfnet8_48khz_hr`** with W7A8, 32-value activation packing and fitted degree-5
+GRU gates. Use the same model getters, weight files, state sizes and streaming
+API as above, but request **`DPDF_PRESET_W7A8_FITTED` (value 2)**:
+
+```c
+const dpdf_native_api_v1 *api = dpdfnet2_48khz_hr_get_api(DPDF_NATIVE_ABI_VERSION);
+/* For DPDFNet-8, use dpdfnet8_48khz_hr_get_api instead. */
+if (!api || !api->preset_supported(DPDF_PRESET_W7A8_FITTED)) return;
+dpdf_native_model *model = api->create(weights, weight_count, DPDF_PRESET_W7A8_FITTED);
+if (!model) return;
+/* Allocate/reset model-specific state, then process through api as above. */
+```
+
+The v1 function table layout and existing preset numbers are unchanged. Always
+query `preset_supported`: the **default build supports W8A8 preset 1 and rejects
+W7A8 preset 2**; the **opt-in build supports W7A8 preset 2 and rejects W8A8
+preset 1**. There is no silent precision substitution. Both quantized presets
+require AVX2/FMA. Scalar builds reject them and retain FP32. The opt-in profile
+also uses the fitted gates in SIMD FP32 execution, so that profile's FP32 path
+is not byte-identical to the default profile. Link one profile per executable;
+the two profiles export the same model symbols and library name.
+
+The weights and learned state initialization are unchanged. Use separate model
+contexts and separate correctly sized states for the two model sizes; never
+transfer recurrent state directly between them. Keep HushMic's audio pipeline
+and model-switch handling around this spectral API.
+
+This remains a research candidate with a six-mixture fullband quality screen
+for each model. Typical latency improves, but peak latency does not improve
+uniformly. See the [two-model tables](../../README.md) before choosing it as a
+default. Actual PipeWire scheduling and audio quality require HushMic-side
+validation on the deployment machine.
+
+The distributed optimized kernels are exact copies of the measured research
+sources. A publisher check compares this C ABI against each measured library
+for 300 recurrent frames per model, requiring byte-identical output and state
+and equal owned bytes; see [W7A8 parity](../../results/hushmic_w7_parity.json)
+and [default INT8 parity](../../results/hushmic_int8_parity.json).
+
 ## Regenerate or choose custom symbol prefixes (publishers only)
 
 The existing generators keep the default `dpdf_model` prefix. Both accept
@@ -134,3 +187,8 @@ invalid weights, exact agreement with the old selective INT8/FP32 settings,
 in-place spectrum/state, reset determinism and weight-buffer ownership.
 Run it with AVX2 enabled, `-DDPDF_ENABLE_AVX2=OFF`, and
 `-DDPDF_SANITIZE=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo`.
+
+The 2026-09-27 integration refresh passed the dual-model contract in the
+default shared build, opt-in W7A8 shared build, opt-in scalar-only static
+build, and opt-in ASan/UBSan static build. Default INT8 and opt-in W7A8 also
+passed the 300-frame-per-model exact research parity checks linked above.

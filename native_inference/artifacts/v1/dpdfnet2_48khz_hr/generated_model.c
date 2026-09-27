@@ -990,13 +990,17 @@ return 0;
 static int native_preset_supported(uint32_t preset) {
     switch (preset) {
     case DPDF_PRESET_FP32: return 1;
+#ifdef DPDF_EXPERIMENTAL_W7A8
+    case DPDF_PRESET_W7A8_FITTED: return dpdf_has_avx2();
+#else
     case DPDF_PRESET_INT8_SELECTIVE: return dpdf_has_avx2();
+#endif
     default: return 0;
     }
 }
 static dpdf_native_model *native_create(const float *w,size_t count,uint32_t preset) {
     if (!native_preset_supported(preset)) return NULL;
-    if (preset==DPDF_PRESET_INT8_SELECTIVE)
+    if (preset==DPDF_PRESET_INT8_SELECTIVE || preset==DPDF_PRESET_W7A8_FITTED)
         return (dpdf_native_model *)dpdfnet2_48khz_hr_create_config(w,count,DPDF_EXPERIMENTAL_INT8,8,7);
     return (dpdf_native_model *)dpdfnet2_48khz_hr_create_config(w,count,DPDF_AUTO,0,0);
 }

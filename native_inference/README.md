@@ -106,6 +106,9 @@ and [validation, memory methodology and reproduction](native/MODEL_OVERVIEW_EVAL
 now provide symbol-prefixed models in one library, the named
 `DPDF_PRESET_INT8_SELECTIVE` preset with CPU capability checks, and
 [checksummed generated C, headers and weights for both models](artifacts/v1/).
+The [opt-in W7A8 build](native/integration/README.md#opt-in-to-the-latest-w7a8-candidate-both-models)
+exposes the latest fitted-gate candidate for **both model sizes** through
+`DPDF_PRESET_W7A8_FITTED`, using the same C ABI and weights.
 
 **Latest measurements against original ONNX:** the [matched comparison](native/ONNX_LATEST_COMPARISON.md)
 measures selective INT8 at **5.57 → 2.38 ms/hop (57.3% less)** for DPDFNet-8

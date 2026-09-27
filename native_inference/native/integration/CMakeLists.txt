@@ -3,9 +3,14 @@ project(dpdf_native_integration VERSION 1.0.0 LANGUAGES C)
 include(CTest)
 option(DPDF_ENABLE_AVX2 "Build runtime-dispatched AVX2/FMA kernels" ON)
 option(DPDF_SANITIZE "Enable ASan/UBSan" OFF)
+option(DPDF_EXPERIMENTAL_W7A8 "Opt in to measured W7A8/pack32/fitted-gate kernels for both models" OFF)
 set(DPDF_ARTIFACT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../artifacts/v1" CACHE PATH "Checksummed generated C and weights")
 get_filename_component(DPDF_ARTIFACT_DIR "${DPDF_ARTIFACT_DIR}" ABSOLUTE)
 get_filename_component(DPDF_NATIVE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+set(DPDF_QUANT_KERNEL_DIR "${DPDF_NATIVE_DIR}")
+if(DPDF_EXPERIMENTAL_W7A8)
+  set(DPDF_QUANT_KERNEL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/w7a8")
+endif()
 
 # No Python at configure, build or test time. Fail before compilation if any
 # distributed source, header, weight blob or model manifest has changed.
@@ -41,15 +46,18 @@ add_library(dpdf_native
   "${DPDF_NATIVE_DIR}/full_ops.c"
   "${DPDF_NATIVE_DIR}/extended_ops.c")
 target_compile_features(dpdf_native PUBLIC c_std_11)
+if(DPDF_EXPERIMENTAL_W7A8)
+  target_compile_definitions(dpdf_native PRIVATE DPDF_EXPERIMENTAL_W7A8)
+endif()
 target_include_directories(dpdf_native PUBLIC "${DPDF_NATIVE_DIR}" "${DPDF_ARTIFACT_DIR}")
 set_target_properties(dpdf_native PROPERTIES POSITION_INDEPENDENT_CODE ON
   VERSION 1.0.0 SOVERSION 1)
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
   target_compile_options(dpdf_native PRIVATE -Wall -Wextra -Werror -ffp-contract=off)
   if(DPDF_ENABLE_AVX2 AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|amd64")
-    target_sources(dpdf_native PRIVATE "${DPDF_NATIVE_DIR}/avx2.c" "${DPDF_NATIVE_DIR}/fp16.c" "${DPDF_NATIVE_DIR}/int8.c")
+    target_sources(dpdf_native PRIVATE "${DPDF_QUANT_KERNEL_DIR}/avx2.c" "${DPDF_NATIVE_DIR}/fp16.c" "${DPDF_QUANT_KERNEL_DIR}/int8.c")
     target_compile_definitions(dpdf_native PRIVATE DPDF_X86_DISPATCH)
-    set_source_files_properties("${DPDF_NATIVE_DIR}/avx2.c" "${DPDF_NATIVE_DIR}/int8.c"
+    set_source_files_properties("${DPDF_QUANT_KERNEL_DIR}/avx2.c" "${DPDF_QUANT_KERNEL_DIR}/int8.c"
       PROPERTIES COMPILE_OPTIONS "-mavx2;-mfma")
     set_source_files_properties("${DPDF_NATIVE_DIR}/fp16.c"
       PROPERTIES COMPILE_OPTIONS "-mavx2;-mfma;-mf16c")
@@ -65,6 +73,9 @@ endif()
 if(BUILD_TESTING)
   add_executable(dpdf_integration_contract integration_contract.c)
   target_link_libraries(dpdf_integration_contract PRIVATE dpdf_native)
+  if(DPDF_EXPERIMENTAL_W7A8)
+    target_compile_definitions(dpdf_integration_contract PRIVATE DPDF_EXPERIMENTAL_W7A8)
+  endif()
   if(NOT WIN32)
     target_link_libraries(dpdf_integration_contract PRIVATE m)
   endif()

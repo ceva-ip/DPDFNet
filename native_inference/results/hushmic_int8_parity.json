@@ -1,0 +1,18 @@
+{
+  "library_sha256": "20d8514d64b4d3b3794d1909b740a507e5275abac4c702cd34af9b8c2d541538",
+  "w7": false,
+  "models": {
+    "dpdfnet2_48khz_hr": {
+      "frames": 300,
+      "output_and_state_bit_exact": true,
+      "owned_bytes": 5406675,
+      "research_sha256": "d052c146cd7cfc295bafd6e0659957e4673e9c0fa96ecc2b09280e5a705a9550"
+    },
+    "dpdfnet8_48khz_hr": {
+      "frames": 300,
+      "output_and_state_bit_exact": true,
+      "owned_bytes": 6738951,
+      "research_sha256": "c40127779bd90e04a1954ff4b7d3b68438fc5361e6ea8f53905d7ba78d19586a"
+    }
+  }
+}

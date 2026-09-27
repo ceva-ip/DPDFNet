@@ -7258,8 +7258,8 @@
   "native_abi_version": 1,
   "artifacts": {
     "generated_model.c": {
-      "sha256": "ec77d6301fce90c8ae5de49e34990539b799331ff25a8158bd786559771dab07",
-      "bytes": 101073
+      "sha256": "085d4d7cbcac6bfb627c3262ebb744d35f018650377f4c370090b0d7d8e4fb87",
+      "bytes": 101209
     },
     "generated_model.h": {
       "sha256": "18ea1bb96fe18ac773b915c80dc52272c7e32185402057f0146a47fc2ef95328",

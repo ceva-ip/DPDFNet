@@ -16,7 +16,10 @@ extern "C" {
  */
 enum {
     DPDF_PRESET_FP32 = 0,
-    DPDF_PRESET_INT8_SELECTIVE = 1
+    DPDF_PRESET_INT8_SELECTIVE = 1,
+    /* Opt-in integration build only: W7A8 + pack32 + fitted GRU gates.
+     * The default build reports this preset unsupported. */
+    DPDF_PRESET_W7A8_FITTED = 2
 };
 typedef struct dpdf_native_model dpdf_native_model;
 

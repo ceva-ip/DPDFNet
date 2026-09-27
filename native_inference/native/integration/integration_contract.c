@@ -34,7 +34,7 @@ int main(int argc,char **argv) {
     void (*legacy_destroy[])(void *)={dpdfnet2_48khz_hr_legacy_destroy,dpdfnet8_48khz_hr_legacy_destroy};
     const size_t expected_states[]={56436,90228};
     const char *names[]={"dpdfnet2_48khz_hr","dpdfnet8_48khz_hr"};
-    for (int preset=DPDF_PRESET_FP32;preset<=DPDF_PRESET_INT8_SELECTIVE;++preset) {
+    for (int preset=DPDF_PRESET_FP32;preset<=DPDF_PRESET_W7A8_FITTED;++preset) {
         dpdf_native_model *models[2]={NULL,NULL}; void *legacy[2]={NULL,NULL};
         float *states[2]={NULL,NULL},*reference[2]={NULL,NULL},*initial[2]={NULL,NULL};
         float first[2][962];
@@ -45,7 +45,13 @@ int main(int argc,char **argv) {
             CHECK(a->sample_rate==48000 && a->hop_size==480 && a->spectrum_size==962);
             CHECK(a->state_size==expected_states[i] && a->weight_count>0);
             CHECK(a->preset_supported(DPDF_PRESET_FP32)); CHECK(!a->preset_supported(999));
+#ifdef DPDF_EXPERIMENTAL_W7A8
+            CHECK(!a->preset_supported(DPDF_PRESET_INT8_SELECTIVE));
+            CHECK(a->preset_supported(DPDF_PRESET_W7A8_FITTED)==dpdf_has_avx2());
+#else
             CHECK(a->preset_supported(DPDF_PRESET_INT8_SELECTIVE)==dpdf_has_avx2());
+            CHECK(!a->preset_supported(DPDF_PRESET_W7A8_FITTED));
+#endif
             CHECK(a->init_state(NULL)==-1); a->destroy(NULL); CHECK(!a->owned_bytes(NULL));
             size_t n=a->weight_count;
             float *w=malloc(n*sizeof(float)); CHECK(w);
