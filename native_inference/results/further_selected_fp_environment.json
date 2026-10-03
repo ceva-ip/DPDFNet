@@ -1,0 +1,94 @@
+{
+  "frames_per_mode": 64,
+  "modes": [
+    {
+      "rounding": "nearest",
+      "ftz_daz": false,
+      "exact": true,
+      "frames_checked": 64,
+      "finite": true,
+      "caller_mxcsr": "0x1fa2"
+    },
+    {
+      "rounding": "nearest",
+      "ftz_daz": true,
+      "exact": true,
+      "frames_checked": 64,
+      "finite": true,
+      "caller_mxcsr": "0x9fe2"
+    },
+    {
+      "rounding": "downward",
+      "ftz_daz": false,
+      "exact": true,
+      "frames_checked": 64,
+      "finite": true,
+      "caller_mxcsr": "0x3fa2"
+    },
+    {
+      "rounding": "downward",
+      "ftz_daz": true,
+      "exact": true,
+      "frames_checked": 64,
+      "finite": true,
+      "caller_mxcsr": "0xbfe2"
+    },
+    {
+      "rounding": "upward",
+      "ftz_daz": false,
+      "exact": true,
+      "frames_checked": 64,
+      "finite": true,
+      "caller_mxcsr": "0x5fa2"
+    },
+    {
+      "rounding": "upward",
+      "ftz_daz": true,
+      "exact": true,
+      "frames_checked": 64,
+      "finite": true,
+      "caller_mxcsr": "0xdfe2"
+    },
+    {
+      "rounding": "towardzero",
+      "ftz_daz": false,
+      "exact": true,
+      "frames_checked": 64,
+      "finite": true,
+      "caller_mxcsr": "0x7fa2"
+    },
+    {
+      "rounding": "towardzero",
+      "ftz_daz": true,
+      "exact": true,
+      "frames_checked": 64,
+      "finite": true,
+      "caller_mxcsr": "0xffe2"
+    }
+  ],
+  "post_creation_control_changes": true,
+  "in_place_spectrum_and_state": true,
+  "helper_source": "/bench/scratch/further_validation/fp_environment_e856aive/fp_environment.c",
+  "helper_sha256": "0da9ab0b0654bb1a1e1034eeb7a06d0fd6944e99ad621f5b619b4256cb11ba43",
+  "exception_flags": "Floating-point exception flags are not compared.",
+  "sources": [
+    "https://codebrowser.dev/glibc/glibc/sysdeps/x86_64/fpu/fegetenv.c.html",
+    "https://codebrowser.dev/glibc/glibc/sysdeps/x86_64/fpu/fesetenv.c.html"
+  ],
+  "builds": {
+    "baseline": {
+      "path": "build/further_baseline/libdpdf_full.so",
+      "sha256": "bf71a93d37cfca5d69a1ce2ee55341e75c400a539e80425b961793396420e4ee"
+    },
+    "candidate0": {
+      "path": "build/further_best_single/libdpdf_full.so",
+      "sha256": "992634818ee6e2f8301c63d33a3a279da8e8f054daed3c47eadcfe94926c3771"
+    }
+  },
+  "model_creation_mxcsr": "0x1fb2",
+  "passed": true,
+  "observed_process_thread_counts": [
+    1
+  ],
+  "single_thread_verification_requested": true
+}

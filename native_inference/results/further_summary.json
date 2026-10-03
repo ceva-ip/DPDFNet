@@ -1,0 +1,222 @@
+{
+  "reference": "Current fitted W7A8/pack32 dpdfnet8_48khz_hr; no additional quantization or activation approximation.",
+  "inference_threads": 1,
+  "fp_controls": {
+    "report": "results/further_selected_fp_environment.json",
+    "frames_per_mode": 64,
+    "modes": 8,
+    "observed_process_threads": [
+      1
+    ],
+    "passed": true
+  },
+  "candidates": {
+    "best_single": {
+      "quality_cases": 65,
+      "quality_audio_seconds": 1339.1487291666667,
+      "quality_audio_hops": 134332,
+      "byte_identical": true,
+      "timing": {
+        "continuous": {
+          "baseline": {
+            "mean_ms": 1.903236878,
+            "p50_ms": 1.8736515,
+            "p95_ms": 2.087154999999999,
+            "p99_ms": 2.3937795099999994,
+            "max_ms": 3.429295,
+            "over_10ms": 0,
+            "median_process_cpu_ms": 1.90969815
+          },
+          "candidate": {
+            "mean_ms": 1.8047495075,
+            "p50_ms": 1.781424,
+            "p95_ms": 1.9529415,
+            "p99_ms": 2.2110550099999995,
+            "max_ms": 3.674503,
+            "over_10ms": 0,
+            "median_process_cpu_ms": 1.8109564
+          },
+          "mean_reduction_percent": 5.174730042194986
+        },
+        "paced": {
+          "baseline": {
+            "mean_ms": 2.011017744,
+            "p50_ms": 1.99893075,
+            "p95_ms": 2.1658560749999998,
+            "p99_ms": 2.3388245249999997,
+            "max_ms": 2.830476,
+            "over_10ms": 0,
+            "median_process_cpu_ms": 2.01861705,
+            "completion_over_10ms": 0,
+            "completion_max_ms": 5.199196999910782
+          },
+          "candidate": {
+            "mean_ms": 1.918048987,
+            "p50_ms": 1.90362825,
+            "p95_ms": 2.063830975,
+            "p99_ms": 2.2575794900000004,
+            "max_ms": 2.918878,
+            "over_10ms": 0,
+            "median_process_cpu_ms": 1.92510835,
+            "completion_over_10ms": 0,
+            "completion_max_ms": 5.960185999811074
+          },
+          "mean_reduction_percent": 4.622970497270773
+        },
+        "standalone_paced": {
+          "baseline": {
+            "mean_ms": 1.983184593,
+            "p50_ms": 1.9690292500000002,
+            "p95_ms": 2.1730035249999995,
+            "p99_ms": 2.34708549,
+            "max_ms": 3.31819,
+            "over_10ms": 0,
+            "median_process_cpu_ms": 1.9912776,
+            "completion_over_10ms": 0,
+            "completion_max_ms": 3.4950430003846122
+          },
+          "candidate": {
+            "mean_ms": 1.86667182,
+            "p50_ms": 1.849726,
+            "p95_ms": 2.066314975,
+            "p99_ms": 2.2387580049999998,
+            "max_ms": 2.658673,
+            "over_10ms": 0,
+            "median_process_cpu_ms": 1.8748532,
+            "completion_over_10ms": 0,
+            "completion_max_ms": 2.751630999682675
+          },
+          "mean_reduction_percent": 5.875034195568696
+        }
+      },
+      "memory": {
+        "runs": [
+          {
+            "rss_before_bytes": 58884096,
+            "rss_after_bytes": 66809856,
+            "rss_delta_bytes": 7925760,
+            "peak_rss_bytes": 79269888,
+            "owned_bytes": 6763588
+          },
+          {
+            "rss_before_bytes": 58290176,
+            "rss_after_bytes": 66211840,
+            "rss_delta_bytes": 7921664,
+            "peak_rss_bytes": 78458880,
+            "owned_bytes": 6763588
+          },
+          {
+            "rss_before_bytes": 58576896,
+            "rss_after_bytes": 66445312,
+            "rss_delta_bytes": 7868416,
+            "peak_rss_bytes": 78979072,
+            "owned_bytes": 6763588
+          },
+          {
+            "rss_before_bytes": 58757120,
+            "rss_after_bytes": 66748416,
+            "rss_delta_bytes": 7991296,
+            "peak_rss_bytes": 79093760,
+            "owned_bytes": 6763588
+          }
+        ],
+        "median_incremental_rss_bytes": 7923712.0,
+        "owned_bytes": 6763588,
+        "library_sha256": "992634818ee6e2f8301c63d33a3a279da8e8f054daed3c47eadcfe94926c3771"
+      },
+      "baseline_memory": {
+        "runs": [
+          {
+            "rss_before_bytes": 58298368,
+            "rss_after_bytes": 66199552,
+            "rss_delta_bytes": 7901184,
+            "peak_rss_bytes": 78704640,
+            "owned_bytes": 6738951
+          },
+          {
+            "rss_before_bytes": 58486784,
+            "rss_after_bytes": 66387968,
+            "rss_delta_bytes": 7901184,
+            "peak_rss_bytes": 79224832,
+            "owned_bytes": 6738951
+          },
+          {
+            "rss_before_bytes": 58572800,
+            "rss_after_bytes": 66424832,
+            "rss_delta_bytes": 7852032,
+            "peak_rss_bytes": 78987264,
+            "owned_bytes": 6738951
+          },
+          {
+            "rss_before_bytes": 58494976,
+            "rss_after_bytes": 66408448,
+            "rss_delta_bytes": 7913472,
+            "peak_rss_bytes": 79360000,
+            "owned_bytes": 6738951
+          }
+        ],
+        "median_incremental_rss_bytes": 7901184.0,
+        "owned_bytes": 6738951,
+        "library_sha256": "bf71a93d37cfca5d69a1ce2ee55341e75c400a539e80425b961793396420e4ee"
+      },
+      "contracts": {
+        "release": {
+          "log": "scratch/further_optimization/best_single_contracts.log",
+          "log_sha256": "a991b5bdf384044bf1182e21e4625804b4f8729d521f48a7ee851a35006cf4dd",
+          "output": "Internal ctest changing into directory: /bench/build/further_best_single\nTest project /bench/build/further_best_single\n    Start 1: int8_contract\n1/5 Test #1: int8_contract ....................   Passed    0.08 sec\n    Start 2: layout_contract\n2/5 Test #2: layout_contract ..................   Passed    0.03 sec\n    Start 3: extended_contract\n3/5 Test #3: extended_contract ................   Passed    0.97 sec\n    Start 4: full_contract\n4/5 Test #4: full_contract ....................   Passed    1.57 sec\n    Start 5: native_contract\n5/5 Test #5: native_contract ..................   Passed    0.53 sec\n\n100% tests passed, 0 tests failed out of 5\n\nTotal Test time (real) =   3.24 sec\n"
+        },
+        "_asan": {
+          "log": "scratch/further_optimization/best_single_asan_contracts.log",
+          "log_sha256": "cf92fc42e80564a8319e43d64d2be42870cc5bdaa77b0f16b06ae971897c9841",
+          "output": "Internal ctest changing into directory: /bench/build/further_best_single_asan\nTest project /bench/build/further_best_single_asan\n    Start 1: int8_contract\n1/5 Test #1: int8_contract ....................   Passed    0.20 sec\n    Start 2: layout_contract\n2/5 Test #2: layout_contract ..................   Passed    0.09 sec\n    Start 3: extended_contract\n3/5 Test #3: extended_contract ................   Passed    3.97 sec\n    Start 4: full_contract\n4/5 Test #4: full_contract ....................   Passed   22.62 sec\n    Start 5: native_contract\n5/5 Test #5: native_contract ..................   Passed   11.59 sec\n\n100% tests passed, 0 tests failed out of 5\n\nTotal Test time (real) =  38.54 sec\n"
+        },
+        "_scalar": {
+          "log": "scratch/further_optimization/best_single_scalar_contracts.log",
+          "log_sha256": "c22b7afb8a56ac850a5f7898d0fd5569cbb82288e59b562c007284cf5db9ab04",
+          "output": "Internal ctest changing into directory: /bench/build/further_best_single_scalar\nTest project /bench/build/further_best_single_scalar\n    Start 1: layout_contract\n1/4 Test #1: layout_contract ..................   Passed    0.02 sec\n    Start 2: extended_contract\n2/4 Test #2: extended_contract ................   Passed    1.06 sec\n    Start 3: full_contract\n3/4 Test #3: full_contract ....................   Passed    1.09 sec\n    Start 4: native_contract\n4/4 Test #4: native_contract ..................   Passed    0.52 sec\n\n100% tests passed, 0 tests failed out of 4\n\nTotal Test time (real) =   2.75 sec\n"
+        }
+      },
+      "library_sha256": {
+        "baseline": "bf71a93d37cfca5d69a1ce2ee55341e75c400a539e80425b961793396420e4ee",
+        "candidate": "992634818ee6e2f8301c63d33a3a279da8e8f054daed3c47eadcfe94926c3771"
+      },
+      "environment": {
+        "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+        "platform": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+        "affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "quality_report": "results/further_best_single_audio.json",
+      "timing_report": "results/further_best_single_final.json"
+    }
+  },
+  "screening": {
+    "best_single": {
+      "median_run_mean_ms": {
+        "baseline": 1.949931475,
+        "candidate": 1.8516779633333333
+      },
+      "mean_reduction_percent": 5.03881869318853,
+      "recurrent_parity": {
+        "frames": 500,
+        "output_and_state_bit_identical": true
+      },
+      "library_sha256": {
+        "baseline": "bf71a93d37cfca5d69a1ce2ee55341e75c400a539e80425b961793396420e4ee",
+        "candidate": "992634818ee6e2f8301c63d33a3a279da8e8f054daed3c47eadcfe94926c3771"
+      }
+    }
+  }
+}

@@ -1,7 +1,17 @@
 # DPDFNet native inference investigation
 
-**Progress overview — `dpdfnet8_48khz_hr` (48 kHz).** The latest optimized
-research candidate is **W7A8 + pack32 + fitted degree-5 GRU gates**
+**2026-10-03 single-thread W7A8 follow-up:** the [accepted optimization](native/FURTHER_EXACT_OPTIMIZATION.md)
+reduces `dpdfnet8_48khz_hr` standalone 10 ms cadence inference time from
+**1.983 to 1.867 ms (5.9% less)**, relative to the fitted W7A8 reference below.
+It preserves all output spectra, complete recurrent states and PCM byte for
+byte across 65 files / 22.3 minutes / 134,332 hops. All inference executes on
+one calling thread, matching HushMic's constraint. The report includes matched
+timing tails, CPU use, memory, safety checks and reproduction. This is an
+isolated research build; distributed integration presets remain unchanged.
+The overview tables below describe the September reference measurements.
+
+**September reference overview — `dpdfnet8_48khz_hr` (48 kHz).** The fitted
+W7A8 reference is **W7A8 + pack32 + fitted degree-5 GRU gates**
 (`build/w7_followup_pack_fit5`). FP16 and INT8 below are the selective native
 precision presets; W7A8 uses 7-bit weights and 8-bit activations in its quantized
 kernels. The production INT8 preset remains unchanged.
