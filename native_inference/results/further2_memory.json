@@ -1,0 +1,75 @@
+{
+  "method": "Four fresh processes per variant; median warmed incremental RSS; source weights unmapped; 120 warmup hops.",
+  "variants": {
+    "baseline": {
+      "runs": [
+        {
+          "rss_before_bytes": 58339328,
+          "rss_after_bytes": 64782336,
+          "rss_delta_bytes": 6443008,
+          "peak_rss_bytes": 73613312,
+          "owned_bytes": 5406675
+        },
+        {
+          "rss_before_bytes": 58589184,
+          "rss_after_bytes": 65024000,
+          "rss_delta_bytes": 6434816,
+          "peak_rss_bytes": 73773056,
+          "owned_bytes": 5406675
+        },
+        {
+          "rss_before_bytes": 58617856,
+          "rss_after_bytes": 65056768,
+          "rss_delta_bytes": 6438912,
+          "peak_rss_bytes": 73773056,
+          "owned_bytes": 5406675
+        },
+        {
+          "rss_before_bytes": 58445824,
+          "rss_after_bytes": 64876544,
+          "rss_delta_bytes": 6430720,
+          "peak_rss_bytes": 73596928,
+          "owned_bytes": 5406675
+        }
+      ],
+      "median_incremental_rss_bytes": 6436864.0,
+      "owned_bytes": 5406675,
+      "library_sha256": "ba199d02ef9111007cff638eabb8070da01bb9593c9ac756fdffdd34b1c357c7"
+    },
+    "best_single": {
+      "runs": [
+        {
+          "rss_before_bytes": 58642432,
+          "rss_after_bytes": 64978944,
+          "rss_delta_bytes": 6336512,
+          "peak_rss_bytes": 73728000,
+          "owned_bytes": 5424496
+        },
+        {
+          "rss_before_bytes": 58744832,
+          "rss_after_bytes": 65163264,
+          "rss_delta_bytes": 6418432,
+          "peak_rss_bytes": 73797632,
+          "owned_bytes": 5424496
+        },
+        {
+          "rss_before_bytes": 58564608,
+          "rss_after_bytes": 64983040,
+          "rss_delta_bytes": 6418432,
+          "peak_rss_bytes": 73678848,
+          "owned_bytes": 5424496
+        },
+        {
+          "rss_before_bytes": 58503168,
+          "rss_after_bytes": 64962560,
+          "rss_delta_bytes": 6459392,
+          "peak_rss_bytes": 73662464,
+          "owned_bytes": 5424496
+        }
+      ],
+      "median_incremental_rss_bytes": 6418432.0,
+      "owned_bytes": 5424496,
+      "library_sha256": "3669e2784dc5f3ae0dc85b2078dadd663f59773fae8a785ca5b7964a65d07f5f"
+    }
+  }
+}

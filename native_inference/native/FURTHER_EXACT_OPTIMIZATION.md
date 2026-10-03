@@ -1,6 +1,7 @@
-# Single-thread exact-output optimization of DPDFNet-8
+# Single-thread exact-output optimization of DPDFNet-8 and DPDFNet-2
 
-Investigation: 2026-10-03. Model: `dpdfnet8_48khz_hr`. The retained profile is
+Investigation: 2026-10-03. Models: `dpdfnet8_48khz_hr` and `dpdfnet2_48khz_hr`.
+The first tables below describe DPDFNet-8; the DPDFNet-2 results follow. The retained profile is
 `best_single`, using exactly one inference thread. Its reference is the fitted
 W7A8 + pack32 + degree-5 GRU-gate profile already present in the repository.
 Both retain the same weights, quantization grid, activation coefficients, FP32
@@ -161,3 +162,82 @@ subsequent builds. The accepted library SHA256 is
 `992634818ee6e2f8301c63d33a3a279da8e8f054daed3c47eadcfe94926c3771`;
 the reference SHA256 is
 `bf71a93d37cfca5d69a1ce2ee55341e75c400a539e80425b961793396420e4ee`.
+
+## DPDFNet-2 results
+
+The same five accepted transforms apply to `dpdfnet2_48khz_hr`, with its own
+unchanged generated graph and weights. No additional optimization or numerical
+approximation was added. All inference remains on the calling thread.
+
+| Execution | Fitted W7A8 reference → accepted mean | Time reduction |
+| --- | ---: | ---: |
+| Continuous | 0.838 → 0.813 ms | 2.92% |
+| Paired 10 ms cadence | 0.990 → 0.944 ms | 4.61% |
+| Standalone 10 ms cadence | **0.974 → 0.939 ms** | **3.58%** |
+
+| Standalone measurement | Reference → accepted |
+| --- | ---: |
+| p99 | 1.176 → 1.176 ms |
+| Observed maximum | 2.272 → 2.328 ms |
+| Whole-process CPU per hop | 0.982 → 0.947 ms |
+| Native owned bytes | 5,406,675 → 5,424,496 |
+| Warmed incremental RSS bytes | 6,436,864 → 6,418,432 |
+
+Timing and memory use the same protocols as DPDFNet-8. Both DPDFNet-2 builds
+had zero calls above 10 ms across 12,000 timed calls each; all cadence calls
+completed before the next release. The standalone maximum increased slightly
+and p99 was nearly unchanged, so the lower mean is not a worst-case guarantee.
+The accepted build owns 5.17 MiB and its warmed incremental RSS is 6.12 MiB.
+Alignment adds 17,821 owned bytes; the small RSS difference is not evidence
+of a memory reduction. Cross-model comparisons use separate timing sessions.
+
+All 65 saved audio fixtures passed, totaling 1,339.149 seconds and 134,332 hops.
+Every output spectrum, full recurrent state and aligned PCM sample was byte
+identical to the live reference; all values remained finite and reset replay
+matched. All six scored waveform hashes from
+[dpdfnet2_overview_quality.json](../results/dpdfnet2_overview_quality.json) also
+matched. Its model and weight hashes are checked against that saved report.
+The rebuilt reference library is identical to the preserved fitted W7A8 build.
+Thus the README's six-mixture quality scores remain valid; the 65-file output
+regression does not add perceptual scores or establish equivalence to INT8/FP16.
+
+Release and ASan/UBSan each passed five C contracts; scalar-only passed four.
+The three compatibility precision modes passed 1,000 recurrent frames and
+independent-context replay. The additional quiet/high-level/silence synthetic
+stream passed 1,000 hops. All eight rounding/denormal settings passed 64 hops
+with exact output/state and one observed OS thread throughout create/process/destroy.
+Independent-context concurrency is a correctness check; it adds no inference workers.
+
+Complete evidence, source/library hashes, safety logs and timing tails are in
+[further2_summary.json](../results/further2_summary.json). The accepted library
+SHA256 is `3669e2784dc5f3ae0dc85b2078dadd663f59773fae8a785ca5b7964a65d07f5f`;
+the reference is `ba199d02ef9111007cff638eabb8070da01bb9593c9ac756fdffdd34b1c357c7`.
+
+### Reproduce DPDFNet-2
+
+From `native_inference/` in the same Linux environment, with saved fixtures:
+
+```sh
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+python download_model.py dpdfnet2_48khz_hr
+python native/generate_extended.py models/dpdfnet2_48khz_hr.onnx models/rework2
+python native/experiments/further_optimization.py --model-size 2 build baseline best_single
+python native/experiments/further_optimization.py --model-size 2 asan best_single
+python native/experiments/further_optimization.py --model-size 2 scalar best_single
+python native/latency_validation.py --model models/dpdfnet2_48khz_hr.onnx --weights models/rework2/weights.f32 --baseline-build build/further2_baseline --candidate-build build/further2_best_single --frames 1000 --output results/further2_best_single_validation.json
+python native/experiments/further_exact_validation.py --model models/dpdfnet2_48khz_hr.onnx --weights models/rework2/weights.f32 --baseline-build build/further2_baseline --candidate-build build/further2_best_single --model-quality-report results/dpdfnet2_overview_quality.json --workers 4 --output results/further2_best_single_audio.json
+python native/experiments/further_fp_environment.py --baseline-build build/further2_baseline --candidate-build build/further2_best_single --weights models/rework2/weights.f32 --frames 64 --verify-single-thread --output results/further2_selected_fp_environment.json
+```
+
+After correctness jobs finish, run the measurement phases sequentially:
+
+```sh
+python native/experiments/further_optimization.py --model-size 2 screen best_single
+python native/experiments/further_optimization.py --model-size 2 memory baseline best_single
+python native/experiments/further_optimization.py --model-size 2 final best_single
+python native/experiments/further_optimization.py --model-size 2 summary best_single
+```
+
+Sources are guarded under `scratch/further_optimization2/`, libraries under
+`build/further2_*/`, and retained results under `results/further2_*.json`.
+The default driver still reproduces DPDFNet-8 under its original paths.

@@ -120,8 +120,8 @@ def main():
                   'weights_sha256': hashlib.sha256(args.weights.read_bytes()).hexdigest(),
                   'artifacts': {name: hashlib.sha256((build / 'libdpdf_full.so').read_bytes()).hexdigest()
                                 for name, build in builds.items()},
-                  'source_manifests': {name: json.loads((ROOT / 'scratch/further_optimization' /
-                      build.name.removeprefix('further_') /
+                  'source_manifests': {name: json.loads((ROOT / ('scratch/further_optimization2' if build.name.startswith('further2_') else 'scratch/further_optimization') /
+                      build.name.removeprefix('further2_').removeprefix('further_') /
                       'source_manifest.json').read_text()) for name, build in builds.items()},
                   'owned_bytes': {name: model.owned_bytes for name, model in models.items()},
                   'timed_frames_per_run': args.frames, 'warmup': args.warmup,

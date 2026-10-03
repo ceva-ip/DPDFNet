@@ -55,7 +55,29 @@
 | dpdfnet2_48khz_hr | 2.58 | 2.42 | 11.6 | 10.0 |
 | dpdfnet8_48khz_hr | 3.63 | 7.17 | 18.7 | 14.2 |
 
+### Latest single-thread native W7A8 results
+
+The accepted exact kernel optimization uses one calling thread, 7-bit weights
+and 8-bit activations in quantized kernels, with FP32 recurrent state. Both
+models preserve their fitted W7A8 reference output byte for byte across the
+same 65 audio fixtures (22.3 minutes and 134,332 hops per model).
+
+| Model | Standalone inference / 10 ms hop | Warmed incremental RSS | Native owned allocations |
+| --- | ---: | ---: | ---: |
+| `dpdfnet8_48khz_hr` | **1.867 ms** | **7.56 MiB** | **6.45 MiB** |
+| `dpdfnet2_48khz_hr` | **0.939 ms** | **6.12 MiB** | **5.17 MiB** |
+
+Measured on Intel i7-8700, Linux Docker/WSL2, using preallocated C calls:
+median of four standalone cadence run means, 100 warmup and 1,000 timed hops
+per run. FFT and audio I/O are excluded; the 50 ms algorithmic delay is unchanged.
+These are isolated research builds; packaged ONNX and distributed integration
+presets remain unchanged. See the [current latency, memory and quality tables](native_inference/README.md)
+and [matched reference comparisons and reproduction](native_inference/native/FURTHER_EXACT_OPTIMIZATION.md).
+
 ### Experimental native FP16 / INT8 results
+
+The following tables retain the earlier FP16/INT8 investigation measurements;
+the latest accepted W7A8 results are above.
 
 The final selective native precision configuration has been evaluated on both
 48 kHz HR models. It stores DPRNN, dense/grouped FC, and 1×1 CNN weights in

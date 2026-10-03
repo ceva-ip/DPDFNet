@@ -229,6 +229,7 @@ def main():
     parser.add_argument('--data', type=Path, default=ROOT / 'scratch/fullband')
     parser.add_argument('--fixture-report', type=Path, default=ROOT / 'results/w7_followup_pack32_audio.json')
     parser.add_argument('--baseline-audio-report', type=Path, default=ROOT / 'results/w7_followup_pack_fit5_audio.json')
+    parser.add_argument('--model-quality-report', type=Path, help='Saved per-model scored reference for model/weight provenance and PCM hashes')
     parser.add_argument('--limit', type=int, default=0, help='First N selected cases; zero checks the whole suite')
     parser.add_argument('--cases', nargs='+', help='Exact case IDs, e.g. mixture_00033 clean_00033 pink')
     parser.add_argument('--workers', type=int, default=1)
@@ -243,6 +244,19 @@ def main():
                  [('baseline', args.baseline_build), ('candidate', args.candidate_build)]}
     jobs, provenance, saved_library_matches = load_cases(
         args.data, args.fixture_report, args.baseline_audio_report, libraries['baseline'])
+    if args.model_quality_report:
+        scored = json.loads(args.model_quality_report.read_text())
+        artifacts = scored['artifacts']
+        provenance = {key: artifacts[str(path.relative_to(ROOT))] for key, path in
+                      [('model', args.model), ('weights', args.weights)]}
+        saved = {'mixture_' + clip['clip']['id']: clip['systems']['w7a8_fit5']['pcm_sha256']
+                 for clip in scored['clips']}
+        for job in jobs:
+            job.pop('saved_baseline_pcm_sha256', None)
+            job.pop('require_saved_baseline_hash', None)
+            if job['id'] in saved:
+                job.update(saved_baseline_pcm_sha256=saved[job['id']], require_saved_baseline_hash=True)
+        saved_library_matches = False  # PCM hashes are verified regardless of compiler identity.
     available_count = len(jobs)
     if args.cases:
         missing = set(args.cases) - {job['id'] for job in jobs}
@@ -269,6 +283,7 @@ def main():
               'packages': {name: importlib.metadata.version(name) for name in
                   ('numpy', 'soundfile', 'onnxruntime')},
               'fixture_report_sha256': sha(args.fixture_report),
+              'model_quality_report_sha256': sha(args.model_quality_report) if args.model_quality_report else None,
               'saved_pack_fit5_library_matches_baseline': saved_library_matches,
               'available_cases': available_count, 'selected_cases': len(jobs),
               'full_available_suite': len(jobs) == available_count, 'cases': []}

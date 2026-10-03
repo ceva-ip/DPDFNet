@@ -14,6 +14,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / 'scratch/further_optimization'
+SIZE = 8
+PREFIX = 'further_'
 VARIANTS = ('baseline', 'best_single')
 
 
@@ -46,7 +48,7 @@ def prepare(name):
                     ignore=shutil.ignore_patterns('__pycache__'), dirs_exist_ok=False)
     for filename in ('int8.c', 'avx2.c'):
         shutil.copyfile(ROOT / 'native/integration/w7a8' / filename, source / filename)
-    generated = (ROOT / 'models/rework8/generated_model.c').read_text()
+    generated = (ROOT / f'models/rework{SIZE}/generated_model.c').read_text()
     if name == 'best_single':
         from further_exact_kernels import optimize
         optimize(source)
@@ -71,10 +73,10 @@ def build(name, sanitizer=False, scalar=False):
     manifest = source_manifest(source, name)
     (source / 'source_manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     suffix = '_asan' if sanitizer else '_scalar' if scalar else ''
-    target = ROOT / 'build' / ('further_' + name + suffix)
+    target = ROOT / 'build' / (PREFIX + name + suffix)
     options = ['-DDPDF_EXTENDED_MODEL=ON', '-DCMAKE_BUILD_TYPE=Release',
                f'-DDPDF_GENERATED_MODEL={source}/generated_model.c',
-               f'-DDPDF_TEST_WEIGHTS={ROOT}/models/rework8/weights.f32']
+               f'-DDPDF_TEST_WEIGHTS={ROOT}/models/rework{SIZE}/weights.f32']
     if sanitizer:
         options += ['-DDPDF_SANITIZE=ON', '-DCMAKE_EXE_LINKER_FLAGS=-no-pie']
     if scalar:
@@ -86,13 +88,13 @@ def build(name, sanitizer=False, scalar=False):
 
 
 def timing(name, final=False):
-    output = ROOT / 'results' / ('further_' + name + ('_final' if final else '_screen') + '.json')
+    output = ROOT / 'results' / (PREFIX + name + ('_final' if final else '_screen') + '.json')
     probe = ROOT / ('native/experiments/further_streaming_timing.py' if final else 'native/latency_probe.py')
     logged([sys.executable, probe,
-            '--model', ROOT / 'models/dpdfnet8_48khz_hr.onnx',
-            '--weights', ROOT / 'models/rework8/weights.f32',
-            '--baseline-build', ROOT / 'build/further_baseline',
-            '--candidate-build', ROOT / 'build' / ('further_' + name),
+            '--model', ROOT / f'models/dpdfnet{SIZE}_48khz_hr.onnx',
+            '--weights', ROOT / f'models/rework{SIZE}/weights.f32',
+            '--baseline-build', ROOT / 'build' / (PREFIX + 'baseline'),
+            '--candidate-build', ROOT / 'build' / (PREFIX + name),
             '--frames', '1000' if final else '600', '--repeats', '4' if final else '3',
             '--paced-repeats', '4' if final else '0',
             '--standalone-paced-repeats', '4' if final else '0', '--output', output],
@@ -113,12 +115,12 @@ def memory(names):
     report = {'method': 'Four fresh processes per variant; median warmed incremental RSS; source weights unmapped; 120 warmup hops.',
               'variants': {}}
     for name in names:
-        target = ROOT / 'build' / ('further_' + name)
+        target = ROOT / 'build' / (PREFIX + name)
         runs = []
         for _ in range(4):
             result = subprocess.check_output([sys.executable, str(ROOT / 'native/onnx_memory_probe.py'),
-                      '--model', str(ROOT / 'models/dpdfnet8_48khz_hr.onnx'),
-                      '--weights', str(ROOT / 'models/rework8/weights.f32'), '--build', str(target),
+                      '--model', str(ROOT / f'models/dpdfnet{SIZE}_48khz_hr.onnx'),
+                      '--weights', str(ROOT / f'models/rework{SIZE}/weights.f32'), '--build', str(target),
                       '--variant', 'selective_int8'], text=True, cwd=ROOT)
             runs.append(json.loads(result))
         item = {'runs': runs, 'median_incremental_rss_bytes': median(run['rss_delta_bytes'] for run in runs),
@@ -126,30 +128,30 @@ def memory(names):
                 'library_sha256': hashlib.sha256((target / 'libdpdf_full.so').read_bytes()).hexdigest()}
         report['variants'][name] = item
         print(json.dumps({'variant': name, **{key: value for key, value in item.items() if key != 'runs'}}), flush=True)
-    (ROOT / 'results/further_memory.json').write_text(json.dumps(report, indent=2) + '\n')
+    (ROOT / 'results' / (PREFIX + 'memory.json')).write_text(json.dumps(report, indent=2) + '\n')
 
 
 def summary(names):
-    memory_report = json.loads((ROOT / 'results/further_memory.json').read_text())
-    fp_report = json.loads((ROOT / 'results/further_selected_fp_environment.json').read_text())
+    memory_report = json.loads((ROOT / 'results' / (PREFIX + 'memory.json')).read_text())
+    fp_report = json.loads((ROOT / 'results' / (PREFIX + 'selected_fp_environment.json')).read_text())
     if not fp_report['passed'] or fp_report.get('observed_process_thread_counts') != [1]:
         raise AssertionError('W7A8 FP controls and single-thread verification have not passed')
-    report = {'reference': 'Current fitted W7A8/pack32 dpdfnet8_48khz_hr; no additional quantization or activation approximation.',
+    report = {'reference': f'Current fitted W7A8/pack32 dpdfnet{SIZE}_48khz_hr; no additional quantization or activation approximation.',
               'inference_threads': 1,
-              'fp_controls': {'report': 'results/further_selected_fp_environment.json',
+              'fp_controls': {'report': 'results/' + PREFIX + 'selected_fp_environment.json',
                               'frames_per_mode': fp_report['frames_per_mode'],
                               'modes': len(fp_report['modes']), 'observed_process_threads': [1], 'passed': True},
               'candidates': {}, 'screening': {}}
-    for path in [ROOT / 'results/further_best_single_screen.json']:
+    for path in [ROOT / 'results' / (PREFIX + 'best_single_screen.json')]:
         data = json.loads(path.read_text())
         means = {name: median(row['implementations'][name]['wall']['mean_ms'] for row in data['continuous'])
                  for name in ('baseline', 'candidate')}
-        report['screening'][path.stem.removeprefix('further_').removesuffix('_screen')] = {
+        report['screening'][path.stem.removeprefix(PREFIX).removesuffix('_screen')] = {
             'median_run_mean_ms': means, 'mean_reduction_percent': 100 * (1 - means['candidate'] / means['baseline']),
             'recurrent_parity': data['parity'], 'library_sha256': data['artifacts']}
     for name in names:
-        quality_path = ROOT / 'results' / ('further_' + name + '_audio.json')
-        timing_path = ROOT / 'results' / ('further_' + name + '_final.json')
+        quality_path = ROOT / 'results' / (PREFIX + name + '_audio.json')
+        timing_path = ROOT / 'results' / (PREFIX + name + '_final.json')
         quality = json.loads(quality_path.read_text())
         timing = json.loads(timing_path.read_text())
         if quality['library_sha256'] != timing['artifacts']:
@@ -190,15 +192,21 @@ def summary(names):
             'baseline_memory': memory_report['variants']['baseline'], 'contracts': contracts,
             'library_sha256': timing['artifacts'], 'environment': timing['environment'],
             'quality_report': str(quality_path.relative_to(ROOT)), 'timing_report': str(timing_path.relative_to(ROOT))}
-    (ROOT / 'results/further_summary.json').write_text(json.dumps(report, indent=2) + '\n')
+    (ROOT / 'results' / (PREFIX + 'summary.json')).write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({name: candidate['timing'] for name, candidate in report['candidates'].items()}), flush=True)
 
 
 def main():
+    global WORK, SIZE, PREFIX
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--model-size', type=int, choices=(2, 8), default=8)
     parser.add_argument('phase', choices=('build', 'screen', 'final', 'asan', 'scalar', 'memory', 'summary'))
     parser.add_argument('variants', nargs='+', choices=VARIANTS)
     args = parser.parse_args()
+    SIZE = args.model_size
+    if SIZE == 2:
+        PREFIX = 'further2_'
+        WORK = ROOT / 'scratch/further_optimization2'
     if args.phase == 'memory':
         memory(args.variants)
         return
