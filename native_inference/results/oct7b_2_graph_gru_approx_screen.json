@@ -1,0 +1,297 @@
+{
+  "generated_at": "2026-10-07T16:33:51.271633+00:00",
+  "driver_sha256": "0f3747da2dbc769ff35fe95356af973f2702936bd9e7734403b2554314848f11",
+  "model_size": 2,
+  "variant": "graph_gru_approx",
+  "baseline": "Committed Oct7 combo_asm_norm",
+  "approximate": true,
+  "method": "Preallocated single-thread C calls; balanced order; all samples retained.",
+  "environment": {
+    "cpu": "Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz",
+    "platform": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "model_sha256": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b",
+  "weights_sha256": "cb7248b8fccbff7b32f254ec2ed0061e604514b2ccd98d997cd081a876424e7b",
+  "artifacts": {
+    "baseline": "c26483de98b13e3468a961d9f7702ea587e8ae3520851fc6c9f2e5c654412be9",
+    "candidate": "357fd1dc0d4ed8a503ff92b6eaba23d410382d76e65ad4ac2ed4ffc0bddf419e"
+  },
+  "candidate_source_manifest": {
+    "CMakeLists.txt": "5b7269e7124ff0c34fba6fb9f00ff40ebcf178b09afb8962aa42ea3a954a8df0",
+    "affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+    "avx2.c": "fb7a7a0fbfc4279226d167f33dd9f3843c2acd05394f9719b7f769c98ba3e411",
+    "contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+    "dpdf_dprnn.c": "db9338a3993e6dd0a2700a500f42e35b96f6aa1730a85958c50e68d2e91b9e99",
+    "dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+    "extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+    "extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+    "extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+    "fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+    "full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+    "full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+    "full_ops.c": "526dbd9cf5eb96e8a951b75c8f0f1d5e851a73c55db45e8bb59cfe49e09890a5",
+    "full_ops.h": "6f24080c403d2ba10ef15a92f58417f731ca40af8ece18e3a4e10af20a1e7de4",
+    "generated_gru_contract.c": "1ba166996e265fef7a7ab08611d712d1aa587a5325429b890cb814d4051bfcc7",
+    "generated_model.c": "1515d5bc06388112772987096141a84b5cb6bbc5e820d2c818623d7a226e577e",
+    "int8.c": "d28028618d67f435dbfa6e069395b843434294e6b6fae0b8cd4be24bb29ce437",
+    "int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+    "internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+    "layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+    "memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+    "native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+    "qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6"
+  },
+  "owned_bytes": {
+    "baseline": 5424496,
+    "candidate": 5424496
+  },
+  "parity": {
+    "frames": 1000,
+    "output_and_state_bit_identical": false,
+    "finite": true,
+    "spectrum_error": {
+      "max_abs": 0.005690759047865868,
+      "sum_squared_error": 0.0006427795720228602,
+      "reference_energy": 48.721391891804146,
+      "samples": 962000,
+      "relative_rms": 0.0036322120060286764,
+      "rmse": 2.584898515005563e-05
+    },
+    "state_error": {
+      "max_abs": 0.015315383672714233,
+      "sum_squared_error": 1.0852668874199607,
+      "reference_energy": 768121097.6005341,
+      "samples": 56436000,
+      "relative_rms": 3.7588364473265194e-05,
+      "rmse": 0.00013867244211219522
+    },
+    "requires_new_quality_evaluation": true
+  },
+  "timed_frames_per_run": 600,
+  "warmup": 100,
+  "continuous": [
+    {
+      "repeat": 0,
+      "paced": false,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 0.7601988533333333,
+            "p50_ms": 0.741923,
+            "p95_ms": 0.864832,
+            "p99_ms": 0.924571,
+            "max_ms": 1.049732,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 0.7626783333333332,
+            "p50_ms": 0.74485,
+            "p95_ms": 0.867925,
+            "p99_ms": 0.92765,
+            "max_ms": 1.0546,
+            "over_10ms": 0
+          },
+          "process_cpu": {
+            "mean_ms": 0.7651428333333333,
+            "p50_ms": 0.7474000000000001,
+            "p95_ms": 0.8704099999999999,
+            "p99_ms": 0.93026,
+            "max_ms": 1.0575,
+            "over_10ms": 0
+          },
+          "calls_with_caller_context_switches": 2,
+          "late_calls": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 0.7154496566666666,
+            "p50_ms": 0.701172,
+            "p95_ms": 0.8166059499999999,
+            "p99_ms": 0.8843799999999999,
+            "max_ms": 0.98243,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 0.717916,
+            "p50_ms": 0.704,
+            "p95_ms": 0.8199249999999999,
+            "p99_ms": 0.888254,
+            "max_ms": 0.986,
+            "over_10ms": 0
+          },
+          "process_cpu": {
+            "mean_ms": 0.7205656666666665,
+            "p50_ms": 0.7067,
+            "p95_ms": 0.823,
+            "p99_ms": 0.892056,
+            "max_ms": 0.9893,
+            "over_10ms": 0
+          },
+          "calls_with_caller_context_switches": 1,
+          "late_calls": []
+        }
+      }
+    },
+    {
+      "repeat": 1,
+      "paced": false,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 0.7541186866666667,
+            "p50_ms": 0.7379724999999999,
+            "p95_ms": 0.858641,
+            "p99_ms": 0.8927369999999999,
+            "max_ms": 1.065733,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 0.7566576666666667,
+            "p50_ms": 0.7407,
+            "p95_ms": 0.86161,
+            "p99_ms": 0.8962239999999999,
+            "max_ms": 1.0723,
+            "over_10ms": 0
+          },
+          "process_cpu": {
+            "mean_ms": 0.7591223333333332,
+            "p50_ms": 0.7433,
+            "p95_ms": 0.86383,
+            "p99_ms": 0.8986509999999999,
+            "max_ms": 1.0759,
+            "over_10ms": 0
+          },
+          "calls_with_caller_context_switches": 0,
+          "late_calls": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 0.7091583016666667,
+            "p50_ms": 0.6951715,
+            "p95_ms": 0.8069740499999999,
+            "p99_ms": 0.8670560099999999,
+            "max_ms": 0.97923,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 0.7114751666666667,
+            "p50_ms": 0.6978,
+            "p95_ms": 0.8109299999999999,
+            "p99_ms": 0.8706449999999999,
+            "max_ms": 0.985,
+            "over_10ms": 0
+          },
+          "process_cpu": {
+            "mean_ms": 0.7140585,
+            "p50_ms": 0.7005,
+            "p95_ms": 0.81421,
+            "p99_ms": 0.8741439999999999,
+            "max_ms": 0.9901,
+            "over_10ms": 0
+          },
+          "calls_with_caller_context_switches": 2,
+          "late_calls": []
+        }
+      }
+    },
+    {
+      "repeat": 2,
+      "paced": false,
+      "implementations": {
+        "baseline": {
+          "wall": {
+            "mean_ms": 0.7728130683333334,
+            "p50_ms": 0.747023,
+            "p95_ms": 0.9177930499999999,
+            "p99_ms": 1.03126601,
+            "max_ms": 1.386343,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 0.7753209999999999,
+            "p50_ms": 0.74925,
+            "p95_ms": 0.9198699999999999,
+            "p99_ms": 1.035836,
+            "max_ms": 1.394,
+            "over_10ms": 0
+          },
+          "process_cpu": {
+            "mean_ms": 0.7778755,
+            "p50_ms": 0.7518,
+            "p95_ms": 0.92362,
+            "p99_ms": 1.038738,
+            "max_ms": 1.3996,
+            "over_10ms": 0
+          },
+          "calls_with_caller_context_switches": 2,
+          "late_calls": []
+        },
+        "candidate": {
+          "wall": {
+            "mean_ms": 0.7256174816666667,
+            "p50_ms": 0.701322,
+            "p95_ms": 0.8571359999999998,
+            "p99_ms": 0.9463469999999999,
+            "max_ms": 1.391242,
+            "over_10ms": 0
+          },
+          "thread_cpu": {
+            "mean_ms": 0.7280874999999999,
+            "p50_ms": 0.70415,
+            "p95_ms": 0.8601249999999998,
+            "p99_ms": 0.951415,
+            "max_ms": 1.3956,
+            "over_10ms": 0
+          },
+          "process_cpu": {
+            "mean_ms": 0.7307343333333334,
+            "p50_ms": 0.70695,
+            "p95_ms": 0.8634549999999998,
+            "p99_ms": 0.954517,
+            "max_ms": 1.3994,
+            "over_10ms": 0
+          },
+          "calls_with_caller_context_switches": 0,
+          "late_calls": []
+        }
+      }
+    }
+  ],
+  "paced": [],
+  "standalone_paced": [],
+  "summary": {
+    "continuous": {
+      "baseline": {
+        "mean_ms": 0.7601988533333333,
+        "p50_ms": 0.741923,
+        "p99_ms": 0.924571,
+        "max_ms": 1.386343,
+        "over_10ms": 0,
+        "process_cpu_ms": 0.7651428333333333
+      },
+      "candidate": {
+        "mean_ms": 0.7154496566666666,
+        "p50_ms": 0.701172,
+        "p99_ms": 0.8843799999999999,
+        "max_ms": 1.391242,
+        "over_10ms": 0,
+        "process_cpu_ms": 0.7205656666666665
+      },
+      "mean_reduction_percent": 5.886511992283284
+    }
+  }
+}

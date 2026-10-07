@@ -1,0 +1,103 @@
+{
+  "generated_at": "2026-10-07T16:29:03.707917+00:00",
+  "method": "One calling thread, preallocated in-place state, four independent synthetic streams.",
+  "scored_fixture_inputs_used": false,
+  "config": {
+    "tier": 4,
+    "precision": 8,
+    "mask": 7
+  },
+  "worker_pid": 3423,
+  "model_sha256": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b",
+  "weights_sha256": "cb7248b8fccbff7b32f254ec2ed0061e604514b2ccd98d997cd081a876424e7b",
+  "instrumented_library_sha256": "2a628dc6aab39860587da8b4967b8786159893e5d1880397a54d7986a973af02",
+  "source_manifest": {
+    "CMakeLists.txt": "b65a91f89e6408c32de3ffae1352391e3890629a5a807762d8a5f09d7f5e3879",
+    "affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+    "avx2.c": "bc698c0ab099d87ab1abd5a6d237f69c78dbe3fa7f1454f878ab4b86d98fcfb9",
+    "contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+    "dpdf_dprnn.c": "db9338a3993e6dd0a2700a500f42e35b96f6aa1730a85958c50e68d2e91b9e99",
+    "dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+    "extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+    "extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+    "extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+    "fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+    "full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+    "full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+    "full_ops.c": "ff85a03c3880d6d2092d32c5d3772d3b352c23a1effffa7d93006947d60152e8",
+    "full_ops.h": "189466c8ff4794283d81961933ad3505aebecc0a1565320ccbde1df6bdce1438",
+    "generated_model.c": "3df188633833f2b104a77c2584de35c61b89a4403b4d571629de36dbfb57c190",
+    "int8.c": "d28028618d67f435dbfa6e069395b843434294e6b6fae0b8cd4be24bb29ce437",
+    "int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+    "internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+    "layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+    "memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+    "native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+    "qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6"
+  },
+  "streams": [
+    {
+      "label": "probe_default",
+      "frames": 1000,
+      "spectral_input_sha256": "7b29cc0a101e1301431cb3cfee606b1f7370da8fd1d6288f31adb349c28c70c4",
+      "final_output_sha256": "988b6bca771b35e403a45f553743b3cd6fc9e1c2296ec13771fb4a453b653ef8",
+      "final_state_sha256": "dc9eeeeb0acebe84a3d247329d72c3599731f88668991c409d612dfaacf482c2"
+    },
+    {
+      "label": "probe_quiet",
+      "frames": 1000,
+      "spectral_input_sha256": "3c4272ceef38b988c6834751d4f2c7926f4240dd5daf3d3b350ee7c286683c57",
+      "final_output_sha256": "80b90329f822b7ae656f2e84e04e03dc3faaa094c7947f7351e16fcbc6cdbf72",
+      "final_state_sha256": "c177c0d7e947dbac586e9942f8e54f70febed8c9923c5778239eac9c215f0a21"
+    },
+    {
+      "label": "probe_high",
+      "frames": 1000,
+      "spectral_input_sha256": "dce238901bd43f4ec0d549f6ef280f7edd5e88b65ac10487510940d0d309e9cc",
+      "final_output_sha256": "fa5f86526614e03c7df005b4e7ee4aa263ce616cd5297287fcc0004fa6c7aa76",
+      "final_state_sha256": "158af5ad0bcb6f1dc1637b90e47fd2af96816867b8a08fb0aa6f17630c792c74"
+    },
+    {
+      "label": "procedural_complex_noise",
+      "frames": 1000,
+      "spectral_input_sha256": "9a31dc4e7c5af6c3b3ac86ce615250094c12be54f794d796b1741c09ac5c1c86",
+      "final_output_sha256": "4fe28773f1e8038f876429b5eaa6d95aa21aaadcd0b588a9690aa0ab5d11e3b9",
+      "final_state_sha256": "f2d5046f91df710142a3d288b3ab7b6f406cd7103d62f83d9221a4210300cf6a"
+    }
+  ],
+  "driver_sha256": "f0e3d34edf3505662f975591d9ab5b743e6077cdaee6f62dc66ed9c0f4bebd90",
+  "transform_sha256": "1931bcbd65cff29bf3636350369e55bba34be0863a2f952591c28a3365f767f3",
+  "environment": {
+    "platform": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "profile_dir": "/bench/build/oct7b_2_compiler_pgo_profiles",
+  "profiles": {
+    "#bench#build#oct7b_2_compiler_pgo#CMakeFiles#dpdf_full.dir#extended_ops.c.gcda": "8abb0eb4b08219b93ab4eb59049ee319e63044218195215b421180dfcfd39bfd",
+    "#bench#build#oct7b_2_compiler_pgo#CMakeFiles#dpdf_full.dir#full_ops.c.gcda": "353d7d1126647b80a998fdfe8b7c10601ab2464969a6df9b0c7208ec5380b430",
+    "#bench#build#oct7b_2_compiler_pgo#CMakeFiles#dpdf_full.dir#generated_model.c.gcda": "54f5ed4fb1a1c3b6344eb05111caeab62bf5232aa55ac9e692b5fc39ac1d6036",
+    "#bench#build#oct7b_2_compiler_pgo#CMakeFiles#dpdf_kernels.dir#avx2.c.gcda": "f5265f62e3493487abe75fa26e7b46827577e8f225cb82fc57bd178e78210af7",
+    "#bench#build#oct7b_2_compiler_pgo#CMakeFiles#dpdf_kernels.dir#dpdf_dprnn.c.gcda": "e6113993bf88d381ca52cb395eb1b0c17b3b7045b35b38dcfc34672f5e7c2c86",
+    "#bench#build#oct7b_2_compiler_pgo#CMakeFiles#dpdf_kernels.dir#fp16.c.gcda": "cccd57482a6c8373d0d770d29a69d5b8687e3915d85f4bed1fa0cc605d7ef101",
+    "#bench#build#oct7b_2_compiler_pgo#CMakeFiles#dpdf_kernels.dir#int8.c.gcda": "060c42fbea3359c915b824f2a08ca33533a2d1332e4a89679a031425cfeffb0b"
+  },
+  "counter_flush": "Worker process exited before profile collection",
+  "compiler": {
+    "path": "/usr/bin/cc",
+    "sha256": "75e997ec62297a6484f491bae28ab0ccb489daba23e398fd10fe68e9e6f0def8",
+    "version": "cc (Debian 12.2.0-14+deb12u1) 12.2.0"
+  }
+}

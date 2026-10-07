@@ -1,0 +1,88 @@
+{
+  "generated_at": "2026-10-07T16:37:17.108467+00:00",
+  "driver_sha256": "529a634297ff4d726bed5d209bca8f39ef49518a0dafeea4b9468c2dce4e8151",
+  "harness_sha256": "9a5d51529fef8589eef527c6e9d06b77e70809ae85920743517fae31a4db423e",
+  "libraries": {
+    "baseline": {
+      "path": "/bench/build/oct7_2_combo_asm_norm/libdpdf_full.so",
+      "sha256": "c26483de98b13e3468a961d9f7702ea587e8ae3520851fc6c9f2e5c654412be9"
+    },
+    "candidate": {
+      "path": "/bench/build/oct7b_2_dense_int8_pad8/libdpdf_full.so",
+      "sha256": "08188893e8eb89d16a666a242cbe8dfd3df227f35d142a0d0e8d445dfbfa983a"
+    }
+  },
+  "compiler": {
+    "path": "/usr/bin/cc",
+    "sha256": "75e997ec62297a6484f491bae28ab0ccb489daba23e398fd10fe68e9e6f0def8",
+    "version": "cc (Debian 12.2.0-14+deb12u1) 12.2.0"
+  },
+  "sanitizers": false,
+  "n_values": [
+    1,
+    7,
+    8,
+    16,
+    24,
+    31,
+    32,
+    64,
+    192
+  ],
+  "k_values": [
+    1,
+    7,
+    8,
+    17,
+    64,
+    127,
+    512
+  ],
+  "row_values": [
+    1,
+    2,
+    4,
+    5,
+    47,
+    48,
+    49,
+    96,
+    97
+  ],
+  "precision_modes": [
+    0,
+    16,
+    8
+  ],
+  "note": "Unsupported FP16/INT8 modes are skipped on scalar-only builds. INT8 aliases cover <=48 rows or n<=k, preventing overwrite of future chunks. Rounding/denormal controls change after identical nearest-mode creation.",
+  "compile_command": [
+    "/usr/bin/cc",
+    "-O2",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffp-contract=off",
+    "/bench/native/experiments/oct7b_dense/dense_padding_contract.c",
+    "-ldl",
+    "-lm",
+    "-o",
+    "/tmp/oct7b_dense_contract_kxvp1xin/dense_padding_contract"
+  ],
+  "compile_returncode": 0,
+  "executable_sha256": "02b7722ac6261c8db732cbdceb2514b29e4bcb30f8fd7d712472f15227d6fa91",
+  "run_returncode": 0,
+  "checks": {
+    "passed": true,
+    "byte_exact_calls": 12372,
+    "memory_checks": 222,
+    "alias_calls": 2760,
+    "fp_control_calls": 3360,
+    "largest_shape_owned_saving": 18720,
+    "signed_zero_bits": true,
+    "unaligned_buffers": true,
+    "buffer_canaries": true
+  },
+  "passed": true,
+  "log_sha256": "ef6c07a89d469985429317ec2d4f70c7e1b3653b419bc5a182a7e5c62d60ccaf"
+}

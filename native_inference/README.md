@@ -1,27 +1,32 @@
 # DPDFNet native inference investigation
 
-**2026-10-07 further single-thread W7A8 optimization:** the [validated research profile](native/OCT7_OPTIMIZATION.md)
-adds a fixed-width AVX2 assembly kernel, staged GRU gates and exact graph
-optimizations for both models. In a fresh matched session, standalone 10 ms
-cadence inference falls **1.963 → 1.813 ms (7.7% less)** for `dpdfnet8_48khz_hr`
-and **0.958 → 0.919 ms (4.1% less)** for `dpdfnet2_48khz_hr`, relative to the
-accepted October 3 builds rerun alongside the candidates. The historical
-October 3 measurements were **1.867 / 0.939 ms**; those binaries are unchanged.
-Percentages compare the fresh matched measurements, not different sessions.
-The tables retain both historical and latest rows to make this distinction explicit.
+**2026-10-07 next single-thread W7A8 optimization:** the
+[validated follow-up research](native/OCT7B_OPTIMIZATION.md) combines fused
+quantized assembly, exact graph/convolution changes and smaller retained
+INT8 storage after **50 screened builds**. In fresh matched sessions,
+standalone 10 ms cadence inference falls **1.907 → 1.776 ms (6.87% less)** for `dpdfnet8_48khz_hr`
+and **0.942 → 0.878 ms (6.82% less)** for `dpdfnet2_48khz_hr`, relative to
+the unchanged accepted Oct7 builds rerun alongside the candidates. Their
+earlier **1.813 / 0.919 ms** measurements remain historical results from
+another session. Percentages compare fresh matched runs; the tables retain
+both historical profiles and the latest results.
 
 All output spectra, complete recurrent states and PCM remain byte-identical
-across 65 files / 22.3 minutes / 134,332 hops **per model**, with unchanged
-owned model memory and one inference thread. The report includes all 27
-screened builds, measured RSS, timing tails, safety checks and reproduction.
-The assembly targets Linux x86-64 SysV; native Windows timing is unmeasured.
-This is an isolated research build; distributed integration presets remain unchanged.
+across **65 files / 22.3 minutes / 134,332 hops per model**. The six-mixture
+PESQ/STOI/SI-SNR/SIGMOS scores therefore carry forward unchanged. Each
+profile saves **1,440,192 owned bytes** (**21.29% / 26.55%**) with one inference thread. Standalone p99
+improves for both models; the DPDFNet-2 maximum increases. Neither build
+has a call above 10 ms or a late cadence completion in the retained final runs.
+The report includes measured RSS, timing tails, safety checks and reproduction.
+Assembly targets Linux x86-64 SysV; native Windows timing is unmeasured.
+These are isolated research builds; distributed integration presets remain unchanged.
 
 **Current overview — `dpdfnet8_48khz_hr` (48 kHz).** The fitted
 W7A8 reference is **W7A8 + pack32 + fitted degree-5 GRU gates**
 (`build/w7_followup_pack_fit5`). FP16 and INT8 below are the selective native
 precision presets; W7A8 uses 7-bit weights and 8-bit activations in its quantized
-kernels. The production INT8 preset remains unchanged.
+kernels. The latest exact research profile is `build/oct7b_8_combo_exact8`;
+the production INT8 preset remains unchanged.
 
 **Latency and memory footprint** — Intel i7-8700, one inference thread,
 Linux Docker/WSL2, 10 ms audio hops:
@@ -32,32 +37,39 @@ Linux Docker/WSL2, 10 ms audio hops:
 | Native selective FP16 | 2.831 ms | 10.93 MiB | 9.72 MiB |
 | Native selective INT8 | 2.381 ms | 7.53 MiB | 6.43 MiB |
 | Oct3 exact W7A8 (historical session) | 1.867 ms | 7.56 MiB | 6.45 MiB |
-| Latest Oct7 exact W7A8 (single thread) | **1.813 ms** | **7.53 MiB** | **6.45 MiB** |
+| Oct7 exact W7A8 (historical session) | 1.813 ms | 7.53 MiB | 6.45 MiB |
+| Latest Oct7b exact W7A8 (single thread) | **1.776 ms** | **6.48 MiB** | **5.08 MiB** |
 
 The first three rows use the [2026-09-21 matched comparison](native/ONNX_LATEST_COMPARISON.md)
 (median of four run means, including Python call overhead and output allocation).
-The Oct3 row retains its [historical measurement](native/FURTHER_EXACT_OPTIMIZATION.md).
-The latest row uses the [2026-10-07 matched comparison](native/OCT7_OPTIMIZATION.md):
+The Oct3 and earlier Oct7 rows retain their [October 3](native/FURTHER_EXACT_OPTIMIZATION.md)
+and [first October 7](native/OCT7_OPTIMIZATION.md) historical measurements.
+The latest row uses the [next October 7 matched comparison](native/OCT7B_OPTIMIZATION.md):
 median of four standalone cadence run means, preallocated C calls, 100 warmup
-and 1,000 timed hops per run. **The same Oct3 library reran at 1.963 ms** in
-this session, versus **1.813 ms** for the new profile: **7.67% less time**.
-The previous 1.867 ms and fresh 1.963 ms are measurements of identical binaries
-on different days; the cause of the session variation was not isolated.
-Rows use separate sessions and call methods, so direct speedups against their
-historical values would mix measurements. FFT, audio I/O and resampling are
-excluded; the model's **50 ms algorithmic delay is unchanged**. Standalone p99
-fell **2.463 → 2.134 ms** and maximum **3.834 → 3.027 ms**, but the continuous
-maximum increased and one paired-cadence completion was late. No standalone
-completion was late. See the new report and [tail investigation](native/TAIL_LATENCY_INVESTIGATION.md).
+and 1,000 timed hops per run. **The same Oct7 library reran at 1.907 ms**, versus
+**1.776 ms** for the selected profile: **6.87% less time**.
+Its historical 1.813 ms and fresh 1.907 ms describe identical binaries in
+different sessions. Likewise, Oct3’s historical 1.867 ms and its 1.963 ms
+rerun in the earlier Oct7 study describe identical binaries. The cause of
+session variation was not isolated. Direct speedups against historical
+rows would mix sessions or call methods. FFT, audio I/O and resampling
+are excluded; the model’s **50 ms algorithmic delay is unchanged**.
+Standalone p99 fell **2.189 → 2.015 ms**. Maximum fell **3.249 → 2.818 ms**.
+Both builds had zero calls above 10 ms and zero late completions across
+12,000 timed calls each. Observed tails do not guarantee worst-case
+latency; see the [new report](native/OCT7B_OPTIMIZATION.md) and
+[tail investigation](native/TAIL_LATENCY_INVESTIGATION.md).
 
 RSS is warmed process memory above the common imported-runtime baseline,
 including allocator retention and stream buffers; it is not total application
 RAM or model file size. Native owned allocations count memory owned by the C
-model and are **not interchangeable with RSS**. The Oct7 profile retains the
-Oct3 owned allocations exactly; their aligned packing adds 24,637 bytes over
-the earlier fitted reference. Its [2026-10-07 RSS measurement](results/oct7_8_memory.json) uses the same
-protocol: median of four fresh processes, each with 120 warmup hops and
-source weights unmapped before sampling.
+model and are **not interchangeable with RSS**. The selected profile saves
+**1,440,192 owned bytes (21.29%)** relative to the unchanged Oct7 reference,
+by avoiding padded INT8 columns in narrow dense layers. The
+[new RSS measurement](results/oct7b_8_combo_exact8_memory.json) uses the same protocol:
+median of four fresh processes per build, each with 120 warmup hops and
+source weights unmapped before sampling. RSS includes allocator and code
+effects, so its measured reduction differs from exact owned-byte savings.
 
 **Output quality** — unweighted means on the **same six EARS-WHAM_v2 mixtures**
 for every row; higher is better in all columns:
@@ -75,16 +87,17 @@ The common subset is `00033`, `00046`, `00084`, `00133`, `00200`, `00364`
 from the mixture cases in the [fitted-gate quality screen](results/w7_followup_pack_fit5_audio.json).
 Inference and audio remain at 48 kHz: SI-SNR and SIGMOS are fullband; PESQ-WB
 explicitly resamples to 16 kHz, and STOI internally uses 10 kHz.
-The latest exact kernels preserve the fitted reference byte for byte over
-[all 65 saved audio fixtures](results/oct7_8_combo_asm_norm_audio.json), including
+The latest exact kernels preserve the Oct7 and fitted references byte for byte over
+[all 65 saved audio fixtures](results/oct7b_8_combo_exact8_audio.json), including
 the six scored mixtures, so those quality scores carry forward unchanged.
 The fitted reference has only the six-mixture matched score comparison. The [50-clip report](native/FULLBAND_EVALUATION.md) covers
 ONNX, FP16, INT8 and the earlier W7A8 build. These six-clip means show small
 quality differences, not proof of equivalence or an overall quality improvement.
 
-**Current overview — `dpdfnet2_48khz_hr` (48 kHz).** The same validated Oct7 W7A8
-kernels are built for this model in `build/oct7_2_combo_asm_norm`.
-It remains an experimental candidate, with the production INT8 preset unchanged.
+**Current overview — `dpdfnet2_48khz_hr` (48 kHz).** The selected exact Oct7b W7A8
+profile is `build/oct7b_2_combo_wide2`, with the same fitted reference and
+unchanged weights. It remains an experimental candidate, with the
+production INT8 preset unchanged.
 
 **Latency and memory footprint** — same CPU, single-thread execution and
 10 ms cadence as above:
@@ -95,28 +108,40 @@ It remains an experimental candidate, with the production INT8 preset unchanged.
 | Native selective FP16 | 1.337 ms | 8.41 MiB | 7.55 MiB |
 | Native selective INT8 | 1.069 ms | 6.03 MiB | 5.16 MiB |
 | Oct3 exact W7A8 (historical session) | 0.939 ms | 6.12 MiB | 5.17 MiB |
-| Latest Oct7 exact W7A8 (single thread) | **0.919 ms** | **6.08 MiB** | **5.17 MiB** |
+| Oct7 exact W7A8 (historical session) | 0.919 ms | 6.08 MiB | 5.17 MiB |
+| Latest Oct7b exact W7A8 (single thread) | **0.878 ms** | **4.79 MiB** | **3.80 MiB** |
 
 The first three latency rows retain the [2026-09-27 matched comparison](results/dpdfnet2_overview_timing.json):
 median of four run means, 100 warmup + 1,000 timed hops per run, rotating order,
-including Python overhead and output allocation. The Oct3 row retains its
-[historical measurement](results/further2_best_single_final.json). The latest row uses
-the [2026-10-07 matched preallocated C comparison](results/oct7_2_combo_asm_norm_final.json),
+including Python overhead and output allocation. The Oct3 and earlier Oct7
+rows retain their [October 3](results/further2_best_single_final.json) and
+[first October 7](results/oct7_2_combo_asm_norm_final.json) historical measurements.
+The latest row uses the [next October 7 matched preallocated C comparison](native/OCT7B_OPTIMIZATION.md),
 with the same four-run standalone cadence method as the latest DPDFNet-8 row.
-**The same Oct3 library reran at 0.958 ms**, versus **0.919 ms** for the new
-profile: **4.05% less time**. Its historical 0.939 ms came from another session.
-Direct speedups against historical rows would mix methods or sessions.
-Standalone p99 fell **1.305 → 1.153 ms** and maximum **1.910 → 1.549 ms**.
+**The same Oct7 library reran at 0.942 ms**, versus
+**0.878 ms** for the selected profile: **6.82% less time**.
+Its historical 0.919 ms and fresh 0.942 ms describe identical binaries in
+different sessions. Direct speedups against historical rows would mix
+sessions or methods. Cross-model ratios remain approximate because the
+models were measured in separate sessions. The **50 ms algorithmic delay
+is unchanged**; FFT, audio I/O, synthesis and resampling are excluded.
+Standalone p99 fell **1.157 → 1.135 ms**. Maximum increased **1.696 → 2.177 ms**, so peak latency did not improve uniformly.
 Both builds had zero calls above 10 ms and zero late completions across
-12,000 timed calls each. Cross-model ratios remain approximate because the
-two models were measured in separate sessions.
+12,000 timed calls each. Observed tails do not guarantee worst-case
+latency; see the [new report](native/OCT7B_OPTIMIZATION.md) and
+[tail investigation](native/TAIL_LATENCY_INVESTIGATION.md).
 
 ONNX/FP16/INT8 RSS comes from the [original matched memory study](results/onnx_latest_summary.json).
-The [latest W7A8 memory measurement](results/oct7_2_memory.json) uses four
-fresh processes and 120 warmup hops per process. Owned allocations match Oct3
-exactly; their aligned packing adds 17,821 bytes over the fitted reference. Small RSS differences
-between sessions do not establish memory savings. Memory definitions and the
-unchanged 50 ms algorithmic delay are as above.
+RSS is warmed process memory above the common imported-runtime baseline,
+including allocator retention and stream buffers; it is not total application
+RAM or model file size. Native owned allocations count memory owned by the C
+model and are **not interchangeable with RSS**. The selected profile saves
+**1,440,192 owned bytes (26.55%)** relative to the unchanged Oct7 reference,
+by avoiding padded INT8 columns in narrow dense layers. The
+[new RSS measurement](results/oct7b_2_combo_wide2_memory.json) uses the same protocol:
+median of four fresh processes per build, each with 120 warmup hops and
+source weights unmapped before sampling. RSS includes allocator and code
+effects, so its measured reduction differs from exact owned-byte savings.
 
 **Output quality** — retained fitted-reference scores on the **same six EARS-WHAM_v2 mixtures**
 listed in the DPDFNet-8 overview, with the same metrics and sample-rate handling:
@@ -129,7 +154,7 @@ listed in the DPDFNet-8 overview, with the same metrics and sample-rate handling
 | Latest exact W7A8 (single thread) | 2.44130 | 0.935874 | 16.0841 | 3.86312 | 4.61457 | 3.28124 |
 
 The latest kernels match every output spectrum, recurrent state and aligned
-PCM sample across [all 65 saved fixtures](results/oct7_2_combo_asm_norm_audio.json).
+PCM sample across [all 65 saved fixtures](results/oct7b_2_combo_wide2_audio.json).
 All six previously scored fitted-reference waveform hashes also match, so
 these quality scores carry forward unchanged. These are unweighted six-clip
 means; the 65-file exact-output check does not expand the scored subset. Compared
@@ -137,7 +162,7 @@ with ONNX, the fitted candidate changes mean SI-SNR by −0.0348 dB and SIGMOS
 OVRL by −0.0180, while PESQ increases by 0.0101. The mixed small changes do
 not establish equivalence or an overall quality improvement. All outputs and
 states remained finite. See the [per-clip measurements](results/dpdfnet2_overview_quality.json)
-and [latest validation, memory and reproduction](native/OCT7_OPTIMIZATION.md).
+and [latest validation, memory and reproduction](native/OCT7B_OPTIMIZATION.md).
 
 **HushMic integration:** [C ABI v1 and Python-free build](native/integration/README.md)
 now provide symbol-prefixed models in one library, the named

@@ -1,0 +1,2162 @@
+{
+  "model_size": 2,
+  "frames": 500,
+  "parity": {
+    "frames": 1000,
+    "output_and_state_bit_identical": true
+  },
+  "warning": "Instrumented diagnostic, not a latency benchmark; timers and compiler scheduling affect attribution.",
+  "baseline_sha256": "c26483de98b13e3468a961d9f7702ea587e8ae3520851fc6c9f2e5c654412be9",
+  "profile_sha256": "619f2aba0ba0c64dd221030bd0dbb96c719e31495a2a060a2987e936a7efbaf8",
+  "source_manifest": {
+    "CMakeLists.txt": "d2f40b6fc8b198d8e587eb5f7d49d76a5f2de2370f9c1a8a2d1a450e6e0f532b",
+    "affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+    "avx2.c": "bc698c0ab099d87ab1abd5a6d237f69c78dbe3fa7f1454f878ab4b86d98fcfb9",
+    "contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+    "dpdf_dprnn.c": "db9338a3993e6dd0a2700a500f42e35b96f6aa1730a85958c50e68d2e91b9e99",
+    "dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+    "extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+    "extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+    "extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+    "fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+    "full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+    "full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+    "full_ops.c": "ff85a03c3880d6d2092d32c5d3772d3b352c23a1effffa7d93006947d60152e8",
+    "full_ops.h": "189466c8ff4794283d81961933ad3505aebecc0a1565320ccbde1df6bdce1438",
+    "generated_model.c": "6052f9f742f546f792ea899bd51f55018479d5979e6471aeb14a318db6387048",
+    "int8.c": "d28028618d67f435dbfa6e069395b843434294e6b6fae0b8cd4be24bb29ce437",
+    "int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+    "internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+    "layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+    "memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+    "native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+    "qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6"
+  },
+  "categories_ms_per_hop": {
+    "DPRNN": 0.284833412,
+    "convolution": 0.22730818000000003,
+    "scalar_nonlinear": 0.03965532000000001,
+    "other": 0.09340060399999997,
+    "dense": 0.06882854
+  },
+  "nodes": [
+    {
+      "index": 80,
+      "operation": "DpdfDprnn",
+      "name": "/model/enc/dprnn_df/blocks.0/Native",
+      "diagnostic_ms_per_hop": 0.07757998399999999
+    },
+    {
+      "index": 82,
+      "operation": "DpdfDprnn",
+      "name": "/model/enc/dprnn_df/blocks.1/Native",
+      "diagnostic_ms_per_hop": 0.07736658
+    },
+    {
+      "index": 58,
+      "operation": "DpdfDprnn",
+      "name": "/model/enc/dprnn_erb/blocks.0/Native",
+      "diagnostic_ms_per_hop": 0.065531234
+    },
+    {
+      "index": 60,
+      "operation": "DpdfDprnn",
+      "name": "/model/enc/dprnn_erb/blocks.1/Native",
+      "diagnostic_ms_per_hop": 0.064355614
+    },
+    {
+      "index": 222,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt1/convt1.1/Conv",
+      "diagnostic_ms_per_hop": 0.056350516
+    },
+    {
+      "index": 210,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt2/convt2.1/Conv",
+      "diagnostic_ms_per_hop": 0.017869964
+    },
+    {
+      "index": 49,
+      "operation": "Conv",
+      "name": "/model/enc/erb_conv1/erb_conv1.1/Conv",
+      "diagnostic_ms_per_hop": 0.017370846000000002
+    },
+    {
+      "index": 46,
+      "operation": "Conv",
+      "name": "/model/enc/erb_conv0/erb_conv0.1/Conv",
+      "diagnostic_ms_per_hop": 0.014612404
+    },
+    {
+      "index": 74,
+      "operation": "Conv",
+      "name": "/model/enc/df_conv0/df_conv0.2/Conv",
+      "diagnostic_ms_per_hop": 0.010632328
+    },
+    {
+      "index": 298,
+      "operation": "Tanh",
+      "name": "/model/df_dec/df_out/df_out.1/Tanh",
+      "diagnostic_ms_per_hop": 0.010407914
+    },
+    {
+      "index": 220,
+      "operation": "Transpose",
+      "name": "/model/erb_dec/convt1/convt1.0/Transpose",
+      "diagnostic_ms_per_hop": 0.009401132
+    },
+    {
+      "index": 199,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt3/convt3.1/Conv",
+      "diagnostic_ms_per_hop": 0.00898909
+    },
+    {
+      "index": 52,
+      "operation": "Conv",
+      "name": "/model/enc/erb_conv2/erb_conv2.1/Conv",
+      "diagnostic_ms_per_hop": 0.008666216000000001
+    },
+    {
+      "index": 286,
+      "operation": "Conv",
+      "name": "/model/df_dec/df_convp/df_convp.1/convs.0/Conv",
+      "diagnostic_ms_per_hop": 0.007672064
+    },
+    {
+      "index": 287,
+      "operation": "Conv",
+      "name": "/model/df_dec/df_convp/df_convp.1/convs.1/Conv",
+      "diagnostic_ms_per_hop": 0.007292816
+    },
+    {
+      "index": 48,
+      "operation": "Conv",
+      "name": "/model/enc/erb_conv1/erb_conv1.0/Conv",
+      "diagnostic_ms_per_hop": 0.007241212
+    },
+    {
+      "index": 352,
+      "operation": "Mul",
+      "name": "/Mul_1",
+      "diagnostic_ms_per_hop": 0.00699654
+    },
+    {
+      "index": 351,
+      "operation": "Concat",
+      "name": "/model/Concat",
+      "diagnostic_ms_per_hop": 0.0067787179999999995
+    },
+    {
+      "index": 227,
+      "operation": "Conv",
+      "name": "/model/erb_dec/conv0_out/conv0_out.0/Conv",
+      "diagnostic_ms_per_hop": 0.00634286
+    },
+    {
+      "index": 282,
+      "operation": "Transpose",
+      "name": "/model/df_dec/df_convp_buffer/Transpose_1",
+      "diagnostic_ms_per_hop": 0.006157614
+    },
+    {
+      "index": 87,
+      "operation": "MatMul",
+      "name": "/model/enc/df_fc_emb/df_fc_emb.0/MatMul",
+      "diagnostic_ms_per_hop": 0.005704338
+    },
+    {
+      "index": 224,
+      "operation": "Conv",
+      "name": "/model/erb_dec/conv0p/conv0p.0/Conv",
+      "diagnostic_ms_per_hop": 0.005522518
+    },
+    {
+      "index": 226,
+      "operation": "Add",
+      "name": "/model/erb_dec/Add_3",
+      "diagnostic_ms_per_hop": 0.005155044
+    },
+    {
+      "index": 77,
+      "operation": "Conv",
+      "name": "/model/enc/df_conv1/df_conv1.1/Conv",
+      "diagnostic_ms_per_hop": 0.005115244
+    },
+    {
+      "index": 96,
+      "operation": "MatMul",
+      "name": "/model/enc/erb_fc_emb/erb_fc_emb.0/MatMul",
+      "diagnostic_ms_per_hop": 0.004933212
+    },
+    {
+      "index": 239,
+      "operation": "Gemm",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Gemm",
+      "diagnostic_ms_per_hop": 0.004819218
+    },
+    {
+      "index": 111,
+      "operation": "Gemm",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Gemm",
+      "diagnostic_ms_per_hop": 0.004520176000000001
+    },
+    {
+      "index": 113,
+      "operation": "Gemm",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Gemm_1",
+      "diagnostic_ms_per_hop": 0.004466906
+    },
+    {
+      "index": 144,
+      "operation": "Gemm",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Gemm_1",
+      "diagnostic_ms_per_hop": 0.0044415439999999995
+    },
+    {
+      "index": 258,
+      "operation": "Gemm",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Gemm_1",
+      "diagnostic_ms_per_hop": 0.00443956
+    },
+    {
+      "index": 142,
+      "operation": "Gemm",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Gemm",
+      "diagnostic_ms_per_hop": 0.004368322
+    },
+    {
+      "index": 223,
+      "operation": "Relu",
+      "name": "/model/erb_dec/convt1/convt1.3/Relu",
+      "diagnostic_ms_per_hop": 0.00436791
+    },
+    {
+      "index": 161,
+      "operation": "Gemm",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Gemm_1",
+      "diagnostic_ms_per_hop": 0.0043635
+    },
+    {
+      "index": 159,
+      "operation": "Gemm",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Gemm",
+      "diagnostic_ms_per_hop": 0.0043481019999999995
+    },
+    {
+      "index": 216,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt1/convt1.0/convs.1/Conv",
+      "diagnostic_ms_per_hop": 0.004280496
+    },
+    {
+      "index": 241,
+      "operation": "Gemm",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Gemm_1",
+      "diagnostic_ms_per_hop": 0.004272692
+    },
+    {
+      "index": 169,
+      "operation": "Tanh",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Tanh",
+      "diagnostic_ms_per_hop": 0.004264496
+    },
+    {
+      "index": 256,
+      "operation": "Gemm",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Gemm",
+      "diagnostic_ms_per_hop": 0.00425689
+    },
+    {
+      "index": 215,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt1/convt1.0/convs.0/Conv",
+      "diagnostic_ms_per_hop": 0.004247118
+    },
+    {
+      "index": 217,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt1/convt1.0/convs.2/Conv",
+      "diagnostic_ms_per_hop": 0.00424589
+    },
+    {
+      "index": 183,
+      "operation": "MatMul",
+      "name": "/model/erb_dec/erb_fc_emb/erb_fc_emb.0/MatMul",
+      "diagnostic_ms_per_hop": 0.004160484000000001
+    },
+    {
+      "index": 121,
+      "operation": "Tanh",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Tanh",
+      "diagnostic_ms_per_hop": 0.004099268
+    },
+    {
+      "index": 71,
+      "operation": "Conv",
+      "name": "/model/enc/df_conv0/df_conv0.1/convs.0/Conv",
+      "diagnostic_ms_per_hop": 0.004034468
+    },
+    {
+      "index": 55,
+      "operation": "Conv",
+      "name": "/model/enc/erb_conv3/erb_conv3.1/Conv",
+      "diagnostic_ms_per_hop": 0.00401186
+    },
+    {
+      "index": 72,
+      "operation": "Conv",
+      "name": "/model/enc/df_conv0/df_conv0.1/convs.1/Conv",
+      "diagnostic_ms_per_hop": 0.003910058
+    },
+    {
+      "index": 47,
+      "operation": "Relu",
+      "name": "/model/enc/erb_conv0/erb_conv0.3/Relu",
+      "diagnostic_ms_per_hop": 0.003885844
+    },
+    {
+      "index": 266,
+      "operation": "Tanh",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Tanh",
+      "diagnostic_ms_per_hop": 0.0038840619999999998
+    },
+    {
+      "index": 225,
+      "operation": "Relu",
+      "name": "/model/erb_dec/conv0p/conv0p.2/Relu",
+      "diagnostic_ms_per_hop": 0.003817656
+    },
+    {
+      "index": 152,
+      "operation": "Tanh",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Tanh",
+      "diagnostic_ms_per_hop": 0.0037224119999999996
+    },
+    {
+      "index": 51,
+      "operation": "Conv",
+      "name": "/model/enc/erb_conv2/erb_conv2.0/Conv",
+      "diagnostic_ms_per_hop": 0.003722026
+    },
+    {
+      "index": 280,
+      "operation": "Concat",
+      "name": "/model/df_dec/df_convp_buffer/Concat",
+      "diagnostic_ms_per_hop": 0.003584568
+    },
+    {
+      "index": 249,
+      "operation": "Tanh",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Tanh",
+      "diagnostic_ms_per_hop": 0.003460768
+    },
+    {
+      "index": 289,
+      "operation": "Conv",
+      "name": "/model/df_dec/df_convp/df_convp.2/Conv",
+      "diagnostic_ms_per_hop": 0.0034231500000000002
+    },
+    {
+      "index": 204,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt2/convt2.0/convs.0/Conv",
+      "diagnostic_ms_per_hop": 0.003268554
+    },
+    {
+      "index": 205,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt2/convt2.0/convs.1/Conv",
+      "diagnostic_ms_per_hop": 0.003149522
+    },
+    {
+      "index": 218,
+      "operation": "Concat",
+      "name": "/model/erb_dec/convt1/convt1.0/Concat",
+      "diagnostic_ms_per_hop": 0.0030713240000000003
+    },
+    {
+      "index": 193,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt3/convt3.0/convs.0/Conv",
+      "diagnostic_ms_per_hop": 0.0030250819999999997
+    },
+    {
+      "index": 194,
+      "operation": "Conv",
+      "name": "/model/erb_dec/convt3/convt3.0/convs.1/Conv",
+      "diagnostic_ms_per_hop": 0.00285329
+    },
+    {
+      "index": 76,
+      "operation": "Conv",
+      "name": "/model/enc/df_conv1/df_conv1.0/Conv",
+      "diagnostic_ms_per_hop": 0.0024398159999999996
+    },
+    {
+      "index": 208,
+      "operation": "Transpose",
+      "name": "/model/erb_dec/convt2/convt2.0/Transpose",
+      "diagnostic_ms_per_hop": 0.002220366
+    },
+    {
+      "index": 54,
+      "operation": "Conv",
+      "name": "/model/enc/erb_conv3/erb_conv3.0/Conv",
+      "diagnostic_ms_per_hop": 0.002217576
+    },
+    {
+      "index": 212,
+      "operation": "Conv",
+      "name": "/model/erb_dec/conv1p/conv1p.0/Conv",
+      "diagnostic_ms_per_hop": 0.00221237
+    },
+    {
+      "index": 104,
+      "operation": "MatMul",
+      "name": "/model/enc/emb_gru/linear_in/linear_in.0/MatMul",
+      "diagnostic_ms_per_hop": 0.0020853440000000003
+    },
+    {
+      "index": 294,
+      "operation": "MatMul",
+      "name": "/model/df_dec/df_out/df_out.0/MatMul",
+      "diagnostic_ms_per_hop": 0.001755686
+    },
+    {
+      "index": 228,
+      "operation": "Sigmoid",
+      "name": "/model/erb_dec/conv0_out/conv0_out.2/Sigmoid",
+      "diagnostic_ms_per_hop": 0.001608048
+    },
+    {
+      "index": 271,
+      "operation": "MatMul",
+      "name": "/model/df_dec/df_skip/MatMul",
+      "diagnostic_ms_per_hop": 0.001579058
+    },
+    {
+      "index": 214,
+      "operation": "Add",
+      "name": "/model/erb_dec/Add_2",
+      "diagnostic_ms_per_hop": 0.001517852
+    },
+    {
+      "index": 135,
+      "operation": "MatMul",
+      "name": "/model/erb_dec/emb_gru/linear_in/linear_in.0/MatMul",
+      "diagnostic_ms_per_hop": 0.001472462
+    },
+    {
+      "index": 5,
+      "operation": "Log",
+      "name": "/model/Log",
+      "diagnostic_ms_per_hop": 0.001380228
+    },
+    {
+      "index": 190,
+      "operation": "Conv",
+      "name": "/model/erb_dec/conv3p/conv3p.0/Conv",
+      "diagnostic_ms_per_hop": 0.001349204
+    },
+    {
+      "index": 189,
+      "operation": "Transpose",
+      "name": "/model/erb_dec/Transpose",
+      "diagnostic_ms_per_hop": 0.001299244
+    },
+    {
+      "index": 211,
+      "operation": "Relu",
+      "name": "/model/erb_dec/convt2/convt2.3/Relu",
+      "diagnostic_ms_per_hop": 0.001270416
+    },
+    {
+      "index": 201,
+      "operation": "Conv",
+      "name": "/model/erb_dec/conv2p/conv2p.0/Conv",
+      "diagnostic_ms_per_hop": 0.0012396220000000001
+    },
+    {
+      "index": 50,
+      "operation": "Relu",
+      "name": "/model/enc/erb_conv1/erb_conv1.3/Relu",
+      "diagnostic_ms_per_hop": 0.0012374200000000001
+    },
+    {
+      "index": 213,
+      "operation": "Relu",
+      "name": "/model/erb_dec/conv1p/conv1p.2/Relu",
+      "diagnostic_ms_per_hop": 0.001218388
+    },
+    {
+      "index": 276,
+      "operation": "Transpose",
+      "name": "/model/df_dec/df_convp_buffer/Transpose",
+      "diagnostic_ms_per_hop": 0.001207194
+    },
+    {
+      "index": 329,
+      "operation": "Slice",
+      "name": "/model/df_op/Slice",
+      "diagnostic_ms_per_hop": 0.001205596
+    },
+    {
+      "index": 327,
+      "operation": "Transpose",
+      "name": "/model/df_op/spec_buffer/Transpose_1",
+      "diagnostic_ms_per_hop": 0.001203394
+    },
+    {
+      "index": 232,
+      "operation": "MatMul",
+      "name": "/model/df_dec/df_gru/linear_in/linear_in.0/MatMul",
+      "diagnostic_ms_per_hop": 0.000992938
+    },
+    {
+      "index": 197,
+      "operation": "Transpose",
+      "name": "/model/erb_dec/convt3/convt3.0/Transpose",
+      "diagnostic_ms_per_hop": 0.0009639500000000001
+    },
+    {
+      "index": 128,
+      "operation": "MatMul",
+      "name": "/model/enc/emb_gru/linear_out/linear_out.0/MatMul",
+      "diagnostic_ms_per_hop": 0.000944548
+    },
+    {
+      "index": 176,
+      "operation": "MatMul",
+      "name": "/model/erb_dec/emb_gru/linear_out/linear_out.0/MatMul",
+      "diagnostic_ms_per_hop": 0.00090356
+    },
+    {
+      "index": 116,
+      "operation": "Sigmoid",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Sigmoid",
+      "diagnostic_ms_per_hop": 0.000883136
+    },
+    {
+      "index": 147,
+      "operation": "Sigmoid",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Sigmoid",
+      "diagnostic_ms_per_hop": 0.000867524
+    },
+    {
+      "index": 263,
+      "operation": "Sigmoid",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Sigmoid_1",
+      "diagnostic_ms_per_hop": 0.000816932
+    },
+    {
+      "index": 244,
+      "operation": "Sigmoid",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Sigmoid",
+      "diagnostic_ms_per_hop": 0.00081193
+    },
+    {
+      "index": 166,
+      "operation": "Sigmoid",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Sigmoid_1",
+      "diagnostic_ms_per_hop": 0.000809938
+    },
+    {
+      "index": 118,
+      "operation": "Sigmoid",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Sigmoid_1",
+      "diagnostic_ms_per_hop": 0.000808952
+    },
+    {
+      "index": 164,
+      "operation": "Sigmoid",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Sigmoid",
+      "diagnostic_ms_per_hop": 0.000807336
+    },
+    {
+      "index": 261,
+      "operation": "Sigmoid",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Sigmoid",
+      "diagnostic_ms_per_hop": 0.000806928
+    },
+    {
+      "index": 246,
+      "operation": "Sigmoid",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Sigmoid_1",
+      "diagnostic_ms_per_hop": 0.000800934
+    },
+    {
+      "index": 149,
+      "operation": "Sigmoid",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Sigmoid_1",
+      "diagnostic_ms_per_hop": 0.000794742
+    },
+    {
+      "index": 45,
+      "operation": "Slice",
+      "name": "/model/enc/Slice",
+      "diagnostic_ms_per_hop": 0.000786136
+    },
+    {
+      "index": 206,
+      "operation": "Concat",
+      "name": "/model/erb_dec/convt2/convt2.0/Concat",
+      "diagnostic_ms_per_hop": 0.0007649239999999999
+    },
+    {
+      "index": 75,
+      "operation": "Relu",
+      "name": "/model/enc/df_conv0/df_conv0.4/Relu",
+      "diagnostic_ms_per_hop": 0.000760134
+    },
+    {
+      "index": 203,
+      "operation": "Add",
+      "name": "/model/erb_dec/Add_1",
+      "diagnostic_ms_per_hop": 0.000721912
+    },
+    {
+      "index": 200,
+      "operation": "Relu",
+      "name": "/model/erb_dec/convt3/convt3.3/Relu",
+      "diagnostic_ms_per_hop": 0.000659096
+    },
+    {
+      "index": 53,
+      "operation": "Relu",
+      "name": "/model/enc/erb_conv2/erb_conv2.3/Relu",
+      "diagnostic_ms_per_hop": 0.00065271
+    },
+    {
+      "index": 325,
+      "operation": "Concat",
+      "name": "/model/df_op/spec_buffer/Concat",
+      "diagnostic_ms_per_hop": 0.000652498
+    },
+    {
+      "index": 202,
+      "operation": "Relu",
+      "name": "/model/erb_dec/conv2p/conv2p.2/Relu",
+      "diagnostic_ms_per_hop": 0.0006356939999999999
+    },
+    {
+      "index": 73,
+      "operation": "Concat",
+      "name": "/model/enc/df_conv0/df_conv0.1/Concat",
+      "diagnostic_ms_per_hop": 0.000616506
+    },
+    {
+      "index": 92,
+      "operation": "Transpose",
+      "name": "/model/enc/Transpose_1",
+      "diagnostic_ms_per_hop": 0.00058048
+    },
+    {
+      "index": 83,
+      "operation": "Transpose",
+      "name": "/model/enc/Transpose",
+      "diagnostic_ms_per_hop": 0.000573314
+    },
+    {
+      "index": 312,
+      "operation": "Mul",
+      "name": "/model/mask/Mul",
+      "diagnostic_ms_per_hop": 0.0005375
+    },
+    {
+      "index": 195,
+      "operation": "Concat",
+      "name": "/model/erb_dec/convt3/convt3.0/Concat",
+      "diagnostic_ms_per_hop": 0.0005148819999999999
+    },
+    {
+      "index": 186,
+      "operation": "Add",
+      "name": "/model/erb_dec/erb_fc_emb/erb_fc_emb.0/Add",
+      "diagnostic_ms_per_hop": 0.00049187
+    },
+    {
+      "index": 308,
+      "operation": "Concat",
+      "name": "/model/mask/spec_buffer/Concat",
+      "diagnostic_ms_per_hop": 0.000405864
+    },
+    {
+      "index": 317,
+      "operation": "Concat",
+      "name": "/model/df_op/coefs_buffer/Concat",
+      "diagnostic_ms_per_hop": 0.000367866
+    },
+    {
+      "index": 0,
+      "operation": "Mul",
+      "name": "/Mul",
+      "diagnostic_ms_per_hop": 0.000355848
+    },
+    {
+      "index": 3,
+      "operation": "Sqrt",
+      "name": "/model/Sqrt",
+      "diagnostic_ms_per_hop": 0.00035386200000000004
+    },
+    {
+      "index": 78,
+      "operation": "Relu",
+      "name": "/model/enc/df_conv1/df_conv1.3/Relu",
+      "diagnostic_ms_per_hop": 0.000348664
+    },
+    {
+      "index": 56,
+      "operation": "Relu",
+      "name": "/model/enc/erb_conv3/erb_conv3.3/Relu",
+      "diagnostic_ms_per_hop": 0.00033384399999999997
+    },
+    {
+      "index": 192,
+      "operation": "Add",
+      "name": "/model/erb_dec/Add",
+      "diagnostic_ms_per_hop": 0.000330474
+    },
+    {
+      "index": 187,
+      "operation": "Relu",
+      "name": "/model/erb_dec/erb_fc_emb/erb_fc_emb.1/Relu",
+      "diagnostic_ms_per_hop": 0.000300444
+    },
+    {
+      "index": 304,
+      "operation": "Transpose",
+      "name": "/model/mask/spec_buffer/Transpose",
+      "diagnostic_ms_per_hop": 0.00029824
+    },
+    {
+      "index": 191,
+      "operation": "Relu",
+      "name": "/model/erb_dec/conv3p/conv3p.2/Relu",
+      "diagnostic_ms_per_hop": 0.00029745600000000003
+    },
+    {
+      "index": 330,
+      "operation": "Gather",
+      "name": "/model/df_op/Gather",
+      "diagnostic_ms_per_hop": 0.00027145
+    },
+    {
+      "index": 335,
+      "operation": "Gather",
+      "name": "/model/df_op/Gather_3",
+      "diagnostic_ms_per_hop": 0.000257656
+    },
+    {
+      "index": 334,
+      "operation": "Gather",
+      "name": "/model/df_op/Gather_2",
+      "diagnostic_ms_per_hop": 0.000252634
+    },
+    {
+      "index": 331,
+      "operation": "Gather",
+      "name": "/model/df_op/Gather_1",
+      "diagnostic_ms_per_hop": 0.000251634
+    },
+    {
+      "index": 291,
+      "operation": "Transpose",
+      "name": "/model/df_dec/Transpose",
+      "diagnostic_ms_per_hop": 0.00024925
+    },
+    {
+      "index": 320,
+      "operation": "Transpose",
+      "name": "/model/df_op/Transpose",
+      "diagnostic_ms_per_hop": 0.00024705
+    },
+    {
+      "index": 313,
+      "operation": "Transpose",
+      "name": "/model/df_op/coefs_buffer/Transpose",
+      "diagnostic_ms_per_hop": 0.000238046
+    },
+    {
+      "index": 321,
+      "operation": "Transpose",
+      "name": "/model/df_op/spec_buffer/Transpose",
+      "diagnostic_ms_per_hop": 0.000218426
+    },
+    {
+      "index": 297,
+      "operation": "Add",
+      "name": "/model/df_dec/df_out/df_out.0/Add",
+      "diagnostic_ms_per_hop": 0.000204642
+    },
+    {
+      "index": 310,
+      "operation": "Transpose",
+      "name": "/model/mask/spec_buffer/Transpose_1",
+      "diagnostic_ms_per_hop": 0.000203632
+    },
+    {
+      "index": 1,
+      "operation": "Pow",
+      "name": "/model/Pow",
+      "diagnostic_ms_per_hop": 0.000186022
+    },
+    {
+      "index": 90,
+      "operation": "Add",
+      "name": "/model/enc/df_fc_emb/df_fc_emb.0/Add",
+      "diagnostic_ms_per_hop": 0.00018203999999999999
+    },
+    {
+      "index": 41,
+      "operation": "Concat",
+      "name": "/model/enc/erb_conv0_buffer/Concat",
+      "diagnostic_ms_per_hop": 0.00016162799999999998
+    },
+    {
+      "index": 301,
+      "operation": "Add",
+      "name": "/model/df_dec/Add_1",
+      "diagnostic_ms_per_hop": 0.000152632
+    },
+    {
+      "index": 43,
+      "operation": "Transpose",
+      "name": "/model/enc/erb_conv0_buffer/Transpose_1",
+      "diagnostic_ms_per_hop": 0.00015221199999999999
+    },
+    {
+      "index": 290,
+      "operation": "Relu",
+      "name": "/model/df_dec/df_convp/df_convp.4/Relu",
+      "diagnostic_ms_per_hop": 0.000144034
+    },
+    {
+      "index": 346,
+      "operation": "Concat",
+      "name": "/model/df_op/Concat",
+      "diagnostic_ms_per_hop": 0.000137222
+    },
+    {
+      "index": 33,
+      "operation": "Concat",
+      "name": "/model/spec_norm/Concat",
+      "diagnostic_ms_per_hop": 0.00013161799999999999
+    },
+    {
+      "index": 259,
+      "operation": "Split",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Split_1",
+      "diagnostic_ms_per_hop": 0.000125008
+    },
+    {
+      "index": 162,
+      "operation": "Split",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Split_1",
+      "diagnostic_ms_per_hop": 0.00012203
+    },
+    {
+      "index": 145,
+      "operation": "Split",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Split_1",
+      "diagnostic_ms_per_hop": 0.000118422
+    },
+    {
+      "index": 16,
+      "operation": "Div",
+      "name": "/model/erb_norm/Div",
+      "diagnostic_ms_per_hop": 0.00011561199999999999
+    },
+    {
+      "index": 257,
+      "operation": "Split",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Split",
+      "diagnostic_ms_per_hop": 0.00011522
+    },
+    {
+      "index": 6,
+      "operation": "Div",
+      "name": "/model/Div",
+      "diagnostic_ms_per_hop": 0.00010942
+    },
+    {
+      "index": 2,
+      "operation": "ReduceSum",
+      "name": "/model/ReduceSum",
+      "diagnostic_ms_per_hop": 0.00010722
+    },
+    {
+      "index": 131,
+      "operation": "Add",
+      "name": "/model/enc/emb_gru/linear_out/linear_out.0/Add",
+      "diagnostic_ms_per_hop": 0.000106414
+    },
+    {
+      "index": 349,
+      "operation": "Concat",
+      "name": "/model/df_op/Concat_1",
+      "diagnostic_ms_per_hop": 0.000105026
+    },
+    {
+      "index": 65,
+      "operation": "Concat",
+      "name": "/model/enc/df_conv0_buffer/Concat",
+      "diagnostic_ms_per_hop": 0.000103818
+    },
+    {
+      "index": 15,
+      "operation": "Sub",
+      "name": "/model/erb_norm/Sub",
+      "diagnostic_ms_per_hop": 0.000103016
+    },
+    {
+      "index": 99,
+      "operation": "Add",
+      "name": "/model/enc/erb_fc_emb/erb_fc_emb.0/Add",
+      "diagnostic_ms_per_hop": 0.00010162
+    },
+    {
+      "index": 114,
+      "operation": "Split",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Split_1",
+      "diagnostic_ms_per_hop": 0.000101414
+    },
+    {
+      "index": 179,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/linear_out/linear_out.0/Add",
+      "diagnostic_ms_per_hop": 0.000100822
+    },
+    {
+      "index": 67,
+      "operation": "Transpose",
+      "name": "/model/enc/df_conv0_buffer/Transpose_1",
+      "diagnostic_ms_per_hop": 0.000100018
+    },
+    {
+      "index": 288,
+      "operation": "Concat",
+      "name": "/model/df_dec/df_convp/df_convp.1/Concat",
+      "diagnostic_ms_per_hop": 9.741800000000001e-05
+    },
+    {
+      "index": 242,
+      "operation": "Split",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Split_1",
+      "diagnostic_ms_per_hop": 9.662e-05
+    },
+    {
+      "index": 160,
+      "operation": "Split",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Split",
+      "diagnostic_ms_per_hop": 9.661799999999999e-05
+    },
+    {
+      "index": 240,
+      "operation": "Split",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Split",
+      "diagnostic_ms_per_hop": 9.6212e-05
+    },
+    {
+      "index": 143,
+      "operation": "Split",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Split",
+      "diagnostic_ms_per_hop": 9.4016e-05
+    },
+    {
+      "index": 132,
+      "operation": "Relu",
+      "name": "/model/enc/emb_gru/linear_out/linear_out.1/Relu",
+      "diagnostic_ms_per_hop": 9.242400000000001e-05
+    },
+    {
+      "index": 101,
+      "operation": "Concat",
+      "name": "/model/enc/combine/Concat",
+      "diagnostic_ms_per_hop": 9.1012e-05
+    },
+    {
+      "index": 265,
+      "operation": "Add",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Add_2",
+      "diagnostic_ms_per_hop": 9.0628e-05
+    },
+    {
+      "index": 26,
+      "operation": "Sqrt",
+      "name": "/model/spec_norm/Sqrt_1",
+      "diagnostic_ms_per_hop": 8.9614e-05
+    },
+    {
+      "index": 100,
+      "operation": "Relu",
+      "name": "/model/enc/erb_fc_emb/erb_fc_emb.1/Relu",
+      "diagnostic_ms_per_hop": 8.941400000000001e-05
+    },
+    {
+      "index": 112,
+      "operation": "Split",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Split",
+      "diagnostic_ms_per_hop": 8.881e-05
+    },
+    {
+      "index": 11,
+      "operation": "Mul",
+      "name": "/model/erb_norm/Mul",
+      "diagnostic_ms_per_hop": 8.8226e-05
+    },
+    {
+      "index": 19,
+      "operation": "Sqrt",
+      "name": "/model/spec_norm/Sqrt",
+      "diagnostic_ms_per_hop": 8.8218e-05
+    },
+    {
+      "index": 332,
+      "operation": "Mul",
+      "name": "/model/df_op/Mul",
+      "diagnostic_ms_per_hop": 8.7218e-05
+    },
+    {
+      "index": 180,
+      "operation": "Relu",
+      "name": "/model/erb_dec/emb_gru/linear_out/linear_out.1/Relu",
+      "diagnostic_ms_per_hop": 8.720399999999999e-05
+    },
+    {
+      "index": 91,
+      "operation": "Relu",
+      "name": "/model/enc/df_fc_emb/df_fc_emb.1/Relu",
+      "diagnostic_ms_per_hop": 8.661199999999999e-05
+    },
+    {
+      "index": 139,
+      "operation": "Relu",
+      "name": "/model/erb_dec/emb_gru/linear_in/linear_in.1/Relu",
+      "diagnostic_ms_per_hop": 8.3414e-05
+    },
+    {
+      "index": 339,
+      "operation": "Mul",
+      "name": "/model/df_op/Mul_2",
+      "diagnostic_ms_per_hop": 8.3408e-05
+    },
+    {
+      "index": 341,
+      "operation": "Mul",
+      "name": "/model/df_op/Mul_3",
+      "diagnostic_ms_per_hop": 8.3212e-05
+    },
+    {
+      "index": 29,
+      "operation": "Gather",
+      "name": "/model/spec_norm/Gather_1",
+      "diagnostic_ms_per_hop": 8.161400000000001e-05
+    },
+    {
+      "index": 336,
+      "operation": "Mul",
+      "name": "/model/df_op/Mul_1",
+      "diagnostic_ms_per_hop": 8.0412e-05
+    },
+    {
+      "index": 342,
+      "operation": "ReduceSum",
+      "name": "/model/df_op/ReduceSum_3",
+      "diagnostic_ms_per_hop": 7.8416e-05
+    },
+    {
+      "index": 13,
+      "operation": "Add",
+      "name": "/model/erb_norm/Add",
+      "diagnostic_ms_per_hop": 7.8012e-05
+    },
+    {
+      "index": 12,
+      "operation": "Mul",
+      "name": "/model/erb_norm/Mul_1",
+      "diagnostic_ms_per_hop": 7.661400000000001e-05
+    },
+    {
+      "index": 236,
+      "operation": "Relu",
+      "name": "/model/df_dec/df_gru/linear_in/linear_in.1/Relu",
+      "diagnostic_ms_per_hop": 7.4812e-05
+    },
+    {
+      "index": 61,
+      "operation": "Transpose",
+      "name": "/model/enc/df_conv0_buffer/Transpose",
+      "diagnostic_ms_per_hop": 7.4014e-05
+    },
+    {
+      "index": 7,
+      "operation": "Mul",
+      "name": "/model/Mul",
+      "diagnostic_ms_per_hop": 7.2804e-05
+    },
+    {
+      "index": 107,
+      "operation": "Add",
+      "name": "/model/enc/emb_gru/linear_in/linear_in.0/Add",
+      "diagnostic_ms_per_hop": 7.261199999999999e-05
+    },
+    {
+      "index": 235,
+      "operation": "Add",
+      "name": "/model/df_dec/df_gru/linear_in/linear_in.0/Add",
+      "diagnostic_ms_per_hop": 7.220999999999999e-05
+    },
+    {
+      "index": 274,
+      "operation": "Add",
+      "name": "/model/df_dec/df_skip/Add",
+      "diagnostic_ms_per_hop": 7.1006e-05
+    },
+    {
+      "index": 4,
+      "operation": "Add",
+      "name": "/model/Add",
+      "diagnostic_ms_per_hop": 7.0214e-05
+    },
+    {
+      "index": 27,
+      "operation": "Gather",
+      "name": "/model/spec_norm/Gather",
+      "diagnostic_ms_per_hop": 6.7816e-05
+    },
+    {
+      "index": 243,
+      "operation": "Add",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Add",
+      "diagnostic_ms_per_hop": 6.701600000000001e-05
+    },
+    {
+      "index": 153,
+      "operation": "Sub",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Sub",
+      "diagnostic_ms_per_hop": 6.701399999999999e-05
+    },
+    {
+      "index": 138,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/linear_in/linear_in.0/Add",
+      "diagnostic_ms_per_hop": 6.700400000000001e-05
+    },
+    {
+      "index": 198,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/convt3/convt3.0/Reshape_1",
+      "diagnostic_ms_per_hop": 6.621599999999999e-05
+    },
+    {
+      "index": 250,
+      "operation": "Sub",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Sub",
+      "diagnostic_ms_per_hop": 6.620399999999999e-05
+    },
+    {
+      "index": 245,
+      "operation": "Add",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Add_1",
+      "diagnostic_ms_per_hop": 6.5614e-05
+    },
+    {
+      "index": 115,
+      "operation": "Add",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Add",
+      "diagnostic_ms_per_hop": 6.4008e-05
+    },
+    {
+      "index": 163,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Add",
+      "diagnostic_ms_per_hop": 6.3406e-05
+    },
+    {
+      "index": 252,
+      "operation": "Add",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Add_3",
+      "diagnostic_ms_per_hop": 6.321e-05
+    },
+    {
+      "index": 150,
+      "operation": "Mul",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Mul",
+      "diagnostic_ms_per_hop": 6.301e-05
+    },
+    {
+      "index": 275,
+      "operation": "Add",
+      "name": "/model/df_dec/Add",
+      "diagnostic_ms_per_hop": 6.2812e-05
+    },
+    {
+      "index": 260,
+      "operation": "Add",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Add",
+      "diagnostic_ms_per_hop": 6.240400000000001e-05
+    },
+    {
+      "index": 267,
+      "operation": "Sub",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Sub",
+      "diagnostic_ms_per_hop": 6.201e-05
+    },
+    {
+      "index": 262,
+      "operation": "Add",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Add_1",
+      "diagnostic_ms_per_hop": 6.1216e-05
+    },
+    {
+      "index": 264,
+      "operation": "Mul",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Mul",
+      "diagnostic_ms_per_hop": 6.1204e-05
+    },
+    {
+      "index": 268,
+      "operation": "Mul",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Mul_1",
+      "diagnostic_ms_per_hop": 6.1202e-05
+    },
+    {
+      "index": 122,
+      "operation": "Sub",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Sub",
+      "diagnostic_ms_per_hop": 6.0804e-05
+    },
+    {
+      "index": 151,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Add_2",
+      "diagnostic_ms_per_hop": 6.0414e-05
+    },
+    {
+      "index": 154,
+      "operation": "Mul",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Mul_1",
+      "diagnostic_ms_per_hop": 6.0406e-05
+    },
+    {
+      "index": 171,
+      "operation": "Mul",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Mul_1",
+      "diagnostic_ms_per_hop": 6.0206000000000006e-05
+    },
+    {
+      "index": 124,
+      "operation": "Add",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Add_3",
+      "diagnostic_ms_per_hop": 6.0008000000000006e-05
+    },
+    {
+      "index": 167,
+      "operation": "Mul",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Mul",
+      "diagnostic_ms_per_hop": 6.0008000000000006e-05
+    },
+    {
+      "index": 146,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Add",
+      "diagnostic_ms_per_hop": 6.0006e-05
+    },
+    {
+      "index": 120,
+      "operation": "Add",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Add_2",
+      "diagnostic_ms_per_hop": 5.9810000000000005e-05
+    },
+    {
+      "index": 170,
+      "operation": "Sub",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Sub",
+      "diagnostic_ms_per_hop": 5.9607999999999996e-05
+    },
+    {
+      "index": 248,
+      "operation": "Add",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Add_2",
+      "diagnostic_ms_per_hop": 5.92e-05
+    },
+    {
+      "index": 37,
+      "operation": "Transpose",
+      "name": "/model/enc/erb_conv0_buffer/Transpose",
+      "diagnostic_ms_per_hop": 5.8808e-05
+    },
+    {
+      "index": 117,
+      "operation": "Add",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Add_1",
+      "diagnostic_ms_per_hop": 5.8414e-05
+    },
+    {
+      "index": 247,
+      "operation": "Mul",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Mul",
+      "diagnostic_ms_per_hop": 5.8212000000000004e-05
+    },
+    {
+      "index": 229,
+      "operation": "Pad",
+      "name": "/model/erb_dec/Pad",
+      "diagnostic_ms_per_hop": 5.821e-05
+    },
+    {
+      "index": 108,
+      "operation": "Relu",
+      "name": "/model/enc/emb_gru/linear_in/linear_in.1/Relu",
+      "diagnostic_ms_per_hop": 5.7808e-05
+    },
+    {
+      "index": 168,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Add_2",
+      "diagnostic_ms_per_hop": 5.7414e-05
+    },
+    {
+      "index": 148,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Add_1",
+      "diagnostic_ms_per_hop": 5.7208e-05
+    },
+    {
+      "index": 119,
+      "operation": "Mul",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Mul",
+      "diagnostic_ms_per_hop": 5.6814e-05
+    },
+    {
+      "index": 251,
+      "operation": "Mul",
+      "name": "/model/df_dec/df_gru/gru.0/grucell/Mul_1",
+      "diagnostic_ms_per_hop": 5.6604e-05
+    },
+    {
+      "index": 269,
+      "operation": "Add",
+      "name": "/model/df_dec/df_gru/gru.1/grucell/Add_3",
+      "diagnostic_ms_per_hop": 5.6402e-05
+    },
+    {
+      "index": 165,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Add_1",
+      "diagnostic_ms_per_hop": 5.6206000000000004e-05
+    },
+    {
+      "index": 123,
+      "operation": "Mul",
+      "name": "/model/enc/emb_gru/gru.0/grucell/Mul_1",
+      "diagnostic_ms_per_hop": 5.6012e-05
+    },
+    {
+      "index": 337,
+      "operation": "ReduceSum",
+      "name": "/model/df_op/ReduceSum_1",
+      "diagnostic_ms_per_hop": 5.5006e-05
+    },
+    {
+      "index": 172,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/gru.1/grucell/Add_3",
+      "diagnostic_ms_per_hop": 5.4804e-05
+    },
+    {
+      "index": 155,
+      "operation": "Add",
+      "name": "/model/erb_dec/emb_gru/gru.0/grucell/Add_3",
+      "diagnostic_ms_per_hop": 5.4412e-05
+    },
+    {
+      "index": 17,
+      "operation": "Pow",
+      "name": "/model/spec_norm/Pow",
+      "diagnostic_ms_per_hop": 5.24e-05
+    },
+    {
+      "index": 333,
+      "operation": "ReduceSum",
+      "name": "/model/df_op/ReduceSum",
+      "diagnostic_ms_per_hop": 5.1608e-05
+    },
+    {
+      "index": 340,
+      "operation": "ReduceSum",
+      "name": "/model/df_op/ReduceSum_2",
+      "diagnostic_ms_per_hop": 4.9204e-05
+    },
+    {
+      "index": 18,
+      "operation": "ReduceSum",
+      "name": "/model/spec_norm/ReduceSum",
+      "diagnostic_ms_per_hop": 4.6006e-05
+    },
+    {
+      "index": 22,
+      "operation": "Mul",
+      "name": "/model/spec_norm/Mul",
+      "diagnostic_ms_per_hop": 4.2414000000000004e-05
+    },
+    {
+      "index": 28,
+      "operation": "Div",
+      "name": "/model/spec_norm/Div",
+      "diagnostic_ms_per_hop": 4.1207999999999996e-05
+    },
+    {
+      "index": 24,
+      "operation": "Add",
+      "name": "/model/spec_norm/Add",
+      "diagnostic_ms_per_hop": 4.1009999999999995e-05
+    },
+    {
+      "index": 30,
+      "operation": "Div",
+      "name": "/model/spec_norm/Div_1",
+      "diagnostic_ms_per_hop": 4.1003999999999996e-05
+    },
+    {
+      "index": 338,
+      "operation": "Sub",
+      "name": "/model/df_op/Sub",
+      "diagnostic_ms_per_hop": 3.9412e-05
+    },
+    {
+      "index": 25,
+      "operation": "Add",
+      "name": "/model/spec_norm/Add_1",
+      "diagnostic_ms_per_hop": 3.9206000000000004e-05
+    },
+    {
+      "index": 343,
+      "operation": "Add",
+      "name": "/model/df_op/Add",
+      "diagnostic_ms_per_hop": 3.5404e-05
+    },
+    {
+      "index": 23,
+      "operation": "Mul",
+      "name": "/model/spec_norm/Mul_1",
+      "diagnostic_ms_per_hop": 3.2202e-05
+    },
+    {
+      "index": 188,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/Reshape",
+      "diagnostic_ms_per_hop": 2.9404e-05
+    },
+    {
+      "index": 300,
+      "operation": "Reshape",
+      "name": "/model/df_dec/Reshape",
+      "diagnostic_ms_per_hop": 2.2402e-05
+    },
+    {
+      "index": 97,
+      "operation": "Squeeze",
+      "name": "/model/enc/erb_fc_emb/erb_fc_emb.0/Squeeze",
+      "diagnostic_ms_per_hop": 2.2004e-05
+    },
+    {
+      "index": 64,
+      "operation": "Slice",
+      "name": "/model/enc/df_conv0_buffer/Slice_1",
+      "diagnostic_ms_per_hop": 2.1808e-05
+    },
+    {
+      "index": 106,
+      "operation": "Reshape",
+      "name": "/model/enc/emb_gru/linear_in/linear_in.0/Reshape_1",
+      "diagnostic_ms_per_hop": 2.1804e-05
+    },
+    {
+      "index": 35,
+      "operation": "Unsqueeze",
+      "name": "/model/Unsqueeze",
+      "diagnostic_ms_per_hop": 2.1202e-05
+    },
+    {
+      "index": 39,
+      "operation": "Reshape",
+      "name": "/model/enc/erb_conv0_buffer/Reshape",
+      "diagnostic_ms_per_hop": 2.1008e-05
+    },
+    {
+      "index": 272,
+      "operation": "Squeeze",
+      "name": "/model/df_dec/df_skip/Squeeze",
+      "diagnostic_ms_per_hop": 2.1008e-05
+    },
+    {
+      "index": 279,
+      "operation": "Slice",
+      "name": "/model/df_dec/df_convp_buffer/Slice_1",
+      "diagnostic_ms_per_hop": 2.1006000000000002e-05
+    },
+    {
+      "index": 305,
+      "operation": "Slice",
+      "name": "/model/mask/spec_buffer/Slice",
+      "diagnostic_ms_per_hop": 2.08e-05
+    },
+    {
+      "index": 141,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/emb_gru/gru.0/Reshape",
+      "diagnostic_ms_per_hop": 2.0606000000000002e-05
+    },
+    {
+      "index": 156,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/emb_gru/gru.0/Reshape_1",
+      "diagnostic_ms_per_hop": 2.0408000000000002e-05
+    },
+    {
+      "index": 299,
+      "operation": "Unsqueeze",
+      "name": "/model/df_dec/Unsqueeze",
+      "diagnostic_ms_per_hop": 2.0405999999999997e-05
+    },
+    {
+      "index": 86,
+      "operation": "Unsqueeze",
+      "name": "/model/enc/df_fc_emb/df_fc_emb.0/Unsqueeze",
+      "diagnostic_ms_per_hop": 2.0206e-05
+    },
+    {
+      "index": 318,
+      "operation": "Slice",
+      "name": "/model/df_op/coefs_buffer/Slice_2",
+      "diagnostic_ms_per_hop": 2.0204000000000002e-05
+    },
+    {
+      "index": 324,
+      "operation": "Slice",
+      "name": "/model/df_op/spec_buffer/Slice_1",
+      "diagnostic_ms_per_hop": 2.0202e-05
+    },
+    {
+      "index": 69,
+      "operation": "Slice",
+      "name": "/model/enc/df_conv0/df_conv0.1/Slice",
+      "diagnostic_ms_per_hop": 2.02e-05
+    },
+    {
+      "index": 93,
+      "operation": "Flatten",
+      "name": "/model/enc/Flatten_1",
+      "diagnostic_ms_per_hop": 2.0004e-05
+    },
+    {
+      "index": 348,
+      "operation": "Slice",
+      "name": "",
+      "diagnostic_ms_per_hop": 1.9806e-05
+    },
+    {
+      "index": 95,
+      "operation": "Unsqueeze",
+      "name": "/model/enc/erb_fc_emb/erb_fc_emb.0/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.9804e-05
+    },
+    {
+      "index": 319,
+      "operation": "Reshape",
+      "name": "/model/df_op/coefs_buffer/Reshape_1",
+      "diagnostic_ms_per_hop": 1.9802e-05
+    },
+    {
+      "index": 323,
+      "operation": "Reshape",
+      "name": "/model/df_op/spec_buffer/Reshape",
+      "diagnostic_ms_per_hop": 1.9802e-05
+    },
+    {
+      "index": 230,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_gru/linear_in/linear_in.0/Reshape",
+      "diagnostic_ms_per_hop": 1.98e-05
+    },
+    {
+      "index": 281,
+      "operation": "Slice",
+      "name": "/model/df_dec/df_convp_buffer/Slice_2",
+      "diagnostic_ms_per_hop": 1.9606e-05
+    },
+    {
+      "index": 283,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_convp_buffer/Reshape_1",
+      "diagnostic_ms_per_hop": 1.9604e-05
+    },
+    {
+      "index": 314,
+      "operation": "Slice",
+      "name": "/model/df_op/coefs_buffer/Slice",
+      "diagnostic_ms_per_hop": 1.9604e-05
+    },
+    {
+      "index": 59,
+      "operation": "Slice",
+      "name": "/model/enc/dprnn_erb/blocks.1/inter_gru/Slice",
+      "diagnostic_ms_per_hop": 1.9602e-05
+    },
+    {
+      "index": 57,
+      "operation": "Slice",
+      "name": "/model/enc/dprnn_erb/blocks.0/inter_gru/Slice",
+      "diagnostic_ms_per_hop": 1.9600000000000002e-05
+    },
+    {
+      "index": 178,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/emb_gru/linear_out/linear_out.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.9600000000000002e-05
+    },
+    {
+      "index": 270,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_gru/gru.1/Reshape_1",
+      "diagnostic_ms_per_hop": 1.9408e-05
+    },
+    {
+      "index": 70,
+      "operation": "Slice",
+      "name": "/model/enc/df_conv0/df_conv0.1/Slice_1",
+      "diagnostic_ms_per_hop": 1.9404e-05
+    },
+    {
+      "index": 102,
+      "operation": "Reshape",
+      "name": "/model/enc/emb_gru/linear_in/linear_in.0/Reshape",
+      "diagnostic_ms_per_hop": 1.9402e-05
+    },
+    {
+      "index": 302,
+      "operation": "Reshape",
+      "name": "/model/df_out_transform/Reshape",
+      "diagnostic_ms_per_hop": 1.9402e-05
+    },
+    {
+      "index": 20,
+      "operation": "Slice",
+      "name": "/model/spec_norm/Slice",
+      "diagnostic_ms_per_hop": 1.9399999999999997e-05
+    },
+    {
+      "index": 136,
+      "operation": "Squeeze",
+      "name": "/model/erb_dec/emb_gru/linear_in/linear_in.0/Squeeze",
+      "diagnostic_ms_per_hop": 1.9204e-05
+    },
+    {
+      "index": 196,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/convt3/convt3.0/Reshape",
+      "diagnostic_ms_per_hop": 1.9006e-05
+    },
+    {
+      "index": 63,
+      "operation": "Reshape",
+      "name": "/model/enc/df_conv0_buffer/Reshape",
+      "diagnostic_ms_per_hop": 1.9004e-05
+    },
+    {
+      "index": 88,
+      "operation": "Squeeze",
+      "name": "/model/enc/df_fc_emb/df_fc_emb.0/Squeeze",
+      "diagnostic_ms_per_hop": 1.9004e-05
+    },
+    {
+      "index": 44,
+      "operation": "Reshape",
+      "name": "/model/enc/erb_conv0_buffer/Reshape_1",
+      "diagnostic_ms_per_hop": 1.9002e-05
+    },
+    {
+      "index": 158,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/emb_gru/gru.1/Reshape",
+      "diagnostic_ms_per_hop": 1.9002e-05
+    },
+    {
+      "index": 328,
+      "operation": "Reshape",
+      "name": "/model/df_op/spec_buffer/Reshape_1",
+      "diagnostic_ms_per_hop": 1.9002e-05
+    },
+    {
+      "index": 173,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/emb_gru/gru.1/Reshape_1",
+      "diagnostic_ms_per_hop": 1.8809999999999998e-05
+    },
+    {
+      "index": 9,
+      "operation": "Slice",
+      "name": "/model/erb_norm/Slice",
+      "diagnostic_ms_per_hop": 1.8803999999999998e-05
+    },
+    {
+      "index": 38,
+      "operation": "Slice",
+      "name": "/model/enc/erb_conv0_buffer/Slice",
+      "diagnostic_ms_per_hop": 1.8803999999999998e-05
+    },
+    {
+      "index": 129,
+      "operation": "Squeeze",
+      "name": "/model/enc/emb_gru/linear_out/linear_out.0/Squeeze",
+      "diagnostic_ms_per_hop": 1.8803999999999998e-05
+    },
+    {
+      "index": 130,
+      "operation": "Reshape",
+      "name": "/model/enc/emb_gru/linear_out/linear_out.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.8802e-05
+    },
+    {
+      "index": 255,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_gru/gru.1/Reshape",
+      "diagnostic_ms_per_hop": 1.88e-05
+    },
+    {
+      "index": 315,
+      "operation": "Reshape",
+      "name": "/model/df_op/coefs_buffer/Reshape",
+      "diagnostic_ms_per_hop": 1.88e-05
+    },
+    {
+      "index": 309,
+      "operation": "Slice",
+      "name": "/model/mask/spec_buffer/Slice_2",
+      "diagnostic_ms_per_hop": 1.8606e-05
+    },
+    {
+      "index": 98,
+      "operation": "Reshape",
+      "name": "/model/enc/erb_fc_emb/erb_fc_emb.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.8604e-05
+    },
+    {
+      "index": 174,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/emb_gru/linear_out/linear_out.0/Reshape",
+      "diagnostic_ms_per_hop": 1.8604e-05
+    },
+    {
+      "index": 209,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/convt2/convt2.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.8602e-05
+    },
+    {
+      "index": 311,
+      "operation": "Reshape",
+      "name": "/model/mask/spec_buffer/Reshape_1",
+      "diagnostic_ms_per_hop": 1.8602e-05
+    },
+    {
+      "index": 185,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/erb_fc_emb/erb_fc_emb.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.86e-05
+    },
+    {
+      "index": 237,
+      "operation": "Slice",
+      "name": "/model/df_dec/df_gru/gru.0/Slice",
+      "diagnostic_ms_per_hop": 1.8406e-05
+    },
+    {
+      "index": 127,
+      "operation": "Unsqueeze",
+      "name": "/model/enc/emb_gru/linear_out/linear_out.0/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.8404e-05
+    },
+    {
+      "index": 140,
+      "operation": "Slice",
+      "name": "/model/erb_dec/emb_gru/gru.0/Slice",
+      "diagnostic_ms_per_hop": 1.8404e-05
+    },
+    {
+      "index": 182,
+      "operation": "Unsqueeze",
+      "name": "/model/erb_dec/erb_fc_emb/erb_fc_emb.0/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.8402e-05
+    },
+    {
+      "index": 175,
+      "operation": "Unsqueeze",
+      "name": "/model/erb_dec/emb_gru/linear_out/linear_out.0/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.821e-05
+    },
+    {
+      "index": 109,
+      "operation": "Slice",
+      "name": "/model/enc/emb_gru/gru.0/Slice",
+      "diagnostic_ms_per_hop": 1.8006e-05
+    },
+    {
+      "index": 181,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/erb_fc_emb/erb_fc_emb.0/Reshape",
+      "diagnostic_ms_per_hop": 1.8006e-05
+    },
+    {
+      "index": 14,
+      "operation": "Reshape",
+      "name": "/model/erb_norm/Reshape_1",
+      "diagnostic_ms_per_hop": 1.8004000000000002e-05
+    },
+    {
+      "index": 66,
+      "operation": "Slice",
+      "name": "/model/enc/df_conv0_buffer/Slice_2",
+      "diagnostic_ms_per_hop": 1.8001999999999998e-05
+    },
+    {
+      "index": 293,
+      "operation": "Unsqueeze",
+      "name": "/model/df_dec/df_out/df_out.0/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.8e-05
+    },
+    {
+      "index": 31,
+      "operation": "Unsqueeze",
+      "name": "/model/spec_norm/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.7806000000000002e-05
+    },
+    {
+      "index": 307,
+      "operation": "Slice",
+      "name": "/model/mask/spec_buffer/Slice_1",
+      "diagnostic_ms_per_hop": 1.7806000000000002e-05
+    },
+    {
+      "index": 42,
+      "operation": "Slice",
+      "name": "/model/enc/erb_conv0_buffer/Slice_2",
+      "diagnostic_ms_per_hop": 1.7803999999999998e-05
+    },
+    {
+      "index": 105,
+      "operation": "Squeeze",
+      "name": "/model/enc/emb_gru/linear_in/linear_in.0/Squeeze",
+      "diagnostic_ms_per_hop": 1.7803999999999998e-05
+    },
+    {
+      "index": 125,
+      "operation": "Reshape",
+      "name": "/model/enc/emb_gru/gru.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.7803999999999998e-05
+    },
+    {
+      "index": 177,
+      "operation": "Squeeze",
+      "name": "/model/erb_dec/emb_gru/linear_out/linear_out.0/Squeeze",
+      "diagnostic_ms_per_hop": 1.7803999999999998e-05
+    },
+    {
+      "index": 285,
+      "operation": "Slice",
+      "name": "/model/df_dec/df_convp/df_convp.1/Slice_1",
+      "diagnostic_ms_per_hop": 1.7803999999999998e-05
+    },
+    {
+      "index": 133,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/emb_gru/linear_in/linear_in.0/Reshape",
+      "diagnostic_ms_per_hop": 1.7802e-05
+    },
+    {
+      "index": 238,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_gru/gru.0/Reshape",
+      "diagnostic_ms_per_hop": 1.7802e-05
+    },
+    {
+      "index": 254,
+      "operation": "Slice",
+      "name": "/model/df_dec/df_gru/gru.1/Slice",
+      "diagnostic_ms_per_hop": 1.7608e-05
+    },
+    {
+      "index": 253,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_gru/gru.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.7604e-05
+    },
+    {
+      "index": 207,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/convt2/convt2.0/Reshape",
+      "diagnostic_ms_per_hop": 1.7602000000000002e-05
+    },
+    {
+      "index": 326,
+      "operation": "Slice",
+      "name": "/model/df_op/spec_buffer/Slice_2",
+      "diagnostic_ms_per_hop": 1.7602000000000002e-05
+    },
+    {
+      "index": 84,
+      "operation": "Flatten",
+      "name": "/model/enc/Flatten",
+      "diagnostic_ms_per_hop": 1.76e-05
+    },
+    {
+      "index": 137,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/emb_gru/linear_in/linear_in.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.76e-05
+    },
+    {
+      "index": 40,
+      "operation": "Slice",
+      "name": "/model/enc/erb_conv0_buffer/Slice_1",
+      "diagnostic_ms_per_hop": 1.7404e-05
+    },
+    {
+      "index": 36,
+      "operation": "Unsqueeze",
+      "name": "/model/Unsqueeze_1",
+      "diagnostic_ms_per_hop": 1.7402e-05
+    },
+    {
+      "index": 94,
+      "operation": "Reshape",
+      "name": "/model/enc/erb_fc_emb/erb_fc_emb.0/Reshape",
+      "diagnostic_ms_per_hop": 1.7402e-05
+    },
+    {
+      "index": 295,
+      "operation": "Squeeze",
+      "name": "/model/df_dec/df_out/df_out.0/Squeeze",
+      "diagnostic_ms_per_hop": 1.7402e-05
+    },
+    {
+      "index": 316,
+      "operation": "Slice",
+      "name": "/model/df_op/coefs_buffer/Slice_1",
+      "diagnostic_ms_per_hop": 1.7402e-05
+    },
+    {
+      "index": 219,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/convt1/convt1.0/Reshape",
+      "diagnostic_ms_per_hop": 1.74e-05
+    },
+    {
+      "index": 303,
+      "operation": "Unsqueeze",
+      "name": "/model/mask/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.7204e-05
+    },
+    {
+      "index": 134,
+      "operation": "Unsqueeze",
+      "name": "/model/erb_dec/emb_gru/linear_in/linear_in.0/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.7202000000000002e-05
+    },
+    {
+      "index": 221,
+      "operation": "Reshape",
+      "name": "/model/erb_dec/convt1/convt1.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.7202000000000002e-05
+    },
+    {
+      "index": 306,
+      "operation": "Reshape",
+      "name": "/model/mask/spec_buffer/Reshape",
+      "diagnostic_ms_per_hop": 1.7202000000000002e-05
+    },
+    {
+      "index": 231,
+      "operation": "Unsqueeze",
+      "name": "/model/df_dec/df_gru/linear_in/linear_in.0/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.7001999999999997e-05
+    },
+    {
+      "index": 233,
+      "operation": "Squeeze",
+      "name": "/model/df_dec/df_gru/linear_in/linear_in.0/Squeeze",
+      "diagnostic_ms_per_hop": 1.7e-05
+    },
+    {
+      "index": 79,
+      "operation": "Slice",
+      "name": "/model/enc/dprnn_df/blocks.0/inter_gru/Slice",
+      "diagnostic_ms_per_hop": 1.6806e-05
+    },
+    {
+      "index": 34,
+      "operation": "Reshape",
+      "name": "/model/spec_norm/Reshape_1",
+      "diagnostic_ms_per_hop": 1.6803999999999997e-05
+    },
+    {
+      "index": 278,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_convp_buffer/Reshape",
+      "diagnostic_ms_per_hop": 1.6802e-05
+    },
+    {
+      "index": 8,
+      "operation": "Slice",
+      "name": "/model/Slice",
+      "diagnostic_ms_per_hop": 1.6800000000000002e-05
+    },
+    {
+      "index": 68,
+      "operation": "Reshape",
+      "name": "/model/enc/df_conv0_buffer/Reshape_1",
+      "diagnostic_ms_per_hop": 1.6602e-05
+    },
+    {
+      "index": 81,
+      "operation": "Slice",
+      "name": "/model/enc/dprnn_df/blocks.1/inter_gru/Slice",
+      "diagnostic_ms_per_hop": 1.6602e-05
+    },
+    {
+      "index": 157,
+      "operation": "Slice",
+      "name": "/model/erb_dec/emb_gru/gru.1/Slice",
+      "diagnostic_ms_per_hop": 1.6406e-05
+    },
+    {
+      "index": 10,
+      "operation": "Reshape",
+      "name": "/model/erb_norm/Reshape",
+      "diagnostic_ms_per_hop": 1.6404e-05
+    },
+    {
+      "index": 345,
+      "operation": "Unsqueeze",
+      "name": "/model/df_op/Unsqueeze_1",
+      "diagnostic_ms_per_hop": 1.6404e-05
+    },
+    {
+      "index": 350,
+      "operation": "Squeeze",
+      "name": "/model/Squeeze",
+      "diagnostic_ms_per_hop": 1.6404e-05
+    },
+    {
+      "index": 103,
+      "operation": "Unsqueeze",
+      "name": "/model/enc/emb_gru/linear_in/linear_in.0/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.6402e-05
+    },
+    {
+      "index": 234,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_gru/linear_in/linear_in.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.6206e-05
+    },
+    {
+      "index": 110,
+      "operation": "Reshape",
+      "name": "/model/enc/emb_gru/gru.0/Reshape",
+      "diagnostic_ms_per_hop": 1.6204e-05
+    },
+    {
+      "index": 277,
+      "operation": "Slice",
+      "name": "/model/df_dec/df_convp_buffer/Slice",
+      "diagnostic_ms_per_hop": 1.6006e-05
+    },
+    {
+      "index": 296,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_out/df_out.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.6002e-05
+    },
+    {
+      "index": 62,
+      "operation": "Slice",
+      "name": "/model/enc/df_conv0_buffer/Slice",
+      "diagnostic_ms_per_hop": 1.6e-05
+    },
+    {
+      "index": 322,
+      "operation": "Slice",
+      "name": "/model/df_op/spec_buffer/Slice",
+      "diagnostic_ms_per_hop": 1.5808e-05
+    },
+    {
+      "index": 85,
+      "operation": "Reshape",
+      "name": "/model/enc/df_fc_emb/df_fc_emb.0/Reshape",
+      "diagnostic_ms_per_hop": 1.5802e-05
+    },
+    {
+      "index": 347,
+      "operation": "Unsqueeze",
+      "name": "/model/df_op/Unsqueeze_2",
+      "diagnostic_ms_per_hop": 1.58e-05
+    },
+    {
+      "index": 184,
+      "operation": "Squeeze",
+      "name": "/model/erb_dec/erb_fc_emb/erb_fc_emb.0/Squeeze",
+      "diagnostic_ms_per_hop": 1.5602e-05
+    },
+    {
+      "index": 344,
+      "operation": "Unsqueeze",
+      "name": "/model/df_op/Unsqueeze",
+      "diagnostic_ms_per_hop": 1.5402e-05
+    },
+    {
+      "index": 126,
+      "operation": "Reshape",
+      "name": "/model/enc/emb_gru/linear_out/linear_out.0/Reshape",
+      "diagnostic_ms_per_hop": 1.54e-05
+    },
+    {
+      "index": 273,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_skip/Reshape_1",
+      "diagnostic_ms_per_hop": 1.54e-05
+    },
+    {
+      "index": 21,
+      "operation": "Reshape",
+      "name": "/model/spec_norm/Reshape",
+      "diagnostic_ms_per_hop": 1.5199999999999998e-05
+    },
+    {
+      "index": 89,
+      "operation": "Reshape",
+      "name": "/model/enc/df_fc_emb/df_fc_emb.0/Reshape_1",
+      "diagnostic_ms_per_hop": 1.5006e-05
+    },
+    {
+      "index": 32,
+      "operation": "Unsqueeze",
+      "name": "/model/spec_norm/Unsqueeze_1",
+      "diagnostic_ms_per_hop": 1.4804000000000001e-05
+    },
+    {
+      "index": 292,
+      "operation": "Reshape",
+      "name": "/model/df_dec/df_out/df_out.0/Reshape",
+      "diagnostic_ms_per_hop": 1.4599999999999999e-05
+    },
+    {
+      "index": 284,
+      "operation": "Slice",
+      "name": "/model/df_dec/df_convp/df_convp.1/Slice",
+      "diagnostic_ms_per_hop": 1.3402e-05
+    }
+  ]
+}

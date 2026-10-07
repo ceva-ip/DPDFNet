@@ -1,0 +1,1463 @@
+{
+  "fingerprint": "16c355555c5cea89aea051dad066fc57f33b4c9019a7c272676954a0f0049358",
+  "provenance": {
+    "size": 8,
+    "variant": "graph_gru_approx",
+    "candidate_declared_approximate": true,
+    "protocol": {
+      "sample_rate": 48000,
+      "alignment_delay_samples": 2400,
+      "config": [
+        4,
+        8,
+        7
+      ],
+      "streaming": "One state reset per file; continuous recurrent state through causal STFT and flush hops; no chunk resets",
+      "si_snr_48k_db": "Mean-centered SI-SNR on native 48 kHz aligned waveforms",
+      "sigmos": "Official cached Microsoft SIGMOS v1, seven MOS dimensions, unmodified 48 kHz PCM",
+      "pesq_wb_16k": "PESQ wideband explicitly resampled from 48 kHz to 16 kHz with scipy.signal.resample_poly(1,3); not a 48 kHz PESQ metric",
+      "stoi": "pystoi.stoi(clean, enhanced, 48000), standard STOI; implementation internally resamples to 10 kHz",
+      "low_level": "Cached -50 dBFS clean RMS fixtures; identical gain on speech and mixture; raw scores and a separate common inverse-gain score after enhancement",
+      "long_noise": "Three cached 120-second speech-free noise streams; attenuation/amplification/clipping/state metrics, no referenced speech-quality metrics",
+      "aggregation": "Unweighted per-clip means and paired candidate-minus-baseline deltas; missing metrics stay null and report coverage",
+      "parallelism": "Independent files in worker processes; one thread per native model, ORT session, and math runtime; not a latency benchmark"
+    },
+    "builds": {
+      "baseline": {
+        "build": "/bench/build/oct7_8_combo_asm_norm",
+        "source": "/bench/scratch/oct7/8/combo_asm_norm",
+        "source_manifest": {
+          "CMakeLists.txt": "d2f40b6fc8b198d8e587eb5f7d49d76a5f2de2370f9c1a8a2d1a450e6e0f532b",
+          "affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+          "avx2.c": "bc698c0ab099d87ab1abd5a6d237f69c78dbe3fa7f1454f878ab4b86d98fcfb9",
+          "contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+          "dpdf_dprnn.c": "db9338a3993e6dd0a2700a500f42e35b96f6aa1730a85958c50e68d2e91b9e99",
+          "dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+          "extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+          "extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+          "extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+          "fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+          "full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+          "full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+          "full_ops.c": "ff85a03c3880d6d2092d32c5d3772d3b352c23a1effffa7d93006947d60152e8",
+          "full_ops.h": "189466c8ff4794283d81961933ad3505aebecc0a1565320ccbde1df6bdce1438",
+          "generated_model.c": "3a279859f3e0c8727cb8120986f84fef3240e528c1c9b2ff4d90588b58da288a",
+          "int8.c": "d28028618d67f435dbfa6e069395b843434294e6b6fae0b8cd4be24bb29ce437",
+          "int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+          "internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+          "layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+          "memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+          "native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+          "qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6"
+        },
+        "library_sha256": "5398d9cb8d3412cee7e8e6e5b5bd4b941bd7bf4ebd59ff53564da31786dccdb5",
+        "cmake_cache_sha256": "87242fdcdd7f1987b652707d150d76f3bc2ba19f04d00ac36fcd0dd2444e088c"
+      },
+      "candidate": {
+        "build": "/bench/build/oct7b_8_graph_gru_approx",
+        "source": "/bench/scratch/oct7b/8/graph_gru_approx",
+        "source_manifest": {
+          "CMakeLists.txt": "5b7269e7124ff0c34fba6fb9f00ff40ebcf178b09afb8962aa42ea3a954a8df0",
+          "affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+          "avx2.c": "fb7a7a0fbfc4279226d167f33dd9f3843c2acd05394f9719b7f769c98ba3e411",
+          "contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+          "dpdf_dprnn.c": "db9338a3993e6dd0a2700a500f42e35b96f6aa1730a85958c50e68d2e91b9e99",
+          "dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+          "extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+          "extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+          "extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+          "fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+          "full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+          "full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+          "full_ops.c": "526dbd9cf5eb96e8a951b75c8f0f1d5e851a73c55db45e8bb59cfe49e09890a5",
+          "full_ops.h": "6f24080c403d2ba10ef15a92f58417f731ca40af8ece18e3a4e10af20a1e7de4",
+          "generated_gru_contract.c": "1ba166996e265fef7a7ab08611d712d1aa587a5325429b890cb814d4051bfcc7",
+          "generated_model.c": "d863f432ce941579bd39e882d7fcba9ccc9a2ac3dacfa920672ead9ae00bd76b",
+          "int8.c": "d28028618d67f435dbfa6e069395b843434294e6b6fae0b8cd4be24bb29ce437",
+          "int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+          "internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+          "layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+          "memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+          "native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+          "qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6"
+        },
+        "library_sha256": "c397544840c6af2e91ca59806079da62f13e52e0805909fe732a4424fc68a02f",
+        "cmake_cache_sha256": "6fe9b54b7e960291f5fd854d37865af435eb61d19214eeabd14fd5d6c4563ba4"
+      }
+    },
+    "model_sha256": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631",
+    "weights_sha256": "5a5bb67a8619090c54dc2793536fe813fe38123b236d445f3433aafe3075529d",
+    "oct7_audio_report_sha256": "cc32ee5f859490223d197841eb3efb6ca1bb865ee88f728640c6900c0b9f38bb",
+    "artifact_sha256": {
+      "/bench/models/dpdfnet8_48khz_hr.onnx": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631",
+      "/bench/models/rework8/weights.f32": "5a5bb67a8619090c54dc2793536fe813fe38123b236d445f3433aafe3075529d",
+      "/bench/results/oct7_8_combo_asm_norm_audio.json": "cc32ee5f859490223d197841eb3efb6ca1bb865ee88f728640c6900c0b9f38bb",
+      "/bench/results/oct7_summary.json": "4d25396b1f51d83204e184a4bdc5c32d1d3c094de79cdeaa8a74ec53f205713b",
+      "/bench/scratch/oct7/8/combo_asm_norm/CMakeLists.txt": "d2f40b6fc8b198d8e587eb5f7d49d76a5f2de2370f9c1a8a2d1a450e6e0f532b",
+      "/bench/scratch/oct7/8/combo_asm_norm/affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+      "/bench/scratch/oct7/8/combo_asm_norm/avx2.c": "bc698c0ab099d87ab1abd5a6d237f69c78dbe3fa7f1454f878ab4b86d98fcfb9",
+      "/bench/scratch/oct7/8/combo_asm_norm/contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+      "/bench/scratch/oct7/8/combo_asm_norm/dpdf_dprnn.c": "db9338a3993e6dd0a2700a500f42e35b96f6aa1730a85958c50e68d2e91b9e99",
+      "/bench/scratch/oct7/8/combo_asm_norm/dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+      "/bench/scratch/oct7/8/combo_asm_norm/extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+      "/bench/scratch/oct7/8/combo_asm_norm/extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+      "/bench/scratch/oct7/8/combo_asm_norm/extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+      "/bench/scratch/oct7/8/combo_asm_norm/fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+      "/bench/scratch/oct7/8/combo_asm_norm/full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+      "/bench/scratch/oct7/8/combo_asm_norm/full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+      "/bench/scratch/oct7/8/combo_asm_norm/full_ops.c": "ff85a03c3880d6d2092d32c5d3772d3b352c23a1effffa7d93006947d60152e8",
+      "/bench/scratch/oct7/8/combo_asm_norm/full_ops.h": "189466c8ff4794283d81961933ad3505aebecc0a1565320ccbde1df6bdce1438",
+      "/bench/scratch/oct7/8/combo_asm_norm/generated_model.c": "3a279859f3e0c8727cb8120986f84fef3240e528c1c9b2ff4d90588b58da288a",
+      "/bench/scratch/oct7/8/combo_asm_norm/int8.c": "d28028618d67f435dbfa6e069395b843434294e6b6fae0b8cd4be24bb29ce437",
+      "/bench/scratch/oct7/8/combo_asm_norm/int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+      "/bench/scratch/oct7/8/combo_asm_norm/internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+      "/bench/scratch/oct7/8/combo_asm_norm/layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+      "/bench/scratch/oct7/8/combo_asm_norm/memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+      "/bench/scratch/oct7/8/combo_asm_norm/native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+      "/bench/scratch/oct7/8/combo_asm_norm/qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6",
+      "/bench/scratch/oct7/8/combo_asm_norm/source_manifest.json": "1f3c27b45a0056760f1f3cc7fd30d483e89f057414a91f5e7e343c271e8a8bd7",
+      "/bench/build/oct7_8_combo_asm_norm/CMakeCache.txt": "87242fdcdd7f1987b652707d150d76f3bc2ba19f04d00ac36fcd0dd2444e088c",
+      "/bench/build/oct7_8_combo_asm_norm/libdpdf_full.so": "5398d9cb8d3412cee7e8e6e5b5bd4b941bd7bf4ebd59ff53564da31786dccdb5",
+      "/bench/scratch/oct7b/8/graph_gru_approx/CMakeLists.txt": "5b7269e7124ff0c34fba6fb9f00ff40ebcf178b09afb8962aa42ea3a954a8df0",
+      "/bench/scratch/oct7b/8/graph_gru_approx/affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+      "/bench/scratch/oct7b/8/graph_gru_approx/avx2.c": "fb7a7a0fbfc4279226d167f33dd9f3843c2acd05394f9719b7f769c98ba3e411",
+      "/bench/scratch/oct7b/8/graph_gru_approx/contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+      "/bench/scratch/oct7b/8/graph_gru_approx/dpdf_dprnn.c": "db9338a3993e6dd0a2700a500f42e35b96f6aa1730a85958c50e68d2e91b9e99",
+      "/bench/scratch/oct7b/8/graph_gru_approx/dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+      "/bench/scratch/oct7b/8/graph_gru_approx/extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+      "/bench/scratch/oct7b/8/graph_gru_approx/extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+      "/bench/scratch/oct7b/8/graph_gru_approx/extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+      "/bench/scratch/oct7b/8/graph_gru_approx/fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+      "/bench/scratch/oct7b/8/graph_gru_approx/full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+      "/bench/scratch/oct7b/8/graph_gru_approx/full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+      "/bench/scratch/oct7b/8/graph_gru_approx/full_ops.c": "526dbd9cf5eb96e8a951b75c8f0f1d5e851a73c55db45e8bb59cfe49e09890a5",
+      "/bench/scratch/oct7b/8/graph_gru_approx/full_ops.h": "6f24080c403d2ba10ef15a92f58417f731ca40af8ece18e3a4e10af20a1e7de4",
+      "/bench/scratch/oct7b/8/graph_gru_approx/generated_gru_contract.c": "1ba166996e265fef7a7ab08611d712d1aa587a5325429b890cb814d4051bfcc7",
+      "/bench/scratch/oct7b/8/graph_gru_approx/generated_model.c": "d863f432ce941579bd39e882d7fcba9ccc9a2ac3dacfa920672ead9ae00bd76b",
+      "/bench/scratch/oct7b/8/graph_gru_approx/int8.c": "d28028618d67f435dbfa6e069395b843434294e6b6fae0b8cd4be24bb29ce437",
+      "/bench/scratch/oct7b/8/graph_gru_approx/int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+      "/bench/scratch/oct7b/8/graph_gru_approx/internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+      "/bench/scratch/oct7b/8/graph_gru_approx/layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+      "/bench/scratch/oct7b/8/graph_gru_approx/memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+      "/bench/scratch/oct7b/8/graph_gru_approx/native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+      "/bench/scratch/oct7b/8/graph_gru_approx/qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6",
+      "/bench/scratch/oct7b/8/graph_gru_approx/source_manifest.json": "137088a82f817b2118fc8d8365bef3e9c64871facde2ada2fcaddeda73b7e8b2",
+      "/bench/build/oct7b_8_graph_gru_approx/CMakeCache.txt": "6fe9b54b7e960291f5fd854d37865af435eb61d19214eeabd14fd5d6c4563ba4",
+      "/bench/build/oct7b_8_graph_gru_approx/libdpdf_full.so": "c397544840c6af2e91ca59806079da62f13e52e0805909fe732a4424fc68a02f",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00033.wav": "461245960e709df1f9071b892cf3773dcd17900b6f6cd6add3a208ae37a367d3",
+      "/bench/scratch/fullband/evaluation/00033.json": "ad06dba320871eb0436bce2107660801edb43a7c22c06f16f06e96d7f06a52a6",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00046.wav": "82a08171e2955c60aae7634a6d13d8903a4374041277c4fcfeec8990567a6bf1",
+      "/bench/scratch/fullband/evaluation/00046.json": "7c72540e4a2547026051cc30008b765056f49758575d8b7b790ac7dfd53d2810",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00084.wav": "4a49ac8a12f75773533441f5d3153f4be88b09bb3e474a8d0a542d6a9ed6066b",
+      "/bench/scratch/fullband/evaluation/00084.json": "e3e0d292fef019e252741f3c5d4855c7fd84d06bce6a43f7686500ffda2a2c9a",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00101.wav": "ddf15099b1174d5731a686c47a1b590966696a7b0ba01fff4bbc4cd7dfdb7aa8",
+      "/bench/scratch/fullband/evaluation/00101.json": "422b71e0b2f68e9ae90d0ac9fda27b11cea0c7becad284c363fde1f8e26b1a98",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00133.wav": "a5428b39bc9996283b3497a4567a98c90e11def0cf86ea1043f78de816f69259",
+      "/bench/scratch/fullband/evaluation/00133.json": "80d618e47b16549e05a128c9852e533707441bc6748818779be620aa43dd53e5",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00161.wav": "c479d39aa202c61a24a423e1057260c0863297c8ab40eecb61434a2bb10eb761",
+      "/bench/scratch/fullband/evaluation/00161.json": "647300bcae9429b9254275a6297e1f6f59659271bc23a5703410ad7d0d4de76a",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00174.wav": "f3afae6dceb406ef4d76644005b10b534e012355746aae813f2706f36f0123ca",
+      "/bench/scratch/fullband/evaluation/00174.json": "9e758c6214f0fdb2b4bb22a9f99e11a9e0862a763c211824670b4f7d849380c7",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00181.wav": "e31590d2feb7b1efba2b35cd664e3d7bd8fe3a706b0dfb5da5ea29f2b09f7cf5",
+      "/bench/scratch/fullband/evaluation/00181.json": "8529a1b331983c76e14bdf5e9da4754bbaa6bb681c5797162cfd3d4348257e4d",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00200.wav": "21d45f819d3b8f961efdeb8618fe83b75a24c0f670b1dc313ce429689033496c",
+      "/bench/scratch/fullband/evaluation/00200.json": "183ccdf0f2e9b5be58003f1b855beb33a8fa6516cc14cbff93b6ac5864eac626",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00206.wav": "e897489a0143f50539afb02b68e807ebd1d30ad81df8038d0b5124589a853a01",
+      "/bench/scratch/fullband/evaluation/00206.json": "655211fe1dd094831c2a0b49b72b8308c1f37feebffbf7a4cbd496cbf041b712",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00207.wav": "d10ed94e83f063fb3d600a2c3349938f25a616a0decc617ba106597bbd505d4a",
+      "/bench/scratch/fullband/evaluation/00207.json": "63fdae56126162f61c1cbbb6c273e9d1ab0cf3dbc43b4418f6ef8c9fea4623de",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00234.wav": "6ee5e51d40cd08a37ecd82181da286f05cd46f91db6c1e5632e724df3775b6c6",
+      "/bench/scratch/fullband/evaluation/00234.json": "ea649fb9a410023c5f34995dd202db236b528d0820fb5dde655d4df65c5b5bc1",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00237.wav": "680ff299fb5e78e55f819d6b69eb7a08aa8ad527fb3a84e6347d2fbdbac1ad0c",
+      "/bench/scratch/fullband/evaluation/00237.json": "c83e8805ec77470a8907d263bbd158d131b1b4ee89988a7c79b49e6ef8e6a44c",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00240.wav": "2626610597abcd8e6a0afd22c7f54421b57d6daa365c23c836f58eef08d1a420",
+      "/bench/scratch/fullband/evaluation/00240.json": "06864044355d1ddafca72aaa99fe10fe1ac77543846d98357e727e01367e8c87",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00244.wav": "7381b00824757c600d37d42ff3cfa14624f4e496d1522381bf15266577095246",
+      "/bench/scratch/fullband/evaluation/00244.json": "d6179db3b5a218100322491f15f9e3f08a49e7985ba545e3aec53d6e654fb1fb",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00271.wav": "0424ccd105df470765ca68eb1c5aa09e9893d5691f59b3469e839ff3b3887fd0",
+      "/bench/scratch/fullband/evaluation/00271.json": "180b36f8c1a632044c0c23e9990b154d96eee1da90ceb14f3bc7f9bf3edff6a9",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00290.wav": "de04e2063ccaa85fe98a81fbd6792ea3112480ca8921efc14be40200980809f1",
+      "/bench/scratch/fullband/evaluation/00290.json": "d76675d4606b2358822c78f08da43b28fa9da16d5e2185098d9f63325d3289f8",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00305.wav": "bec57c293ea5fc40711401d80e4a0c89f6b9ca135f815b4fe6eb03c0197e16ea",
+      "/bench/scratch/fullband/evaluation/00305.json": "9f8d2a0835dca2847cd18a16cde0550b247c91776d1d3d9417f3cea8ee0de87b",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00339.wav": "83d8a84c1a3e2bde35a6ffb002f9fe466c787c560903415d64bf9e03cb7cf04c",
+      "/bench/scratch/fullband/evaluation/00339.json": "f425046becc058f1be995bfce27c2820d2b22134cf9911dc5dc81176bb18c24a",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00350.wav": "69a5700e8b747ca6c8648bf0bb929b0b25e27280089f2d87e9bad539e5baea3e",
+      "/bench/scratch/fullband/evaluation/00350.json": "607461451cf82b8828a4f234329efa9c7753e9e9d482da9f2d0184dfef719b1e",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00364.wav": "b993f43003974289fa78bcb3a88da2ac5fb1f243291e310d569b4b7b345bf587",
+      "/bench/scratch/fullband/evaluation/00364.json": "e2da8f359299db7d355ed002e3238a932c202e2cbf371a24c9e471b31425efdf",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00406.wav": "10d21d39bbce72aedc19e8b3870758095497195afe94e50dd766b5dc8e74a5e1",
+      "/bench/scratch/fullband/evaluation/00406.json": "3820ab24b04b77d93683ec95664c976d34380b6197a8235d2a3be2ec659c6a16",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00410.wav": "bab02128b19fccecfd381e809157b22dfcaa52de17d948c983a3213a84c0d109",
+      "/bench/scratch/fullband/evaluation/00410.json": "3d4ec95d1e1ff7fd2498596c45b23220c37aba1df35530bcac688c46f980c98b",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00416.wav": "edbb44a1bf464fd17cd9280554c262beaf44528011b79c561a5486118ab73399",
+      "/bench/scratch/fullband/evaluation/00416.json": "344c93264c3915823da520f2296be7f005cc024054f3d491e2e4f37a0fe9e5e0",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00440.wav": "3e91372d2809a1e59af99ec092cf7420629529cc5afa00c785791eaa50325927",
+      "/bench/scratch/fullband/evaluation/00440.json": "9f4a5632a347c8f16dbd90c993529e58ac885963c850c245b0f9dbcd1dcfc17f",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00452.wav": "2cf600c7dcbddbf1448818ee28a231a0fb067b79643aabc725ed88e8987c1a4e",
+      "/bench/scratch/fullband/evaluation/00452.json": "09e4edd8616035c280ec21298f3b6acd266e79b4dfaa816276a9459544ccdbeb",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00454.wav": "a52d5a41379bee6ecd34958ed3bfb7a14eea00b1bc98ed2da7b4cf221d79344c",
+      "/bench/scratch/fullband/evaluation/00454.json": "8b7545fb96d6b2699f6499f95e90783ae053284c75b6f0f0eaf0bfc6b87bcef9",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00513.wav": "3144f1c239de00853a70dde7b3d0837e50d6e90e9f3620e4500019e9e194e456",
+      "/bench/scratch/fullband/evaluation/00513.json": "50404d77eb01427b109fa094ba7ca9be19a5ca34e9bc82dd8d87dd5862140fb1",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00514.wav": "49ab98b05a883aa8164406c09ac0bd1c8d089e2cc0c17b7fa714c0dcb8000abc",
+      "/bench/scratch/fullband/evaluation/00514.json": "43d5590f279590c482425eeb5cfa9f9422e5a3e885c9b94ed2d9445caa4e7c7f",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00517.wav": "64d25157953c643e1999d51bfad5aafdfaae96e07a18d163873bd6f15ae9e114",
+      "/bench/scratch/fullband/evaluation/00517.json": "6d0b02e6c08cf1905052e03c77c8ef61ccad36979de509aa1893b560bfc26142",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00519.wav": "598153c54f60a9cf958a96d04c895e4cedb977e15a9b49ee4b63fcc22493b12d",
+      "/bench/scratch/fullband/evaluation/00519.json": "e336f37cdc4d8bfff9fb76b93366a8f24f6098f1ba527322f1268109047b79f5",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00523.wav": "2e2f408751cb136b364f2488c8f9dd742e50fda9841eb379f71831e2b0728929",
+      "/bench/scratch/fullband/evaluation/00523.json": "04a6b7df26f9e39b0adf028d96193309fddbc9cfba64ec76c71d176ae51aed6e",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00525.wav": "8240fb4a1ea87effa6db65432f564f269bc12541ed090dc45f37d7b20c86ce66",
+      "/bench/scratch/fullband/evaluation/00525.json": "2b89cb9ae6218678a63d736d051c4c70df248e9b46502167978cdb25695d6dec",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00555.wav": "5dca51168037fdc1ad83d212d9255033e673236045a1ec7810b0c5a588c3126f",
+      "/bench/scratch/fullband/evaluation/00555.json": "98366ea224919827c340ea46f6e033f526eb8d7506801939d06518b97c8bdc51",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00568.wav": "fd60fb7861f5348ac561e720ec14525f5499fb847279775f05bf16d88cea4a71",
+      "/bench/scratch/fullband/evaluation/00568.json": "0152dcf96af4f5dad3f241f88c52558dbe0c5f49a1d09dfd8dbaccf8eb3b784b",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00603.wav": "71444631c0eaa230ee6da372647b57cba48ee8bed338854bec9c127517d18cf3",
+      "/bench/scratch/fullband/evaluation/00603.json": "8bfad453c26e5036141940a9b4fd0894132503c8dee257817de3fe62bbec7506",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00628.wav": "b60d263413064101dcee57b442aa6648e3a7747f3d4937c77b569e111e359da0",
+      "/bench/scratch/fullband/evaluation/00628.json": "2259e1d9b47f4ac7e19bc90d7fe6347dfdf878ea6e167e707d2ee9ded1e4d830",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00647.wav": "30c7fbe722799a844f9289e3af3890bde2e8cc138832f2950616d2186b5e081b",
+      "/bench/scratch/fullband/evaluation/00647.json": "f9d2fbb09fef5ecf5d664a4d5a5694dffff245b7bc493c837a8f3a1c3c939368",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00695.wav": "f5172e2f8d0a16fc1db3e191a318812818bbab8b6294ab7c3ffc7e55d4562bb1",
+      "/bench/scratch/fullband/evaluation/00695.json": "489107c889ac908a1f9aa7ff0334b4dbb230ec176987b5775d0c877ba6e8c915",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00725.wav": "07074514c39c76e3322f2f9d606752606f5d9c01b98a8bff0f5b3a71c949c4a1",
+      "/bench/scratch/fullband/evaluation/00725.json": "60d39d18c45015e9f80da12c17c186df9b18c27f4af1d8448ab8bb00a083dc4a",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00729.wav": "6ef08b9f5948dab23eb57605a787a9a616e9fee081436bcb4cdeef7fa1a5a6c7",
+      "/bench/scratch/fullband/evaluation/00729.json": "6e236acfd89af6278c41a624c02baaef66cd6d5bc2dd14a16f317da4604c249d",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00749.wav": "b54953b65a2a3c71dbcb716cda8510ff11cbc7cbc1cfa8bee56c9cecea0667cd",
+      "/bench/scratch/fullband/evaluation/00749.json": "a84cfa9c2c0aaa20e0ce2a86dcfcc59b0ddbd65be557c4d6eb938f4e8cef9a37",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00766.wav": "9dc70ead07a4acd21f61d9d6970f9878422c13d1a55b81c8db9a495b2ec17265",
+      "/bench/scratch/fullband/evaluation/00766.json": "a2456ee06ecdce697f597e099a9ec48fed9f3d6fd287df2cb3a9e4307dbafa5b",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00794.wav": "4b466c8f8806d5ff431ff8e6ca6564dc6f9dd21068132a1aee6faa820b681101",
+      "/bench/scratch/fullband/evaluation/00794.json": "0288de6a9a9c08045e13fb71c77bb3e850a4c4e457e0f6e708cbb296b0a94b3b",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00829.wav": "88e3a7ec3dac5078187193a80e4ef8b8b753d4d18734530baf868b2c9c8d0948",
+      "/bench/scratch/fullband/evaluation/00829.json": "b684f3900f8dfdbaf58830358b00d6fee600ef1e7655bcb064dff856ad6a06ae",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00843.wav": "d869d8596225f2bb73b66e362de843deeea59d633cb6bd27ae5d17801688426e",
+      "/bench/scratch/fullband/evaluation/00843.json": "73ee86a2d2a3f8893b79bb5e7ac5ff7541219cb033c2cefd4b15d165cc66a125",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00849.wav": "2528710f25240103929adff38a8338352d6e5035e16b2f42e644adba6e93ebcb",
+      "/bench/scratch/fullband/evaluation/00849.json": "40e3042ce1e83099ac62855366c2e4d18139b6516a20da9ce2b35e237810af34",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00864.wav": "4090c687bb21d04d4200bc1505cb22a0732bd70478084c3e597405834d342e9b",
+      "/bench/scratch/fullband/evaluation/00864.json": "1a40642bc3899c7cb677d76636dbd1b2368ef348aba436835f0faf7e388a02d7",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00871.wav": "497dd5bf9b90a26d1b8ce9eb62f8666426919e49c87971ceba884cf670043b90",
+      "/bench/scratch/fullband/evaluation/00871.json": "4f56dae53c79a604d619e30b8627db479b6e85be05a098564ba4f995b36a0c4a",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00878.wav": "02cceab0b2722b6f79db7cf9b509814dac976eff18fb7f46dc2b1aed16a62c6a",
+      "/bench/scratch/fullband/evaluation/00878.json": "a37219588bd755daceb73b6a0f76490e2fb8a7bb4f543278e11b7fdd9b765990",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00416_5.6dB.wav": "301040c21d6e5877762a2b5b3d36a65fd547ce41490cb9b32d3f533a9f412695",
+      "/bench/scratch/fullband/robustness/audio/low_00416/clean.wav": "06b9876db9be54fd4690baa5659fdcb517b63261965d3e353ae172fd997e4309",
+      "/bench/scratch/fullband/robustness/low_00416.json": "9d73c3ef98204372082748c0a1e4832e738acc8221c5c2c94d71b5aba862c741",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00084_10.1dB.wav": "52be4eee2e5012812b1e7c72984d63edafbd2b9efc3ad362ca43684eac6bfea1",
+      "/bench/scratch/fullband/robustness/audio/low_00084/clean.wav": "3e92fbf4992dd314c85a8e975f15f78d3e2a05bb29506a5d14e466529fba8a10",
+      "/bench/scratch/fullband/robustness/low_00084.json": "2196b530847e7f376d9edf78d2f2c437db28b02b07a20608c828f090af6410d1",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00695_14.5dB.wav": "7b6093e6a6559218de0cf269dcd861eb499c855953a286aaaa958c1795dbf56b",
+      "/bench/scratch/fullband/robustness/audio/low_00695/clean.wav": "eeed80ff44c882040df0044dee3a8c7433a4335adf9e48aa31019662a4829a2b",
+      "/bench/scratch/fullband/robustness/low_00695.json": "201b7c7a5d5e69a0e7bf1f05c7e477d517a3cf3e5537254db6c306dd2b1a0a46",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00350_12.8dB.wav": "c18b955ed6a98b371d7ff0925b628210c7ac51318b189bef8304e3211720191b",
+      "/bench/scratch/fullband/robustness/audio/low_00350/clean.wav": "287d4e4fe46f82bb001ea54d77c66e94460d75e431e291de312dac410e119f84",
+      "/bench/scratch/fullband/robustness/low_00350.json": "84ff3afed9986142529e9edabad1fdf8453ac94ee784cf9aa9118900ae12e02a",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00864_10.2dB.wav": "f2441b21080bc413f4de84ce9b237695dc8ce542f4ec4ca1dfe0c45b5c2a564c",
+      "/bench/scratch/fullband/robustness/audio/low_00864/clean.wav": "b43a7afc0c7e8cc2629e3905bd170eb498a276552d59c387ef4bf2a5f584fe54",
+      "/bench/scratch/fullband/robustness/low_00864.json": "22b18dc8daaecc378c92971f65a56706fcfbd11fb805c35f3f9687723d630204",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00525_9.2dB.wav": "9d3f505c4e94703c36523086b6b9fd22060e761fe8be4c7ec42d050033ff3e7d",
+      "/bench/scratch/fullband/robustness/audio/low_00525/clean.wav": "dd342b10532a204303b35fbd2ff212bf7a3cdc3132400d25be12c5bfe7997500",
+      "/bench/scratch/fullband/robustness/low_00525.json": "671e7c8f874993fd953dd1f478bb1e32d36a99707a375e8ba073cfed982f2491",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00568_12.2dB.wav": "1995300bae71ea8893911e5c5c8ffe89230d3b981bf10addc526e6db248083d4",
+      "/bench/scratch/fullband/robustness/audio/low_00568/clean.wav": "7862c1e0ea299634896ad7c1e854375f157e22578b03007da155bfd2d148e68a",
+      "/bench/scratch/fullband/robustness/low_00568.json": "7e86f61907e362e13be3851faac13003967eed41c3a03f5e6632b8dd2ed80306",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00514_15.6dB.wav": "143cd3b037dd8517869c8f96729368e69917afd8d00dc2fad28341ade487bb4c",
+      "/bench/scratch/fullband/robustness/audio/low_00514/clean.wav": "6eaaf6d31fd034c05e134417213a52a900b38f91e8a4e622e003694d2cf17175",
+      "/bench/scratch/fullband/robustness/low_00514.json": "3e1ad713f94721f4b6d7bf10e276b4e7eeb87f1e6e1a621dcce779777140fd3f",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00133_-0.7dB.wav": "f0d97dc52ce8a95be60203e0921d373f3e498ec832439be69863e23731ae427c",
+      "/bench/scratch/fullband/robustness/audio/low_00133/clean.wav": "f8d2408338d68825530e5aac812797a08c4ef90de1575dff11285ba94ef5050d",
+      "/bench/scratch/fullband/robustness/low_00133.json": "eec3523257fcc12c7b275f6ef962a488a8e8de14a3a316e75831c9f4d3d9692d",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00161_15.6dB.wav": "c2ad75a1cd9ffcee4f9af3b5b7388fc35022a608a5d84c2215e6b36125e60ae6",
+      "/bench/scratch/fullband/robustness/audio/low_00161/clean.wav": "5aca7c9f8dddf01e69942b14a5b81a84b2defecf2e5f52422465b43862e3c631",
+      "/bench/scratch/fullband/robustness/low_00161.json": "eb627864d40605d8a5c1e2cdc0d1e8ea0ff619b409361fc0a4cc872e5a305f13",
+      "/bench/scratch/fullband/robustness/audio/clean_00033/clean.wav": "90cff249b18b17d1904f87392d94c001b5368b2ed29b7c65f2536b54685ae934",
+      "/bench/scratch/fullband/robustness/clean_00033.json": "d198391f71e7d766a70ce61a959a589b7fef447e2c6d09db1cf458cc007cb8e0",
+      "/bench/scratch/fullband/robustness/audio/clean_00133/clean.wav": "b7adeddbfac51f79595ef94f21513303dd5c3c616a157966171e10ec8aa8ac94",
+      "/bench/scratch/fullband/robustness/clean_00133.json": "d29b5c43afe73c1c001b62ad77509b563f8af604d9e4b1ced739b53846a6b27c",
+      "/bench/scratch/fullband/evaluation/manifest.json": "5a94424c71f346b29324239bf39c857dbbb32480c6ce42f2f49f744c5fa94f06",
+      "/bench/scratch/fullband/subset_selection.json": "9c35eff12531e0f4e3bb81247964b0761a612d7b61ef46a0c636f184fbb258c2",
+      "/bench/scratch/fullband/robustness/manifest.json": "32315737b134fd4e525fa323bc1b48e5961d37bc9cfaa9a6c6075d50d098a276",
+      "/bench/scratch/fullband/long_noise/manifest.json": "23950e50d45d2cbfcd5487c6e2489e361c365b4f8c18d43f3ee9c63dcda2a34a",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00033_8.8dB.wav": "3d1e6718053f22b9fc864df6509bf525c3047059bc7c9293c702a7ba08dbe3af",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00046_10.3dB.wav": "fa5a46ab245a8509fd1178c4ed30967a46cdeb955073b354b1870393bf250ea1",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00101_0.4dB.wav": "1dad82fe4872e08434470df63f5e0a5cecfd890d6cb3198422bebc6dfa401003",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00174_15.9dB.wav": "d64c5bf1f26886bb3599586342edab4e2dd333828987ea1f4164ec539aa00f7f",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00181_-0.1dB.wav": "fc847f96fb163cce92b475c59d8c763d3e494a99f00438a4700077d35983aca6",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00200_9.1dB.wav": "df72bf7e8c593fa29100677edc8d5409d6ae95f06e41d6fe870e205fd88409e1",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00206_-0.6dB.wav": "add267cb61e5319eb0abdaed58254124dbc7262086522f864f1e2fa5c3e2b64d",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00207_5.2dB.wav": "695ce4dd38ee55b2cccb2b622c4992de583e6c82fa47a07afdf4690db23808cc",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00234_0.2dB.wav": "f943faeb6111c2d30002c843fbd766c7d25f50fa923a5181e63e8ab49f2a8d63",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00237_0.5dB.wav": "d490fe3e50bd9fa5c0fc55d5dda7ee888122d68cbfcc2552dfd59fc46a74d718",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00240_13.6dB.wav": "57fdca48f75fa58a4a32a7ac8f20238765a76703cabe17388354499a4681a0d1",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00244_12.7dB.wav": "2fa4e211f2e89edab1632798e309871c21c7aef3a7c2db4233e18bea76b973fc",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00271_1.7dB.wav": "1401566d93f2f8b782003723b3fc19f27249cd8b1c1d6a226735dff4b301e627",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00290_-1.4dB.wav": "1cdcb7213bdc31eac3beeb79ab4a36da6bf5abbf0a221f516b4c9106fdb5dfa2",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00305_3.6dB.wav": "1e705dd4bccc6bfb135cd2be567313d2454ab5648a09dd1219276fc8f1e6ec96",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00339_0.9dB.wav": "4a8726d1a23a9ec0ebd894431137edcfe460e855e6244eb347d694f2ad89bdd0",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00364_4.6dB.wav": "754361bbedc891ffffcd5c2c03a4deb1b888dae108791aa47bb59dcf70dfd4cf",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00406_5.4dB.wav": "2138fbe62d1e007b417b9ea6ba8b8f886f62d6dd109cd2633453b2a129e86c3c",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00410_3.2dB.wav": "c39c827e2be449da0f4aed4538c540f9593b34c7a9c6ad68b737621e347e98ff",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00440_10.8dB.wav": "c41d945fa6fdc3e6d0d2d7a17c5c27c7607550dfd3fbe4920db530de5956d487",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00452_1.0dB.wav": "98b7536257510470002973ed4b48eb20deec4daf48a86b33ef2230671193cd04",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00454_3.6dB.wav": "69c0ae3bc26dfcc38080a0fd0e2a43f2f62d0e5f7a7ae0116df41892b610eb33",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00513_11.2dB.wav": "a1b77d2a3c935805c9ee47642f3d6a5a9f1dcefd6ad21a7c86b50d24fac9f797",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00517_3.0dB.wav": "b80fc7c87467943005730d97e67f56ca26bed205a231676bfd34482268e7500e",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00519_8.6dB.wav": "aa111df3602935be311553162037b3c47c0f132e466e1dbb89d963a1fb40b587",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00523_6.3dB.wav": "24d79c6a99545876a080eaf347c073c02f3a07b875accc079baf0494122d9a24",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00555_13.4dB.wav": "42c0ded0dc3330b9eaa416b0a1b5767ab195c9ac5507e9f4839c11c30f855ff4",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00603_6.7dB.wav": "f8010496a59d98978f29d716a384e361703c0c30fd3076a0b0a017f0bd996cdd",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00628_5.0dB.wav": "83c7e35e8778aab67d970d6b6e7a85fcd41ea654dd017c5a4ed51df9e82f96b8",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00647_11.9dB.wav": "9b478d992b3418971c19a0dbd9703b3ab671bd828d0d17ca4a34027dac1fb9ef",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00725_13.5dB.wav": "12da2372eec28e4a87bdd70b1baafcc732fcd06ff4b54dffffa681befa01818e",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00729_8.8dB.wav": "c0941f8c0e8a058f9b9b9cdf9c09ad0440b56503c6d6192e29839ff169491240",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00749_-2.1dB.wav": "def4ddb3d74db05b046732fd8cb06561359c1c0cae587dd55422b5ea2844e598",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00766_3.2dB.wav": "9bc83546f69dcc9770a818d55599e01cfe6f9dd8fdb2f317e7295c24222e1f5c",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00794_16.7dB.wav": "701c8e1dc7836ec40b24fecf0d731d8846ff4dc711aef3a3b27c27a42a0ea6f2",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00829_16.3dB.wav": "d65ec09d5fcb67299965b4743130344da7cd8017e8802e9df3c8a5af05d14b79",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00843_-2.0dB.wav": "94d2267b40d879119d391a3a6912e1d8d4b787b5bd69d88fce38863742767177",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00849_1.8dB.wav": "17b2bff64d313345b3eec1499ee80b20e5eaca54ab7453eea0360ca9bc939988",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00871_8.4dB.wav": "36175c652745160fe632c051c67ff79d5724ad4e5e7b56a0926fefb0531fab7e",
+      "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00878_14.8dB.wav": "5285a79f21a2804fa9e24949102a7ff713c559ea63c08783264957cc39e0309c",
+      "/bench/scratch/fullband/robustness/audio/low_00416/input.wav": "9498c3bdff3a335811e4b24c3c15c01703b63aa94387194ec78f5135b8ae14c3",
+      "/bench/scratch/fullband/robustness/audio/low_00084/input.wav": "d13a22f31ed6f2549f5024714d33930996b994131440aed3f2e895eda5fa4904",
+      "/bench/scratch/fullband/robustness/audio/low_00695/input.wav": "cdfde3faaa9d697ee54b16993979a576f0dd5f35c4f5efe58b61bc49529568b4",
+      "/bench/scratch/fullband/robustness/audio/low_00350/input.wav": "6384578ed6d207dd69426c26d8bef52c84b56bafd30fc92ae54f44381ac1a742",
+      "/bench/scratch/fullband/robustness/audio/low_00864/input.wav": "2afa901f82109f750d698d5b873918cc461cf08732fb773195b3247fb663d583",
+      "/bench/scratch/fullband/robustness/audio/low_00525/input.wav": "233811bc04a52d1ddaa9579ae9151fe31257e707dc42bbada920a5fe4f223e2a",
+      "/bench/scratch/fullband/robustness/audio/low_00568/input.wav": "33a95a31ac3a64d3240df1ce6e759aecf66c8eedc70ae8f75248e847bbf2a1a3",
+      "/bench/scratch/fullband/robustness/audio/low_00514/input.wav": "bb4c95612056566589ad3dc433e0bf8b3bef4488ce2f8907ab7c738692c72b2a",
+      "/bench/scratch/fullband/robustness/audio/low_00133/input.wav": "bb6687429fd248697a9b73a2dd6001c0168ced404091694048edb292300e75b6",
+      "/bench/scratch/fullband/robustness/audio/low_00161/input.wav": "753e780056c7c02f7b579c6fa9e0bbeb501cb6c5f8f4786565f304d1ec149902",
+      "/bench/scratch/fullband/robustness/audio/clean_00033/input.wav": "90cff249b18b17d1904f87392d94c001b5368b2ed29b7c65f2536b54685ae934",
+      "/bench/scratch/fullband/robustness/audio/clean_00133/input.wav": "b7adeddbfac51f79595ef94f21513303dd5c3c616a157966171e10ec8aa8ac94",
+      "/bench/scratch/fullband/long_noise/white.wav": "8dafd3587d1b78797bf8a98e81a7625bf1856e881e022d0389a1424ab6be8a78",
+      "/bench/scratch/fullband/long_noise/pink.wav": "70da26647cbc2505add6338eb883fbafa6914bcb5e196459e3f6d40b44c9971d",
+      "/bench/scratch/fullband/long_noise/mechanical.wav": "0bec0aa99cd4093c58c0da9f14cd170ca6516dbb6eb335eabd4336dae2286ecd",
+      "/bench/scratch/fullband/sigmos.py": "e6883ee45d29b3f7e81b393e5e33aa1db9e7f18137e0bab8fdd49f1f2447ca27",
+      "/bench/scratch/fullband/model-sigmos_1697718653_41d092e8-epo-200.onnx": "f939dcc1945055a435565b4369e27dafd0f87df3cea4e2ff6eb81225e52cc53b",
+      "/bench/native/experiments/oct7b_quality.py": "46e51b46e26d2099370ae13fa3566fbc2077e337d252e221088b82af9a628cde",
+      "/bench/native/experiments/fullband_quality.py": "9adbe4ff4c0377a4c9e9c6eb9516953df0e44ad1a2cc13f54dc7639ffc9bf5c3",
+      "/bench/native/experiments/robustness_quality.py": "af3e4a1c781774980be0003d4c4ea55b60eac0975338f440fa2a5366e8faa246",
+      "/bench/native/experiments/long_noise_quality.py": "bd266eb6df25f8f9dc3ebfb8ad3c786a1e29422ee6e3c4c8535e9ca23207ecea",
+      "/bench/native/experiments/oct7b_optimization.py": "4b0c48c5a6e10a4ec2ff0a41d84a2855a0b2158358a84cbcd1ca1e5a5ac97518",
+      "/bench/benchmark.py": "d3690cd08742349cc7b6126eeb74a0cfd3d7c85f257edd7b3b08cb9d3887e814",
+      "/bench/native/probe.py": "00cefa861451aba46ca8e8b3504218a52d6401939a03bfa5c9562c1d47ea9dd1",
+      "/bench/native/streaming_runner.py": "066937656c0644f60ca3c2422641aeb212bb4e75922b3b78196fa1a4382c0273",
+      "/bench/native/extended_probe.py": "d2f0196ee54d306d70eaa535fedcecde0a2efa96773e83dab187962d817556c5",
+      "/bench/native/full_probe.py": "92942b09d4af7a796bbc9bf2e2ca8b69151c3d4775193819fddf7826eb994a31"
+    },
+    "catalog_sha256": "cddefb67bb647e1a4c0a3bd54241360138b62263fde793f4efcdc18ed95f891e",
+    "catalog_cases": 65,
+    "python": {
+      "version": "3.11.16",
+      "executable": "/usr/local/bin/python",
+      "sha256": "22e747b1e8a04719d4af2094133a0479b33728d2e4d03ab01539064dc6f45cfb"
+    },
+    "packages": {
+      "numpy": "2.4.6",
+      "scipy": "1.17.1",
+      "soundfile": "0.13.1",
+      "onnxruntime": "1.27.0",
+      "pesq": "0.0.4",
+      "pystoi": "0.4.1"
+    },
+    "selection": "Fixed six IDs first (one per speaker), then deterministic speaker-balanced SHA256 order within the original 50; selected before candidate scoring"
+  },
+  "passed": true,
+  "errors": [],
+  "request": {
+    "mixture_limit": 6,
+    "workers": 4,
+    "robustness": false,
+    "long_noise": false,
+    "cases": [
+      "mixture_00033",
+      "mixture_00046",
+      "mixture_00084",
+      "mixture_00133",
+      "mixture_00200",
+      "mixture_00364"
+    ]
+  },
+  "completed_cases": 6,
+  "full_50_mixture_suite_completed": false,
+  "full_65_fixture_suite_completed": false,
+  "all_completed_pcm_bit_identical": false,
+  "summary": {
+    "mixture": {
+      "clips": 6,
+      "pcm_bit_identical_clips": 0,
+      "metrics": {
+        "preservation.active_frames_suppressed_over_20db_fraction": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 0.006514554533142374,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 0.006514554533142374,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": 0.0,
+          "paired_min_delta": 0.0,
+          "paired_min_delta_case": "mixture_00033",
+          "paired_max_delta": 0.0,
+          "paired_max_delta_case": "mixture_00033"
+        },
+        "preservation.ordinary_snr_vs_clean_db": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 16.75962318593424,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 16.760052881207955,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": 0.0004296952737095812,
+          "paired_min_delta": -0.0007164245810997727,
+          "paired_min_delta_case": "mixture_00046",
+          "paired_max_delta": 0.002431800004714546,
+          "paired_max_delta_case": "mixture_00364"
+        },
+        "preservation.output_peak_dbfs": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": -15.637942190250271,
+          "baseline_scored_clips": 6,
+          "candidate_mean": -15.638063175698976,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": -0.0001209854487077185,
+          "paired_min_delta": -0.00394938696755176,
+          "paired_min_delta_case": "mixture_00046",
+          "paired_max_delta": 0.0046684984030687104,
+          "paired_max_delta_case": "mixture_00200"
+        },
+        "preservation.output_rms_dbfs": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": -36.49997054217237,
+          "baseline_scored_clips": 6,
+          "candidate_mean": -36.49996700636294,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": 3.53580943901477e-06,
+          "paired_min_delta": -0.00043895328141729806,
+          "paired_min_delta_case": "mixture_00046",
+          "paired_max_delta": 0.00041794692783270193,
+          "paired_max_delta_case": "mixture_00084"
+        },
+        "preservation.projection_gain": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 0.9737083005086862,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 0.9737087710969502,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": 4.70588264004738e-07,
+          "paired_min_delta": -5.11294400751261e-05,
+          "paired_min_delta_case": "mixture_00046",
+          "paired_max_delta": 4.7835472049451155e-05,
+          "paired_max_delta_case": "mixture_00084"
+        },
+        "preservation.projection_gain_db": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": -0.23522112224428784,
+          "baseline_scored_clips": 6,
+          "candidate_mean": -0.2352137025564556,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": 7.419687832277075e-06,
+          "paired_min_delta": -0.0004499082059427617,
+          "paired_min_delta_case": "mixture_00046",
+          "paired_max_delta": 0.0004245659348626474,
+          "paired_max_delta_case": "mixture_00084"
+        },
+        "preservation.rms_gain_vs_clean_db": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": -0.1140204351103525,
+          "baseline_scored_clips": 6,
+          "candidate_mean": -0.11401689930091348,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": 3.53580943901477e-06,
+          "paired_min_delta": -0.00043895328141729806,
+          "paired_min_delta_case": "mixture_00046",
+          "paired_max_delta": 0.00041794692783270193,
+          "paired_max_delta_case": "mixture_00084"
+        },
+        "raw.MOS_COL": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 3.7202911376953125,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 3.7179259061813354,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": -0.0023652315139770508,
+          "paired_min_delta": -0.013651371002197266,
+          "paired_min_delta_case": "mixture_00033",
+          "paired_max_delta": 0.0065228939056396484,
+          "paired_max_delta_case": "mixture_00200"
+        },
+        "raw.MOS_DISC": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 3.8600248098373413,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 3.8594651222229004,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": -0.000559687614440918,
+          "paired_min_delta": -0.01662731170654297,
+          "paired_min_delta_case": "mixture_00200",
+          "paired_max_delta": 0.017934560775756836,
+          "paired_max_delta_case": "mixture_00133"
+        },
+        "raw.MOS_LOUD": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 3.6478270292282104,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 3.6438423792521157,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": -0.0039846499760945635,
+          "paired_min_delta": -0.022059202194213867,
+          "paired_min_delta_case": "mixture_00200",
+          "paired_max_delta": 0.0049283504486083984,
+          "paired_max_delta_case": "mixture_00046"
+        },
+        "raw.MOS_NOISE": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 4.6364976565043134,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 4.632114251454671,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": -0.004383405049641927,
+          "paired_min_delta": -0.01696300506591797,
+          "paired_min_delta_case": "mixture_00200",
+          "paired_max_delta": 0.004894733428955078,
+          "paired_max_delta_case": "mixture_00133"
+        },
+        "raw.MOS_OVRL": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 3.3566293319066367,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 3.355642795562744,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": -0.0009865363438924153,
+          "paired_min_delta": -0.011535167694091797,
+          "paired_min_delta_case": "mixture_00033",
+          "paired_max_delta": 0.013454914093017578,
+          "paired_max_delta_case": "mixture_00133"
+        },
+        "raw.MOS_REVERB": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 4.720465898513794,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 4.718954801559448,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": -0.0015110969543457031,
+          "paired_min_delta": -0.007099151611328125,
+          "paired_min_delta_case": "mixture_00200",
+          "paired_max_delta": 0.004675388336181641,
+          "paired_max_delta_case": "mixture_00033"
+        },
+        "raw.MOS_SIG": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 3.8450621366500854,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 3.8440802494684854,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": -0.0009818871815999348,
+          "paired_min_delta": -0.016371726989746094,
+          "paired_min_delta_case": "mixture_00033",
+          "paired_max_delta": 0.008931636810302734,
+          "paired_max_delta_case": "mixture_00133"
+        },
+        "raw.pesq_wb_16k": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 2.5209930737813315,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 2.521526058514913,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": 0.000532984733581543,
+          "paired_min_delta": -8.177757263183594e-05,
+          "paired_min_delta_case": "mixture_00133",
+          "paired_max_delta": 0.0015218257904052734,
+          "paired_max_delta_case": "mixture_00200"
+        },
+        "raw.si_snr_48k_db": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 16.644580357496725,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 16.644987457155946,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": 0.0004070996592246227,
+          "paired_min_delta": -0.0007683179055746336,
+          "paired_min_delta_case": "mixture_00046",
+          "paired_max_delta": 0.002473359614427295,
+          "paired_max_delta_case": "mixture_00364"
+        },
+        "raw.stoi": {
+          "paired_clips": 6,
+          "missing_paired_clips": 0,
+          "baseline_mean": 0.9404491749950535,
+          "baseline_scored_clips": 6,
+          "candidate_mean": 0.9404506397619947,
+          "candidate_scored_clips": 6,
+          "paired_mean_delta": 1.4647669413133297e-06,
+          "paired_min_delta": -2.4254769355636085e-05,
+          "paired_min_delta_case": "mixture_00046",
+          "paired_max_delta": 2.615814374018477e-05,
+          "paired_max_delta_case": "mixture_00133"
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "case": {
+        "id": "mixture_00033",
+        "scenario": "mixture",
+        "clip": {
+          "id": "00033",
+          "speaker": "p106",
+          "speech_file": "sentences_22_regular",
+          "speech_start": 0,
+          "speech_end": -1,
+          "noise_file": "file237_000000000_loc08_day1",
+          "snr_db": 8.8,
+          "clean": "data/EARS-WHAM_v2/test/clean/p106/00033.wav",
+          "noisy": "data/EARS-WHAM_v2/test/noisy/p106/00033_8.8dB.wav"
+        },
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p106/00033_8.8dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p106/00033.wav",
+        "clean_sha256": "461245960e709df1f9071b892cf3773dcd17900b6f6cd6add3a208ae37a367d3",
+        "samples": 745015,
+        "input_sha256": "3d1e6718053f22b9fc864df6509bf525c3047059bc7c9293c702a7ba08dbe3af",
+        "baseline_pcm_sha256": "41161e730c0b2b85bbbb78766e87a87ee8fa7a032464a257f9c2d077734913bc",
+        "baseline_stream_sha256": {
+          "spectrum": "80305c10e46166530b176f19c90e66b704924a4a3dfd7b69a7eaca07221f4f48",
+          "state": "80d3f7f7c17e98ff26d8223346092c3d9b89e86cdf82ca5d99bfd0f4a489cb93"
+        }
+      },
+      "fingerprint": "eb86a9ac3c7007da2bc3fbdacc2f054331a28982320a77d6c4188387eace8271",
+      "experiment_fingerprint": "16c355555c5cea89aea051dad066fc57f33b4c9019a7c272676954a0f0049358",
+      "passed": true,
+      "sample_rate": 48000,
+      "alignment_delay_samples": 2400,
+      "duration_seconds": 15.521145833333334,
+      "systems": {
+        "baseline": {
+          "pcm_sha256": "41161e730c0b2b85bbbb78766e87a87ee8fa7a032464a257f9c2d077734913bc",
+          "hops_including_flush": 1559,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.72640228271484,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 71.75988006591797
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "80305c10e46166530b176f19c90e66b704924a4a3dfd7b69a7eaca07221f4f48",
+            "state": "80d3f7f7c17e98ff26d8223346092c3d9b89e86cdf82ca5d99bfd0f4a489cb93"
+          },
+          "raw": {
+            "si_snr_48k_db": 18.116132908330574,
+            "MOS_COL": 3.717377185821533,
+            "MOS_DISC": 4.200468063354492,
+            "MOS_LOUD": 3.5675582885742188,
+            "MOS_NOISE": 4.748263359069824,
+            "MOS_REVERB": 4.860886573791504,
+            "MOS_SIG": 4.150979518890381,
+            "MOS_OVRL": 3.688222885131836,
+            "pesq_wb_16k": 2.693099021911621,
+            "stoi": 0.9792747135064664
+          },
+          "preservation": {
+            "output_rms_dbfs": -41.1332434512008,
+            "output_peak_dbfs": -20.272045854379755,
+            "rms_gain_vs_clean_db": -0.07001201898934539,
+            "projection_gain": 0.984405986374142,
+            "projection_gain_db": -0.13651507855269535,
+            "ordinary_snr_vs_clean_db": 18.182590036467165,
+            "active_frames_suppressed_over_20db_fraction": 0.00234192037470726
+          }
+        },
+        "candidate": {
+          "pcm_sha256": "e6caac10ae0f3ff9246ad2711814eaa0136158b8bac5d71517024528b9da4740",
+          "hops_including_flush": 1559,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.72640228271484,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 71.75988006591797
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "b2cbc115a3985655cba02a52a863e422d140374f25d714d835c2dab909e04e4e",
+            "state": "6346dc8162db45d6056e45422b40d9a656f97a0491ace84fd0700961626344d5"
+          },
+          "raw": {
+            "si_snr_48k_db": 18.11713311446169,
+            "MOS_COL": 3.703725814819336,
+            "MOS_DISC": 4.198115825653076,
+            "MOS_LOUD": 3.572061538696289,
+            "MOS_NOISE": 4.742762565612793,
+            "MOS_REVERB": 4.8655619621276855,
+            "MOS_SIG": 4.134607791900635,
+            "MOS_OVRL": 3.676687717437744,
+            "pesq_wb_16k": 2.6934916973114014,
+            "stoi": 0.9792766030298035
+          },
+          "preservation": {
+            "output_rms_dbfs": -41.13294260373583,
+            "output_peak_dbfs": -20.2713454244522,
+            "rms_gain_vs_clean_db": -0.069711171524375,
+            "projection_gain": 0.9844418056600407,
+            "projection_gain_db": -0.1361990334368429,
+            "ordinary_snr_vs_clean_db": 18.183582205362125,
+            "active_frames_suppressed_over_20db_fraction": 0.00234192037470726
+          }
+        }
+      },
+      "paired_candidate_minus_baseline": {
+        "raw.si_snr_48k_db": 0.0010002061311169541,
+        "raw.MOS_COL": -0.013651371002197266,
+        "raw.MOS_DISC": -0.0023522377014160156,
+        "raw.MOS_LOUD": 0.0045032501220703125,
+        "raw.MOS_NOISE": -0.00550079345703125,
+        "raw.MOS_REVERB": 0.004675388336181641,
+        "raw.MOS_SIG": -0.016371726989746094,
+        "raw.MOS_OVRL": -0.011535167694091797,
+        "raw.pesq_wb_16k": 0.00039267539978027344,
+        "raw.stoi": 1.889523337017529e-06,
+        "preservation.output_rms_dbfs": 0.0003008474649703885,
+        "preservation.output_peak_dbfs": 0.0007004299275550352,
+        "preservation.rms_gain_vs_clean_db": 0.0003008474649703885,
+        "preservation.projection_gain": 3.5819285898686104e-05,
+        "preservation.projection_gain_db": 0.00031604511585245354,
+        "preservation.ordinary_snr_vs_clean_db": 0.0009921688949603436,
+        "preservation.active_frames_suppressed_over_20db_fraction": 0.0
+      },
+      "waveform_difference": {
+        "pcm_bit_identical": false,
+        "max_abs": 0.00016673468053340912,
+        "rmse": 1.3521065946885154e-05,
+        "relative_rms": 0.0015405404410542638,
+        "baseline_to_candidate_error_snr_db": 56.24653792881452,
+        "float_bits_different_samples": 715636
+      },
+      "elapsed_seconds": 23.915629786999943
+    },
+    {
+      "case": {
+        "id": "mixture_00046",
+        "scenario": "mixture",
+        "clip": {
+          "id": "00046",
+          "speaker": "p105",
+          "speech_file": "rainbow_07_highpitch",
+          "speech_start": 0,
+          "speech_end": -1,
+          "noise_file": "file237_036960000_loc08_day1",
+          "snr_db": 10.3,
+          "clean": "data/EARS-WHAM_v2/test/clean/p105/00046.wav",
+          "noisy": "data/EARS-WHAM_v2/test/noisy/p105/00046_10.3dB.wav"
+        },
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p105/00046_10.3dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p105/00046.wav",
+        "clean_sha256": "82a08171e2955c60aae7634a6d13d8903a4374041277c4fcfeec8990567a6bf1",
+        "samples": 989183,
+        "input_sha256": "fa5a46ab245a8509fd1178c4ed30967a46cdeb955073b354b1870393bf250ea1",
+        "baseline_pcm_sha256": "3b2eb462762ac4b2ff983f45761fbfb52ef05bd3392f3b50fac0928b8d3a8e30",
+        "baseline_stream_sha256": {
+          "spectrum": "ebc41ca3dafd533bfd990d10b9012a95f21f35ffa70a60cefff2d6983fb29ba6",
+          "state": "9fb99566e3046c06767fec8849f90de748ac29ed8e633183653d99a700db9bc6"
+        }
+      },
+      "fingerprint": "7a0920b556035d6110980b063072f19e96a77a60f68d7180d97a1a56e55899fa",
+      "experiment_fingerprint": "16c355555c5cea89aea051dad066fc57f33b4c9019a7c272676954a0f0049358",
+      "passed": true,
+      "sample_rate": 48000,
+      "alignment_delay_samples": 2400,
+      "duration_seconds": 20.607979166666667,
+      "systems": {
+        "baseline": {
+          "pcm_sha256": "3b2eb462762ac4b2ff983f45761fbfb52ef05bd3392f3b50fac0928b8d3a8e30",
+          "hops_including_flush": 2067,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 90.02423858642578,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 71.82164001464844
+            },
+            {
+              "input_seconds": 20.0,
+              "state_max_abs": 67.89640808105469
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "ebc41ca3dafd533bfd990d10b9012a95f21f35ffa70a60cefff2d6983fb29ba6",
+            "state": "9fb99566e3046c06767fec8849f90de748ac29ed8e633183653d99a700db9bc6"
+          },
+          "raw": {
+            "si_snr_48k_db": 18.39735378043944,
+            "MOS_COL": 4.08390998840332,
+            "MOS_DISC": 4.019690990447998,
+            "MOS_LOUD": 3.391512870788574,
+            "MOS_NOISE": 4.944919109344482,
+            "MOS_REVERB": 4.868259429931641,
+            "MOS_SIG": 3.9614617824554443,
+            "MOS_OVRL": 3.414854049682617,
+            "pesq_wb_16k": 2.5657851696014404,
+            "stoi": 0.9425185946641215
+          },
+          "preservation": {
+            "output_rms_dbfs": -38.48455231890397,
+            "output_peak_dbfs": -17.283126964844687,
+            "rms_gain_vs_clean_db": -0.05018343976605877,
+            "projection_gain": 0.987126195430515,
+            "projection_gain_db": -0.1125464607768133,
+            "ordinary_snr_vs_clean_db": 18.459124657008203,
+            "active_frames_suppressed_over_20db_fraction": 0.0
+          }
+        },
+        "candidate": {
+          "pcm_sha256": "55f6cd81dea2fcfe2525d402c55edc771cbd047d1ed7826044ae3b8108514cba",
+          "hops_including_flush": 2067,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 90.02423858642578,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 71.82164001464844
+            },
+            {
+              "input_seconds": 20.0,
+              "state_max_abs": 67.89640808105469
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "d02bf3c9aa91f57887c08ad2f38b82b4d957a20bd2e88678e3f6782f0ec7383b",
+            "state": "8e7564191f48799480f7a606b692729deca3abbd77e06940ad7e6facb4279896"
+          },
+          "raw": {
+            "si_snr_48k_db": 18.396585462533864,
+            "MOS_COL": 4.084415435791016,
+            "MOS_DISC": 4.0160322189331055,
+            "MOS_LOUD": 3.3964412212371826,
+            "MOS_NOISE": 4.943875312805176,
+            "MOS_REVERB": 4.869635105133057,
+            "MOS_SIG": 3.9590163230895996,
+            "MOS_OVRL": 3.4111227989196777,
+            "pesq_wb_16k": 2.5657968521118164,
+            "stoi": 0.9424943398947658
+          },
+          "preservation": {
+            "output_rms_dbfs": -38.48499127218539,
+            "output_peak_dbfs": -17.28707635181224,
+            "rms_gain_vs_clean_db": -0.050622393047476066,
+            "projection_gain": 0.9870750659904399,
+            "projection_gain_db": -0.11299636898275606,
+            "ordinary_snr_vs_clean_db": 18.458408232427104,
+            "active_frames_suppressed_over_20db_fraction": 0.0
+          }
+        }
+      },
+      "paired_candidate_minus_baseline": {
+        "raw.si_snr_48k_db": -0.0007683179055746336,
+        "raw.MOS_COL": 0.0005054473876953125,
+        "raw.MOS_DISC": -0.003658771514892578,
+        "raw.MOS_LOUD": 0.0049283504486083984,
+        "raw.MOS_NOISE": -0.0010437965393066406,
+        "raw.MOS_REVERB": 0.0013756752014160156,
+        "raw.MOS_SIG": -0.0024454593658447266,
+        "raw.MOS_OVRL": -0.003731250762939453,
+        "raw.pesq_wb_16k": 1.1682510375976562e-05,
+        "raw.stoi": -2.4254769355636085e-05,
+        "preservation.output_rms_dbfs": -0.00043895328141729806,
+        "preservation.output_peak_dbfs": -0.00394938696755176,
+        "preservation.rms_gain_vs_clean_db": -0.00043895328141729806,
+        "preservation.projection_gain": -5.11294400751261e-05,
+        "preservation.projection_gain_db": -0.0004499082059427617,
+        "preservation.ordinary_snr_vs_clean_db": -0.0007164245810997727,
+        "preservation.active_frames_suppressed_over_20db_fraction": 0.0
+      },
+      "waveform_difference": {
+        "pcm_bit_identical": false,
+        "max_abs": 0.00017057731747627258,
+        "rmse": 1.6811920847523304e-05,
+        "relative_rms": 0.001412033344755989,
+        "baseline_to_candidate_error_snr_db": 57.00310094850955,
+        "float_bits_different_samples": 971544
+      },
+      "elapsed_seconds": 24.49762797099993
+    },
+    {
+      "case": {
+        "id": "mixture_00084",
+        "scenario": "mixture",
+        "clip": {
+          "id": "00084",
+          "speaker": "p102",
+          "speech_file": "rainbow_04_regular",
+          "speech_start": 0,
+          "speech_end": -1,
+          "noise_file": "file231_010560000_loc25_day1",
+          "snr_db": 10.1,
+          "clean": "data/EARS-WHAM_v2/test/clean/p102/00084.wav",
+          "noisy": "data/EARS-WHAM_v2/test/noisy/p102/00084_10.1dB.wav"
+        },
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p102/00084_10.1dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p102/00084.wav",
+        "clean_sha256": "4a49ac8a12f75773533441f5d3153f4be88b09bb3e474a8d0a542d6a9ed6066b",
+        "samples": 621909,
+        "input_sha256": "52be4eee2e5012812b1e7c72984d63edafbd2b9efc3ad362ca43684eac6bfea1",
+        "baseline_pcm_sha256": "0707bbd52e36dd3222afe12c2fc3133178a0e6fbba0644ec1505ccd76a7ae232",
+        "baseline_stream_sha256": {
+          "spectrum": "da88ebdc4d73126f4b67fb170d42136b848cbce4f369dbf8287805fcbd035c82",
+          "state": "a08b08b97c300def21f9ad97966f7444791db3213a1ab05d9f4bbe22622ad696"
+        }
+      },
+      "fingerprint": "8e37aff93ea557040c04ed1070127157f93893aef1b61c9dfc613b9008cc8388",
+      "experiment_fingerprint": "16c355555c5cea89aea051dad066fc57f33b4c9019a7c272676954a0f0049358",
+      "passed": true,
+      "sample_rate": 48000,
+      "alignment_delay_samples": 2400,
+      "duration_seconds": 12.9564375,
+      "systems": {
+        "baseline": {
+          "pcm_sha256": "0707bbd52e36dd3222afe12c2fc3133178a0e6fbba0644ec1505ccd76a7ae232",
+          "hops_including_flush": 1302,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.83293151855469,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 68.04934692382812
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "da88ebdc4d73126f4b67fb170d42136b848cbce4f369dbf8287805fcbd035c82",
+            "state": "a08b08b97c300def21f9ad97966f7444791db3213a1ab05d9f4bbe22622ad696"
+          },
+          "raw": {
+            "si_snr_48k_db": 15.901562674606813,
+            "MOS_COL": 4.504630088806152,
+            "MOS_DISC": 4.529186248779297,
+            "MOS_LOUD": 4.21417760848999,
+            "MOS_NOISE": 4.831782817840576,
+            "MOS_REVERB": 4.838799953460693,
+            "MOS_SIG": 4.648637294769287,
+            "MOS_OVRL": 4.249463081359863,
+            "pesq_wb_16k": 2.5246405601501465,
+            "stoi": 0.9639967108760605
+          },
+          "preservation": {
+            "output_rms_dbfs": -33.70343619127025,
+            "output_peak_dbfs": -11.601504756488703,
+            "rms_gain_vs_clean_db": -0.07764661458810451,
+            "projection_gain": 0.9786076609453529,
+            "projection_gain_db": -0.18782777452038688,
+            "ordinary_snr_vs_clean_db": 16.009364189854224,
+            "active_frames_suppressed_over_20db_fraction": 0.0
+          }
+        },
+        "candidate": {
+          "pcm_sha256": "a61d3e600f0b515c54aa4df3bcd85dc5f0d52b0de1e520d6d45ef1668f79bc3b",
+          "hops_including_flush": 1302,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.83293151855469,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 68.04934692382812
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "ab4d068cb7c0bc1ce973810569827435caefbed96dab77ec83ff1e058f0127c7",
+            "state": "9dd15cbcc61c9ccd283f3707878b9aa9d932d32b0bce573fa1cf8137123e8f4f"
+          },
+          "raw": {
+            "si_snr_48k_db": 15.901826903148706,
+            "MOS_COL": 4.5003743171691895,
+            "MOS_DISC": 4.527517795562744,
+            "MOS_LOUD": 4.207942962646484,
+            "MOS_NOISE": 4.827459335327148,
+            "MOS_REVERB": 4.836699962615967,
+            "MOS_SIG": 4.648275375366211,
+            "MOS_OVRL": 4.249337196350098,
+            "pesq_wb_16k": 2.525223970413208,
+            "stoi": 0.964004437137693
+          },
+          "preservation": {
+            "output_rms_dbfs": -33.70301824434242,
+            "output_peak_dbfs": -11.601740013965927,
+            "rms_gain_vs_clean_db": -0.07722866766027181,
+            "projection_gain": 0.9786554964174023,
+            "projection_gain_db": -0.18740320858552423,
+            "ordinary_snr_vs_clean_db": 16.009561001799526,
+            "active_frames_suppressed_over_20db_fraction": 0.0
+          }
+        }
+      },
+      "paired_candidate_minus_baseline": {
+        "raw.si_snr_48k_db": 0.00026422854189256384,
+        "raw.MOS_COL": -0.004255771636962891,
+        "raw.MOS_DISC": -0.0016684532165527344,
+        "raw.MOS_LOUD": -0.006234645843505859,
+        "raw.MOS_NOISE": -0.004323482513427734,
+        "raw.MOS_REVERB": -0.0020999908447265625,
+        "raw.MOS_SIG": -0.0003619194030761719,
+        "raw.MOS_OVRL": -0.000125885009765625,
+        "raw.pesq_wb_16k": 0.0005834102630615234,
+        "raw.stoi": 7.726261632479137e-06,
+        "preservation.output_rms_dbfs": 0.00041794692783270193,
+        "preservation.output_peak_dbfs": -0.0002352574772235272,
+        "preservation.rms_gain_vs_clean_db": 0.00041794692783270193,
+        "preservation.projection_gain": 4.7835472049451155e-05,
+        "preservation.projection_gain_db": 0.0004245659348626474,
+        "preservation.ordinary_snr_vs_clean_db": 0.0001968119453010786,
+        "preservation.active_frames_suppressed_over_20db_fraction": 0.0
+      },
+      "waveform_difference": {
+        "pcm_bit_identical": false,
+        "max_abs": 0.00038316845893859863,
+        "rmse": 3.717611827418494e-05,
+        "relative_rms": 0.0018006771382833018,
+        "baseline_to_candidate_error_snr_db": 54.891282985493845,
+        "float_bits_different_samples": 617308
+      },
+      "elapsed_seconds": 23.491121584999973
+    },
+    {
+      "case": {
+        "id": "mixture_00133",
+        "scenario": "mixture",
+        "clip": {
+          "id": "00133",
+          "speaker": "p107",
+          "speech_file": "freeform_speech_01",
+          "speech_start": 905639,
+          "speech_end": 1777262,
+          "noise_file": "file227_055680000_loc07_day1",
+          "snr_db": -0.7,
+          "clean": "data/EARS-WHAM_v2/test/clean/p107/00133.wav",
+          "noisy": "data/EARS-WHAM_v2/test/noisy/p107/00133_-0.7dB.wav"
+        },
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p107/00133_-0.7dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p107/00133.wav",
+        "clean_sha256": "a5428b39bc9996283b3497a4567a98c90e11def0cf86ea1043f78de816f69259",
+        "samples": 871623,
+        "input_sha256": "f0d97dc52ce8a95be60203e0921d373f3e498ec832439be69863e23731ae427c",
+        "baseline_pcm_sha256": "f3425e6239be0027b4f39b69db5c75739406073a3710c469e76af31de67533ca",
+        "baseline_stream_sha256": {
+          "spectrum": "a188cb4dd2c95c86ae699839ebf2d8652bfe8a84e79e28b22ed53817ed1aa4c7",
+          "state": "471ddd27e81991896771404d5ddf02b366ac9a77de16f0f3cbc003fa49b9ded7"
+        }
+      },
+      "fingerprint": "4e57910a51317a461d10b897a4a8eec59a0b6b7b5ad9f21e639d43b59c221c4f",
+      "experiment_fingerprint": "16c355555c5cea89aea051dad066fc57f33b4c9019a7c272676954a0f0049358",
+      "passed": true,
+      "sample_rate": 48000,
+      "alignment_delay_samples": 2400,
+      "duration_seconds": 18.1588125,
+      "systems": {
+        "baseline": {
+          "pcm_sha256": "f3425e6239be0027b4f39b69db5c75739406073a3710c469e76af31de67533ca",
+          "hops_including_flush": 1822,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.79869842529297,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 64.35001373291016
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "a188cb4dd2c95c86ae699839ebf2d8652bfe8a84e79e28b22ed53817ed1aa4c7",
+            "state": "471ddd27e81991896771404d5ddf02b366ac9a77de16f0f3cbc003fa49b9ded7"
+          },
+          "raw": {
+            "si_snr_48k_db": 10.594685380147109,
+            "MOS_COL": 2.761373519897461,
+            "MOS_DISC": 3.221508741378784,
+            "MOS_LOUD": 3.1396825313568115,
+            "MOS_NOISE": 4.204117774963379,
+            "MOS_REVERB": 4.322751998901367,
+            "MOS_SIG": 2.9544711112976074,
+            "MOS_OVRL": 2.4044699668884277,
+            "pesq_wb_16k": 1.4514186382293701,
+            "stoi": 0.820237333701819
+          },
+          "preservation": {
+            "output_rms_dbfs": -39.02248252930179,
+            "output_peak_dbfs": -21.474736300761222,
+            "rms_gain_vs_clean_db": -0.44105518697264756,
+            "projection_gain": 0.9115739499265986,
+            "projection_gain_db": -0.8041618831895723,
+            "ordinary_snr_vs_clean_db": 10.953815753375808,
+            "active_frames_suppressed_over_20db_fraction": 0.03674540682414698
+          }
+        },
+        "candidate": {
+          "pcm_sha256": "0002dc7e7e775a3906f2b309ba0f910bdc29f38b3bb6b877326c4130cece451d",
+          "hops_including_flush": 1822,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.79869842529297,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 64.35001373291016
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "f6a262cd7ea3513d858d8dfa5b4ba150688750702832843bb76e550573e7dc97",
+            "state": "25a1fc27d195b80b78d7e8b5f045a518424a316d8936229d4c0d67ef4afa9dc5"
+          },
+          "raw": {
+            "si_snr_48k_db": 10.594371405575869,
+            "MOS_COL": 2.7587058544158936,
+            "MOS_DISC": 3.239443302154541,
+            "MOS_LOUD": 3.132596015930176,
+            "MOS_NOISE": 4.209012508392334,
+            "MOS_REVERB": 4.318267345428467,
+            "MOS_SIG": 2.96340274810791,
+            "MOS_OVRL": 2.4179248809814453,
+            "pesq_wb_16k": 1.4513368606567383,
+            "stoi": 0.8202634918455591
+          },
+          "preservation": {
+            "output_rms_dbfs": -39.02227495308913,
+            "output_peak_dbfs": -21.474276937162674,
+            "rms_gain_vs_clean_db": -0.44084761075998813,
+            "projection_gain": 0.9115930920420253,
+            "projection_gain_db": -0.8039794903553288,
+            "ordinary_snr_vs_clean_db": 10.953550836141446,
+            "active_frames_suppressed_over_20db_fraction": 0.03674540682414698
+          }
+        }
+      },
+      "paired_candidate_minus_baseline": {
+        "raw.si_snr_48k_db": -0.0003139745712399389,
+        "raw.MOS_COL": -0.002667665481567383,
+        "raw.MOS_DISC": 0.017934560775756836,
+        "raw.MOS_LOUD": -0.007086515426635742,
+        "raw.MOS_NOISE": 0.004894733428955078,
+        "raw.MOS_REVERB": -0.004484653472900391,
+        "raw.MOS_SIG": 0.008931636810302734,
+        "raw.MOS_OVRL": 0.013454914093017578,
+        "raw.pesq_wb_16k": -8.177757263183594e-05,
+        "raw.stoi": 2.615814374018477e-05,
+        "preservation.output_rms_dbfs": 0.0002075762126594327,
+        "preservation.output_peak_dbfs": 0.00045936359854792386,
+        "preservation.rms_gain_vs_clean_db": 0.0002075762126594327,
+        "preservation.projection_gain": 1.914211542675126e-05,
+        "preservation.projection_gain_db": 0.0001823928342434833,
+        "preservation.ordinary_snr_vs_clean_db": -0.00026491723436272707,
+        "preservation.active_frames_suppressed_over_20db_fraction": 0.0
+      },
+      "waveform_difference": {
+        "pcm_bit_identical": false,
+        "max_abs": 0.0003104768693447113,
+        "rmse": 2.6030881790595636e-05,
+        "relative_rms": 0.00232601765317168,
+        "baseline_to_candidate_error_snr_db": 52.66773987086202,
+        "float_bits_different_samples": 864788
+      },
+      "elapsed_seconds": 24.050218003000055
+    },
+    {
+      "case": {
+        "id": "mixture_00200",
+        "scenario": "mixture",
+        "clip": {
+          "id": "00200",
+          "speaker": "p103",
+          "speech_file": "rainbow_04_loud",
+          "speech_start": 0,
+          "speech_end": -1,
+          "noise_file": "file232_061440000_loc25_day1",
+          "snr_db": 9.1,
+          "clean": "data/EARS-WHAM_v2/test/clean/p103/00200.wav",
+          "noisy": "data/EARS-WHAM_v2/test/noisy/p103/00200_9.1dB.wav"
+        },
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p103/00200_9.1dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p103/00200.wav",
+        "clean_sha256": "21d45f819d3b8f961efdeb8618fe83b75a24c0f670b1dc313ce429689033496c",
+        "samples": 923230,
+        "input_sha256": "df72bf7e8c593fa29100677edc8d5409d6ae95f06e41d6fe870e205fd88409e1",
+        "baseline_pcm_sha256": "4273a5cabb826849b8e45034af557074751d5a9cccac044c0481b29669fa5066",
+        "baseline_stream_sha256": {
+          "spectrum": "1db17d766b3c306f61e5851c1cc75a97b322d3402031dcbb04d5e98e3221534a",
+          "state": "f0ac4b45de0c0a9cee549ddb36b723ddd0631d39ee5491af0b5ec4a570e1bc9d"
+        }
+      },
+      "fingerprint": "bbf2be061869d0152480968563fdf8161b88cc8a14776bbd439682fac671f7ee",
+      "experiment_fingerprint": "16c355555c5cea89aea051dad066fc57f33b4c9019a7c272676954a0f0049358",
+      "passed": true,
+      "sample_rate": 48000,
+      "alignment_delay_samples": 2400,
+      "duration_seconds": 19.233958333333334,
+      "systems": {
+        "baseline": {
+          "pcm_sha256": "4273a5cabb826849b8e45034af557074751d5a9cccac044c0481b29669fa5066",
+          "hops_including_flush": 1930,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.86561584472656,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 67.56632232666016
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "1db17d766b3c306f61e5851c1cc75a97b322d3402031dcbb04d5e98e3221534a",
+            "state": "f0ac4b45de0c0a9cee549ddb36b723ddd0631d39ee5491af0b5ec4a570e1bc9d"
+          },
+          "raw": {
+            "si_snr_48k_db": 19.044510906501394,
+            "MOS_COL": 3.7330257892608643,
+            "MOS_DISC": 3.6687545776367188,
+            "MOS_LOUD": 3.9696171283721924,
+            "MOS_NOISE": 4.66667366027832,
+            "MOS_REVERB": 4.728370666503906,
+            "MOS_SIG": 3.647393226623535,
+            "MOS_OVRL": 3.2151551246643066,
+            "pesq_wb_16k": 3.0730113983154297,
+            "stoi": 0.9634772230165202
+          },
+          "preservation": {
+            "output_rms_dbfs": -29.193235512160367,
+            "output_peak_dbfs": -8.530797520189282,
+            "rms_gain_vs_clean_db": 0.026505815429359814,
+            "projection_gain": 0.9968645766334776,
+            "projection_gain_db": -0.027276725753154377,
+            "ordinary_snr_vs_clean_db": 19.068341093888236,
+            "active_frames_suppressed_over_20db_fraction": 0.0
+          }
+        },
+        "candidate": {
+          "pcm_sha256": "fa9be9b44a8ecee263a2dfc97f392dd6f51332a9729ac22e8dbbd4c3e93f31b3",
+          "hops_including_flush": 1930,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.86561584472656,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 67.56632232666016
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "2a313689b8486b735d1b526ff70fd81d8c8ed0f15bbd983d25f462b0f62e7162",
+            "state": "b41d1063a4fd02c72fdfa3575a9ab0f83c44667e20bc221519a34b601ad18153"
+          },
+          "raw": {
+            "si_snr_48k_db": 19.04429800264612,
+            "MOS_COL": 3.739548683166504,
+            "MOS_DISC": 3.652127265930176,
+            "MOS_LOUD": 3.9475579261779785,
+            "MOS_NOISE": 4.649710655212402,
+            "MOS_REVERB": 4.721271514892578,
+            "MOS_SIG": 3.649289131164551,
+            "MOS_OVRL": 3.213524580001831,
+            "pesq_wb_16k": 3.074533224105835,
+            "stoi": 0.9634578474161719
+          },
+          "preservation": {
+            "output_rms_dbfs": -29.193435914524343,
+            "output_peak_dbfs": -8.526129021786213,
+            "rms_gain_vs_clean_db": 0.026305413065383476,
+            "projection_gain": 0.9968412763352147,
+            "projection_gain_db": -0.027479748499918716,
+            "ordinary_snr_vs_clean_db": 19.06827982650098,
+            "active_frames_suppressed_over_20db_fraction": 0.0
+          }
+        }
+      },
+      "paired_candidate_minus_baseline": {
+        "raw.si_snr_48k_db": -0.0002129038552745044,
+        "raw.MOS_COL": 0.0065228939056396484,
+        "raw.MOS_DISC": -0.01662731170654297,
+        "raw.MOS_LOUD": -0.022059202194213867,
+        "raw.MOS_NOISE": -0.01696300506591797,
+        "raw.MOS_REVERB": -0.007099151611328125,
+        "raw.MOS_SIG": 0.001895904541015625,
+        "raw.MOS_OVRL": -0.001630544662475586,
+        "raw.pesq_wb_16k": 0.0015218257904052734,
+        "raw.stoi": -1.9375600348259248e-05,
+        "preservation.output_rms_dbfs": -0.00020040236397633748,
+        "preservation.output_peak_dbfs": 0.0046684984030687104,
+        "preservation.rms_gain_vs_clean_db": -0.00020040236397633748,
+        "preservation.projection_gain": -2.330029826291824e-05,
+        "preservation.projection_gain_db": -0.00020302274676433849,
+        "preservation.ordinary_snr_vs_clean_db": -6.126738725598102e-05,
+        "preservation.active_frames_suppressed_over_20db_fraction": 0.0
+      },
+      "waveform_difference": {
+        "pcm_bit_identical": false,
+        "max_abs": 0.0007652789354324341,
+        "rmse": 6.71452401075501e-05,
+        "relative_rms": 0.0019349823448442213,
+        "baseline_to_candidate_error_snr_db": 54.2664598642886,
+        "float_bits_different_samples": 922526
+      },
+      "elapsed_seconds": 12.897080556999981
+    },
+    {
+      "case": {
+        "id": "mixture_00364",
+        "scenario": "mixture",
+        "clip": {
+          "id": "00364",
+          "speaker": "p104",
+          "speech_file": "freeform_speech_01",
+          "speech_start": 5032360,
+          "speech_end": 5906395,
+          "noise_file": "file241_001440000_loc02_day1",
+          "snr_db": 4.6,
+          "clean": "data/EARS-WHAM_v2/test/clean/p104/00364.wav",
+          "noisy": "data/EARS-WHAM_v2/test/noisy/p104/00364_4.6dB.wav"
+        },
+        "input": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/noisy/p104/00364_4.6dB.wav",
+        "clean": "/bench/scratch/fullband/data/EARS-WHAM_v2/test/clean/p104/00364.wav",
+        "clean_sha256": "b993f43003974289fa78bcb3a88da2ac5fb1f243291e310d569b4b7b345bf587",
+        "samples": 874035,
+        "input_sha256": "754361bbedc891ffffcd5c2c03a4deb1b888dae108791aa47bb59dcf70dfd4cf",
+        "baseline_pcm_sha256": "e3f3b823168111f93af2d32868e3b35a1a682078eb124c18571f4d76eb0216dc",
+        "baseline_stream_sha256": {
+          "spectrum": "cd338a2d343fb2abde487398db8e4ae59b95372dc66af58da4ab55e3fc0dc538",
+          "state": "1d0ebfd567b0ddb62e5a6738d4f879a3261e4c7bab70286981d5b4194a6d0ac3"
+        }
+      },
+      "fingerprint": "4de725479ea6b14beb06ef0adf5fddb30f50345b57e81c7ec6f91a032f3a7c71",
+      "experiment_fingerprint": "16c355555c5cea89aea051dad066fc57f33b4c9019a7c272676954a0f0049358",
+      "passed": true,
+      "sample_rate": 48000,
+      "alignment_delay_samples": 2400,
+      "duration_seconds": 18.2090625,
+      "systems": {
+        "baseline": {
+          "pcm_sha256": "e3f3b823168111f93af2d32868e3b35a1a682078eb124c18571f4d76eb0216dc",
+          "hops_including_flush": 1827,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.80699920654297,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 73.99662017822266
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "cd338a2d343fb2abde487398db8e4ae59b95372dc66af58da4ab55e3fc0dc538",
+            "state": "1d0ebfd567b0ddb62e5a6738d4f879a3261e4c7bab70286981d5b4194a6d0ac3"
+          },
+          "raw": {
+            "si_snr_48k_db": 17.813236494955007,
+            "MOS_COL": 3.521430253982544,
+            "MOS_DISC": 3.520540237426758,
+            "MOS_LOUD": 3.6044137477874756,
+            "MOS_NOISE": 4.423229217529297,
+            "MOS_REVERB": 4.703726768493652,
+            "MOS_SIG": 3.707429885864258,
+            "MOS_OVRL": 3.1676108837127686,
+            "pesq_wb_16k": 2.8180036544799805,
+            "stoi": 0.9731904742053334
+          },
+          "preservation": {
+            "output_rms_dbfs": -37.462873250197084,
+            "output_peak_dbfs": -14.665441744837972,
+            "rms_gain_vs_clean_db": -0.07173116577531857,
+            "projection_gain": 0.9836714337420309,
+            "projection_gain_db": -0.14299881067310502,
+            "ordinary_snr_vs_clean_db": 17.88450338501183,
+            "active_frames_suppressed_over_20db_fraction": 0.0
+          }
+        },
+        "candidate": {
+          "pcm_sha256": "ed8847d4c350f99f4333460b6d176ee746e29ebc0ac796ec707974e71b5d50d7",
+          "hops_including_flush": 1827,
+          "state_reset_count": 1,
+          "all_output_and_state_finite": true,
+          "max_state_abs": 89.80699920654297,
+          "state_checkpoints": [
+            {
+              "input_seconds": 10.0,
+              "state_max_abs": 73.99662017822266
+            }
+          ],
+          "stream_sha256": {
+            "spectrum": "ba5591b9094b0e4487e208ee6efd10975296618856f53a37a89b3d645527da24",
+            "state": "24dddae91798ba389e04209d49c11b31ce7675481d9b251e23f133afb6a3286c"
+          },
+          "raw": {
+            "si_snr_48k_db": 17.815709854569434,
+            "MOS_COL": 3.520785331726074,
+            "MOS_DISC": 3.5235543251037598,
+            "MOS_LOUD": 3.606454610824585,
+            "MOS_NOISE": 4.419865131378174,
+            "MOS_REVERB": 4.7022929191589355,
+            "MOS_SIG": 3.709890127182007,
+            "MOS_OVRL": 3.165259599685669,
+            "pesq_wb_16k": 2.8187737464904785,
+            "stoi": 0.9732071192479755
+          },
+          "preservation": {
+            "output_rms_dbfs": -37.46313905030052,
+            "output_peak_dbfs": -14.667811305014615,
+            "rms_gain_vs_clean_db": -0.07199696587875337,
+            "projection_gain": 0.9836458901365781,
+            "projection_gain_db": -0.14322436547836284,
+            "ordinary_snr_vs_clean_db": 17.886935185016544,
+            "active_frames_suppressed_over_20db_fraction": 0.0
+          }
+        }
+      },
+      "paired_candidate_minus_baseline": {
+        "raw.si_snr_48k_db": 0.002473359614427295,
+        "raw.MOS_COL": -0.0006449222564697266,
+        "raw.MOS_DISC": 0.003014087677001953,
+        "raw.MOS_LOUD": 0.002040863037109375,
+        "raw.MOS_NOISE": -0.003364086151123047,
+        "raw.MOS_REVERB": -0.0014338493347167969,
+        "raw.MOS_SIG": 0.0024602413177490234,
+        "raw.MOS_OVRL": -0.0023512840270996094,
+        "raw.pesq_wb_16k": 0.0007700920104980469,
+        "raw.stoi": 1.6645042642093877e-05,
+        "preservation.output_rms_dbfs": -0.000265800103434799,
+        "preservation.output_peak_dbfs": -0.0023695601766426932,
+        "preservation.rms_gain_vs_clean_db": -0.000265800103434799,
+        "preservation.projection_gain": -2.5543605452815754e-05,
+        "preservation.projection_gain_db": -0.00022555480525782157,
+        "preservation.ordinary_snr_vs_clean_db": 0.002431800004714546,
+        "preservation.active_frames_suppressed_over_20db_fraction": 0.0
+      },
+      "waveform_difference": {
+        "pcm_bit_identical": false,
+        "max_abs": 0.00031204335391521454,
+        "rmse": 1.9587002177111326e-05,
+        "relative_rms": 0.0014625530710643574,
+        "baseline_to_candidate_error_snr_db": 56.697767317876746,
+        "float_bits_different_samples": 841803
+      },
+      "elapsed_seconds": 12.016365007999866
+    }
+  ]
+}

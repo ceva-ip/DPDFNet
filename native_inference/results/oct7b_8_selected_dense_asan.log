@@ -1,0 +1,4 @@
+Compile:
+
+Run:
+{"passed":true,"byte_exact_calls":12372,"memory_checks":222,"alias_calls":2760,"fp_control_calls":3360,"largest_shape_owned_saving":18720,"signed_zero_bits":true,"unaligned_buffers":true,"buffer_canaries":true}
