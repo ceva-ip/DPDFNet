@@ -1,16 +1,21 @@
 # DPDFNet native inference investigation
 
-**2026-10-03 single-thread W7A8 follow-up:** the [accepted optimization](native/FURTHER_EXACT_OPTIMIZATION.md)
-reduces `dpdfnet8_48khz_hr` standalone 10 ms cadence inference time from
-**1.983 to 1.867 ms (5.9% less)**, and `dpdfnet2_48khz_hr` from
-**0.974 to 0.939 ms (3.6% less)**, relative to their matched fitted W7A8 references.
-It preserves all output spectra, complete recurrent states and PCM byte for
-byte across 65 files / 22.3 minutes / 134,332 hops **per model**. All inference executes on
-one calling thread, matching HushMic's constraint. The report includes matched
-timing tails, CPU use, memory, safety checks and reproduction. This is an
-isolated research build; distributed integration presets remain unchanged.
-The overview tables below include the accepted profile; older comparison rows
-retain their recorded benchmark dates and methods.
+**2026-10-07 further single-thread W7A8 optimization:** the [validated research profile](native/OCT7_OPTIMIZATION.md)
+adds a fixed-width AVX2 assembly kernel, staged GRU gates and exact graph
+optimizations for both models. In a fresh matched session, standalone 10 ms
+cadence inference falls **1.963 → 1.813 ms (7.7% less)** for `dpdfnet8_48khz_hr`
+and **0.958 → 0.919 ms (4.1% less)** for `dpdfnet2_48khz_hr`, relative to the
+accepted October 3 builds rerun alongside the candidates. The historical
+October 3 measurements were **1.867 / 0.939 ms**; those binaries are unchanged.
+Percentages compare the fresh matched measurements, not different sessions.
+The tables retain both historical and latest rows to make this distinction explicit.
+
+All output spectra, complete recurrent states and PCM remain byte-identical
+across 65 files / 22.3 minutes / 134,332 hops **per model**, with unchanged
+owned model memory and one inference thread. The report includes all 27
+screened builds, measured RSS, timing tails, safety checks and reproduction.
+The assembly targets Linux x86-64 SysV; native Windows timing is unmeasured.
+This is an isolated research build; distributed integration presets remain unchanged.
 
 **Current overview — `dpdfnet8_48khz_hr` (48 kHz).** The fitted
 W7A8 reference is **W7A8 + pack32 + fitted degree-5 GRU gates**
@@ -26,24 +31,31 @@ Linux Docker/WSL2, 10 ms audio hops:
 | Original ONNX FP32 | 5.571 ms | 38.01 MiB | Not available |
 | Native selective FP16 | 2.831 ms | 10.93 MiB | 9.72 MiB |
 | Native selective INT8 | 2.381 ms | 7.53 MiB | 6.43 MiB |
-| Latest exact W7A8 (single thread) | **1.867 ms** | **7.56 MiB** | **6.45 MiB** |
+| Oct3 exact W7A8 (historical session) | 1.867 ms | 7.56 MiB | 6.45 MiB |
+| Latest Oct7 exact W7A8 (single thread) | **1.813 ms** | **7.53 MiB** | **6.45 MiB** |
 
 The first three rows use the [2026-09-21 matched comparison](native/ONNX_LATEST_COMPARISON.md)
 (median of four run means, including Python call overhead and output allocation).
-The latest row uses the [2026-10-03 accepted optimization](native/FURTHER_EXACT_OPTIMIZATION.md):
+The Oct3 row retains its [historical measurement](native/FURTHER_EXACT_OPTIMIZATION.md).
+The latest row uses the [2026-10-07 matched comparison](native/OCT7_OPTIMIZATION.md):
 median of four standalone cadence run means, preallocated C calls, 100 warmup
-and 1,000 timed hops per run. Its matched fitted W7A8 reference measured
-**1.983 ms**, giving **5.88% less inference time**. The rows use separate
-sessions and call methods; comparing the latest row with ONNX is indicative,
-not a fresh matched speedup. FFT, audio I/O and resampling are
-excluded; the model's **50 ms algorithmic delay is unchanged**. Peak latency
-does not improve uniformly; see the [tail investigation](native/TAIL_LATENCY_INVESTIGATION.md).
+and 1,000 timed hops per run. **The same Oct3 library reran at 1.963 ms** in
+this session, versus **1.813 ms** for the new profile: **7.67% less time**.
+The previous 1.867 ms and fresh 1.963 ms are measurements of identical binaries
+on different days; the cause of the session variation was not isolated.
+Rows use separate sessions and call methods, so direct speedups against their
+historical values would mix measurements. FFT, audio I/O and resampling are
+excluded; the model's **50 ms algorithmic delay is unchanged**. Standalone p99
+fell **2.463 → 2.134 ms** and maximum **3.834 → 3.027 ms**, but the continuous
+maximum increased and one paired-cadence completion was late. No standalone
+completion was late. See the new report and [tail investigation](native/TAIL_LATENCY_INVESTIGATION.md).
 
 RSS is warmed process memory above the common imported-runtime baseline,
 including allocator retention and stream buffers; it is not total application
 RAM or model file size. Native owned allocations count memory owned by the C
-model and are **not interchangeable with RSS**. The latest candidate adds 24,637 owned bytes for aligned packed weights.
-Its [2026-10-03 RSS measurement](results/further_memory.json) uses the same
+model and are **not interchangeable with RSS**. The Oct7 profile retains the
+Oct3 owned allocations exactly; their aligned packing adds 24,637 bytes over
+the earlier fitted reference. Its [2026-10-07 RSS measurement](results/oct7_8_memory.json) uses the same
 protocol: median of four fresh processes, each with 120 warmup hops and
 source weights unmapped before sampling.
 
@@ -64,14 +76,14 @@ from the mixture cases in the [fitted-gate quality screen](results/w7_followup_p
 Inference and audio remain at 48 kHz: SI-SNR and SIGMOS are fullband; PESQ-WB
 explicitly resamples to 16 kHz, and STOI internally uses 10 kHz.
 The latest exact kernels preserve the fitted reference byte for byte over
-[all 65 saved audio fixtures](results/further_best_single_audio.json), including
+[all 65 saved audio fixtures](results/oct7_8_combo_asm_norm_audio.json), including
 the six scored mixtures, so those quality scores carry forward unchanged.
 The fitted reference has only the six-mixture matched score comparison. The [50-clip report](native/FULLBAND_EVALUATION.md) covers
 ONNX, FP16, INT8 and the earlier W7A8 build. These six-clip means show small
 quality differences, not proof of equivalence or an overall quality improvement.
 
-**Current overview — `dpdfnet2_48khz_hr` (48 kHz).** The same accepted exact W7A8
-kernels are built for this model in `build/further2_best_single`.
+**Current overview — `dpdfnet2_48khz_hr` (48 kHz).** The same validated Oct7 W7A8
+kernels are built for this model in `build/oct7_2_combo_asm_norm`.
 It remains an experimental candidate, with the production INT8 preset unchanged.
 
 **Latency and memory footprint** — same CPU, single-thread execution and
@@ -82,25 +94,27 @@ It remains an experimental candidate, with the production INT8 preset unchanged.
 | Original ONNX FP32 | 2.312 ms | 28.37 MiB | Not available |
 | Native selective FP16 | 1.337 ms | 8.41 MiB | 7.55 MiB |
 | Native selective INT8 | 1.069 ms | 6.03 MiB | 5.16 MiB |
-| Latest exact W7A8 (single thread) | **0.939 ms** | **6.12 MiB** | **5.17 MiB** |
+| Oct3 exact W7A8 (historical session) | 0.939 ms | 6.12 MiB | 5.17 MiB |
+| Latest Oct7 exact W7A8 (single thread) | **0.919 ms** | **6.08 MiB** | **5.17 MiB** |
 
 The first three latency rows retain the [2026-09-27 matched comparison](results/dpdfnet2_overview_timing.json):
 median of four run means, 100 warmup + 1,000 timed hops per run, rotating order,
-including Python overhead and output allocation. The latest row uses the
-[2026-10-03 matched preallocated C comparison](results/further2_best_single_final.json),
+including Python overhead and output allocation. The Oct3 row retains its
+[historical measurement](results/further2_best_single_final.json). The latest row uses
+the [2026-10-07 matched preallocated C comparison](results/oct7_2_combo_asm_norm_final.json),
 with the same four-run standalone cadence method as the latest DPDFNet-8 row.
-Its fitted W7A8 reference measured **0.974 ms**, so the accepted kernels reduce
-mean inference time by **3.58%**. Direct speedups against the older ONNX/INT8
-rows would mix benchmark methods and sessions. The latest candidate's p99 was
-**1.176 ms** and maximum **2.328 ms**; both builds had zero calls above 10 ms
-and zero late completions across 12,000 timed calls each. Standalone maximum
-was slightly higher than the reference's **2.272 ms** despite the lower mean.
-Cross-model timing ratios remain approximate because runs were in separate sessions.
+**The same Oct3 library reran at 0.958 ms**, versus **0.919 ms** for the new
+profile: **4.05% less time**. Its historical 0.939 ms came from another session.
+Direct speedups against historical rows would mix methods or sessions.
+Standalone p99 fell **1.305 → 1.153 ms** and maximum **1.910 → 1.549 ms**.
+Both builds had zero calls above 10 ms and zero late completions across
+12,000 timed calls each. Cross-model ratios remain approximate because the
+two models were measured in separate sessions.
 
 ONNX/FP16/INT8 RSS comes from the [original matched memory study](results/onnx_latest_summary.json).
-The [latest W7A8 memory measurement](results/further2_memory.json) uses four
-fresh processes and 120 warmup hops per process. Aligned packed weights add
-17,821 owned bytes relative to the fitted W7A8 reference. Small RSS differences
+The [latest W7A8 memory measurement](results/oct7_2_memory.json) uses four
+fresh processes and 120 warmup hops per process. Owned allocations match Oct3
+exactly; their aligned packing adds 17,821 bytes over the fitted reference. Small RSS differences
 between sessions do not establish memory savings. Memory definitions and the
 unchanged 50 ms algorithmic delay are as above.
 
@@ -114,8 +128,8 @@ listed in the DPDFNet-8 overview, with the same metrics and sample-rate handling
 | Native selective INT8 | 2.42767 | 0.935712 | 16.1053 | 3.86265 | 4.66954 | 3.30783 |
 | Latest exact W7A8 (single thread) | 2.44130 | 0.935874 | 16.0841 | 3.86312 | 4.61457 | 3.28124 |
 
-The accepted kernels match every output spectrum, recurrent state and aligned
-PCM sample across [all 65 saved fixtures](results/further2_best_single_audio.json).
+The latest kernels match every output spectrum, recurrent state and aligned
+PCM sample across [all 65 saved fixtures](results/oct7_2_combo_asm_norm_audio.json).
 All six previously scored fitted-reference waveform hashes also match, so
 these quality scores carry forward unchanged. These are unweighted six-clip
 means; the 65-file exact-output check does not expand the scored subset. Compared
@@ -123,7 +137,7 @@ with ONNX, the fitted candidate changes mean SI-SNR by −0.0348 dB and SIGMOS
 OVRL by −0.0180, while PESQ increases by 0.0101. The mixed small changes do
 not establish equivalence or an overall quality improvement. All outputs and
 states remained finite. See the [per-clip measurements](results/dpdfnet2_overview_quality.json)
-and [accepted-kernel validation, memory and reproduction](native/FURTHER_EXACT_OPTIMIZATION.md#dpdfnet-2-results).
+and [latest validation, memory and reproduction](native/OCT7_OPTIMIZATION.md).
 
 **HushMic integration:** [C ABI v1 and Python-free build](native/integration/README.md)
 now provide symbol-prefixed models in one library, the named
@@ -217,6 +231,7 @@ package, exporters, model definitions, and downloaded source weights are unchang
 
 - [Detailed findings and implementation plan](FEASIBILITY.md)
 - [Complete C model, FP16 and native INT8](native/FULL_MODEL.md)
+- [October 7 exact optimization and assembly research, both models](native/OCT7_OPTIMIZATION.md)
 - [Convolution, quantization and gate follow-up](native/LATENCY_FOLLOWUP.md)
 - [INT8 range and handwritten assembly experiments](native/INT8_RANGE_EXPERIMENTS.md)
 - [Exact latency and memory optimization, both models](native/LATENCY_REWORK.md)

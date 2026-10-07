@@ -1,0 +1,563 @@
+{
+  "generated_at": "2026-10-07T11:47:41.621424+00:00",
+  "model_size": 2,
+  "model": "dpdfnet2_48khz_hr",
+  "baseline": "Accepted Oct3 best_single",
+  "candidate": "combo_asm_norm",
+  "method": "Four fresh processes per variant; median warmed incremental RSS; source weights unmapped; 120 warmup hops. Balanced alternating baseline/candidate order; every child completes before the next starts.",
+  "protocol": {
+    "fresh_processes_per_variant": 4,
+    "warmup_hops": 120,
+    "native_configuration": {
+      "variant": "selective_int8",
+      "tier": 4,
+      "precision": 8,
+      "mask": 7
+    },
+    "rss_source": "Linux /proc/self/status VmRSS, kB converted to bytes",
+    "incremental_rss": "Warmed RSS minus RSS after identical Python/NumPy/ORT imports and gc.collect(), before native model loading.",
+    "included": [
+      "native model",
+      "native library",
+      "stream buffers",
+      "allocator retention above the common imported baseline"
+    ],
+    "source_weights": "Read-only mmap closed before warmup and final RSS sample",
+    "onnx_reference_session_created": false,
+    "owned_bytes": "Exact native allocation accounting; distinct from process RSS",
+    "thread_environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "order": [
+      [
+        "baseline",
+        "candidate"
+      ],
+      [
+        "candidate",
+        "baseline"
+      ],
+      [
+        "baseline",
+        "candidate"
+      ],
+      [
+        "candidate",
+        "baseline"
+      ]
+    ],
+    "no_outliers_removed": true,
+    "comparability": "Same unchanged memory worker and metric definition as Oct3."
+  },
+  "driver": {
+    "path": "native/experiments/oct7_memory.py",
+    "sha256": "7138162e69b2ab88ffe91744b915d5a565feef3e9cd8bfdeaf9bbcd14cfd34c2"
+  },
+  "dependency_sha256": {
+    "benchmark.py": "d3690cd08742349cc7b6126eeb74a0cfd3d7c85f257edd7b3b08cb9d3887e814",
+    "native/extended_probe.py": "d2f0196ee54d306d70eaa535fedcecde0a2efa96773e83dab187962d817556c5",
+    "native/full_probe.py": "92942b09d4af7a796bbc9bf2e2ca8b69151c3d4775193819fddf7826eb994a31",
+    "native/model_precision_final.py": "72c69f107ed2d0e2348a45c4bb5d9810c7cf168346b415b888e4bd61e2118162",
+    "native/onnx_memory_probe.py": "92e68ae580d90a7b51e3539155ddfa7ea062092760753e88e37f89eccf166fec",
+    "native/probe.py": "00cefa861451aba46ca8e8b3504218a52d6401939a03bfa5c9562c1d47ea9dd1"
+  },
+  "dependency_packages": {
+    "numpy": {
+      "version": "2.4.6",
+      "entry_point": "/usr/local/lib/python3.11/site-packages/numpy/__init__.py",
+      "entry_point_sha256": "92a46f791e453926d3292af2582b89995a289475f0eaaea71a949823200b838a",
+      "native_binary_sha256": {
+        "_core/_multiarray_tests.cpython-311-x86_64-linux-gnu.so": "5457018b1852b9d38f32187aa1877934404b776b5ce95e58d1f76d0a563f6825",
+        "_core/_multiarray_umath.cpython-311-x86_64-linux-gnu.so": "1535fbed1e9ac6b717e72ad9bd5c20b9f0536a21084fcadc40c00255a8f35d1d",
+        "_core/_operand_flag_tests.cpython-311-x86_64-linux-gnu.so": "16babe15aaf495909d9af8b40431cf3c34ffc319cadacef029edb4ffb93f0e2c",
+        "_core/_rational_tests.cpython-311-x86_64-linux-gnu.so": "4150c28b4fbe191a528cf86b18b9035f1c13b0347ef35576f8ffd229323be2c2",
+        "_core/_simd.cpython-311-x86_64-linux-gnu.so": "8e5117a0e42866ef2f693c4a673f74922b7d681118707d212a6de9886140b74a",
+        "_core/_struct_ufunc_tests.cpython-311-x86_64-linux-gnu.so": "fa59d16d75dd8ed3216d14dbc12351abd13d0a3d0171b028cf0cb78906177b2b",
+        "_core/_umath_tests.cpython-311-x86_64-linux-gnu.so": "5099e6d0e351b46f5f4e9fc633b8d065c65a019ce1ff2b774143a7f918e074da",
+        "fft/_pocketfft_umath.cpython-311-x86_64-linux-gnu.so": "2e78619c9326b3a2e1a61369371ebf257c3c644d209c50f4b641fe055f37167e",
+        "linalg/_umath_linalg.cpython-311-x86_64-linux-gnu.so": "ff1141bebaf0b681b329dfdab7153a78eb2b7c12e54e365ed70d385c495ec792",
+        "linalg/lapack_lite.cpython-311-x86_64-linux-gnu.so": "de5f8dbc506e9c903c265dd048bc6ba14187623ae166a4662e03e9cca349c43c",
+        "random/_bounded_integers.cpython-311-x86_64-linux-gnu.so": "a3ed3619fb0bb7a8a68e605d8219aee971878710a9c7588f043e725f1d05254e",
+        "random/_common.cpython-311-x86_64-linux-gnu.so": "71d7971ef760a9e45c5c804b98bc3155d42d38837d4f287ab3bb41865d9954b1",
+        "random/_generator.cpython-311-x86_64-linux-gnu.so": "336eca5889ed937b66fddf1790095b35ec4c61e3a35375f0d29a94bb1299a3ef",
+        "random/_mt19937.cpython-311-x86_64-linux-gnu.so": "6edbd3acc543aa58610f0e3eacf71e7343010d5721b1df2a2a4fee7bea48407c",
+        "random/_pcg64.cpython-311-x86_64-linux-gnu.so": "cd16eef58424a339bb93a9eff61c7482229e23554cbf4089526e3bacd018ec98",
+        "random/_philox.cpython-311-x86_64-linux-gnu.so": "1a866751156413cd95c38e3b4bd4f981919cc4692a75dc8f965505c1ce48c4de",
+        "random/_sfc64.cpython-311-x86_64-linux-gnu.so": "91cca65548a69ed7851e0925e0ba3427a988b756027d0ce4cd4846c33f387a26",
+        "random/bit_generator.cpython-311-x86_64-linux-gnu.so": "e0d931cd4694de2ca87ed2731dffb51a0dacdeaa160b6fd627bda678f182e157",
+        "random/mtrand.cpython-311-x86_64-linux-gnu.so": "3badc42eeb19cb0837bb5fd89ed792e14be2df6bc4005cf2f9bca0490f610ad6"
+      }
+    },
+    "onnxruntime": {
+      "version": "1.27.0",
+      "entry_point": "/usr/local/lib/python3.11/site-packages/onnxruntime/__init__.py",
+      "entry_point_sha256": "de6adfd9864ecb210dd535fc1d3655b768463f10950fd18e0c8ce827ce64c086",
+      "native_binary_sha256": {
+        "capi/libonnxruntime.so.1.27.0": "b5c9d4f124d24707f514dad926dc181820807178855df1c528e3addb2dd0e6f7",
+        "capi/libonnxruntime_providers_shared.so": "086ec1d5388f64153d9c63470d126693db9a182c8ce236d3a1119068471b8a0d",
+        "capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so": "1fb8111d888da93d1b118ea2bb560410d4500b655d36ca6b03d7a11beed92a3c"
+      }
+    }
+  },
+  "environment": {
+    "platform": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.36",
+    "python_version": "3.11.16 (main, Sep  1 2026, 00:14:22) [GCC 12.2.0]",
+    "python_executable": "/usr/local/bin/python",
+    "python_executable_sha256": "22e747b1e8a04719d4af2094133a0479b33728d2e4d03ab01539064dc6f45cfb",
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "artifacts": {
+    "model": {
+      "path": "models/dpdfnet2_48khz_hr.onnx",
+      "sha256": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b"
+    },
+    "weights": {
+      "path": "models/rework2/weights.f32",
+      "sha256": "cb7248b8fccbff7b32f254ec2ed0061e604514b2ccd98d997cd081a876424e7b"
+    },
+    "libraries": {
+      "baseline": {
+        "path": "build/further2_best_single/libdpdf_full.so",
+        "sha256": "3669e2784dc5f3ae0dc85b2078dadd663f59773fae8a785ca5b7964a65d07f5f"
+      },
+      "candidate": {
+        "path": "build/oct7_2_combo_asm_norm/libdpdf_full.so",
+        "sha256": "c26483de98b13e3468a961d9f7702ea587e8ae3520851fc6c9f2e5c654412be9"
+      }
+    },
+    "sources": {
+      "baseline": {
+        "directory": "scratch/further_optimization2/best_single",
+        "source_manifest_sha256": "f2a9a1a032700d3163cee100f1e3454fed193841d9c527ac6f95c2d76d4a4e9b",
+        "compiled_source_sha256": {
+          "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839",
+          "affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+          "avx2.c": "79b0d12722c273b28ceb5b3a0edeac63dc9037f747893a8aaf91cf009c28e21d",
+          "contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+          "dpdf_dprnn.c": "7d556562364cdf8bb158dbb1a9afda24e89567f25c762c41060db5e2ed3137f6",
+          "dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+          "extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+          "extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+          "extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+          "fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+          "full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+          "full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+          "full_ops.c": "dd77dfa19b9cf6d490b03f37104421615ef45a2c0a3ceafef968bf83af785bed",
+          "full_ops.h": "14ec36aa314bf515c0013571106e0fa58574996caf043353fa2afaeef02f10ab",
+          "generated_model.c": "3df188633833f2b104a77c2584de35c61b89a4403b4d571629de36dbfb57c190",
+          "int8.c": "d9f24ebf71107fa68ac6665cf5244e9c8987abe12c3d286f9c0f4d7f2c6e1f30",
+          "int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+          "internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+          "layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+          "memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+          "native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c"
+        },
+        "validated_declared_source_sha256": {
+          "affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+          "avx2.c": "79b0d12722c273b28ceb5b3a0edeac63dc9037f747893a8aaf91cf009c28e21d",
+          "CMakeLists.txt": "213619972eec17ad4aa7ff531b7396b2a74b2075279aae90a4da8c45c5fc7839",
+          "contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+          "dpdf_dprnn.c": "7d556562364cdf8bb158dbb1a9afda24e89567f25c762c41060db5e2ed3137f6",
+          "dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+          "extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+          "extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+          "extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+          "fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+          "full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+          "full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+          "full_ops.c": "dd77dfa19b9cf6d490b03f37104421615ef45a2c0a3ceafef968bf83af785bed",
+          "full_ops.h": "14ec36aa314bf515c0013571106e0fa58574996caf043353fa2afaeef02f10ab",
+          "generated_model.c": "3df188633833f2b104a77c2584de35c61b89a4403b4d571629de36dbfb57c190",
+          "int8.c": "d9f24ebf71107fa68ac6665cf5244e9c8987abe12c3d286f9c0f4d7f2c6e1f30",
+          "int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+          "internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+          "layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+          "memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+          "native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+          "ort_bridge.cc": "22511012ff9c7de67b1f8c65a03b7f5cac90ce0c7c9728e644244e5e10852b7e",
+          "experiments/tail_loop.c": "9a336086dd8a865f0d03544c941b5a67cb93ee1734948440545f45a3bafe7ea3",
+          "integration/CMakeLists.txt": "bf73b2edf1da95ebc99d9298ba2a618df68ae9541bc55164e3a8c79bff937f4c",
+          "integration/integration_contract.c": "51e31cf0df8755a726f576efad4b30674563b1c7798814463076f41d2f096e67",
+          "integration/w7a8/avx2.c": "ea78768b1239a672b704dd28a3f2a0989f83ae88d8a6bacedfcec4bd61b0224c",
+          "integration/w7a8/int8.c": "4b3e4c01cd0d09125decafedca140416bea4f3d66c553d98a218f8ac5c729e88"
+        }
+      },
+      "candidate": {
+        "directory": "scratch/oct7/2/combo_asm_norm",
+        "source_manifest_sha256": "469992e25e2be424422b14e779f10655c3bbb5916e8f9cf8bfdb7b8f280f3ab3",
+        "compiled_source_sha256": {
+          "CMakeLists.txt": "d2f40b6fc8b198d8e587eb5f7d49d76a5f2de2370f9c1a8a2d1a450e6e0f532b",
+          "affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+          "avx2.c": "bc698c0ab099d87ab1abd5a6d237f69c78dbe3fa7f1454f878ab4b86d98fcfb9",
+          "contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+          "dpdf_dprnn.c": "db9338a3993e6dd0a2700a500f42e35b96f6aa1730a85958c50e68d2e91b9e99",
+          "dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+          "extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+          "extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+          "extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+          "fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+          "full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+          "full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+          "full_ops.c": "ff85a03c3880d6d2092d32c5d3772d3b352c23a1effffa7d93006947d60152e8",
+          "full_ops.h": "189466c8ff4794283d81961933ad3505aebecc0a1565320ccbde1df6bdce1438",
+          "generated_model.c": "3df188633833f2b104a77c2584de35c61b89a4403b4d571629de36dbfb57c190",
+          "int8.c": "d28028618d67f435dbfa6e069395b843434294e6b6fae0b8cd4be24bb29ce437",
+          "int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+          "internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+          "layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+          "memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+          "native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+          "qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6"
+        },
+        "validated_declared_source_sha256": {
+          "CMakeLists.txt": "d2f40b6fc8b198d8e587eb5f7d49d76a5f2de2370f9c1a8a2d1a450e6e0f532b",
+          "affine_benchmark.c": "d1c57f8e5679aa1623f2051168d5fdeca7fc60f5ae8ab7d01cdb1a84be29da67",
+          "avx2.c": "bc698c0ab099d87ab1abd5a6d237f69c78dbe3fa7f1454f878ab4b86d98fcfb9",
+          "contract_test.c": "3d491ecfb2d5d47ce5d0b13d7950315afd898da2249c3c2c622cfc9e4175566c",
+          "dpdf_dprnn.c": "db9338a3993e6dd0a2700a500f42e35b96f6aa1730a85958c50e68d2e91b9e99",
+          "dpdf_dprnn.h": "4e109547ee20892eec6a881146a9de27e8cfe007a0a339ebac5efe71a3ff6f12",
+          "extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+          "extended_ops.c": "5d8e2946796c2d4c72527a79edd277b911ec580ab7a092a455c3c918478c1bd7",
+          "extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+          "fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+          "full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+          "full_model.h": "7a75fd05664eb98c2bef02f06a48eedd9744143285942dad6f7af88f3019927e",
+          "full_ops.c": "ff85a03c3880d6d2092d32c5d3772d3b352c23a1effffa7d93006947d60152e8",
+          "full_ops.h": "189466c8ff4794283d81961933ad3505aebecc0a1565320ccbde1df6bdce1438",
+          "generated_model.c": "3df188633833f2b104a77c2584de35c61b89a4403b4d571629de36dbfb57c190",
+          "int8.c": "d28028618d67f435dbfa6e069395b843434294e6b6fae0b8cd4be24bb29ce437",
+          "int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+          "internal.h": "bba3ea5e9329efec5cc298a1200d549b31a23719d2331d7229510ef1dc237f1f",
+          "layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+          "memory_probe.c": "60f4b152e0b168ba93b94ff3d0a52b683208d4833978bae0289d5d82586db275",
+          "native_api.h": "d866494be8b0d873736a1f97f1c3d46576f89d818b82310afb72facacda7681c",
+          "qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6"
+        }
+      }
+    }
+  },
+  "variants": {
+    "baseline": {
+      "runs": [
+        {
+          "rss_before_bytes": 58572800,
+          "rss_after_bytes": 64937984,
+          "rss_delta_bytes": 6365184,
+          "peak_rss_bytes": 73748480,
+          "owned_bytes": 5424496
+        },
+        {
+          "rss_before_bytes": 58515456,
+          "rss_after_bytes": 64950272,
+          "rss_delta_bytes": 6434816,
+          "peak_rss_bytes": 73465856,
+          "owned_bytes": 5424496
+        },
+        {
+          "rss_before_bytes": 58167296,
+          "rss_after_bytes": 64602112,
+          "rss_delta_bytes": 6434816,
+          "peak_rss_bytes": 73449472,
+          "owned_bytes": 5424496
+        },
+        {
+          "rss_before_bytes": 58634240,
+          "rss_after_bytes": 65064960,
+          "rss_delta_bytes": 6430720,
+          "peak_rss_bytes": 73707520,
+          "owned_bytes": 5424496
+        }
+      ],
+      "library_sha256": "3669e2784dc5f3ae0dc85b2078dadd663f59773fae8a785ca5b7964a65d07f5f",
+      "median_incremental_rss_bytes": 6432768.0,
+      "owned_bytes": 5424496
+    },
+    "candidate": {
+      "runs": [
+        {
+          "rss_before_bytes": 58445824,
+          "rss_after_bytes": 64815104,
+          "rss_delta_bytes": 6369280,
+          "peak_rss_bytes": 73252864,
+          "owned_bytes": 5424496
+        },
+        {
+          "rss_before_bytes": 58449920,
+          "rss_after_bytes": 64868352,
+          "rss_delta_bytes": 6418432,
+          "peak_rss_bytes": 73605120,
+          "owned_bytes": 5424496
+        },
+        {
+          "rss_before_bytes": 58613760,
+          "rss_after_bytes": 64991232,
+          "rss_delta_bytes": 6377472,
+          "peak_rss_bytes": 73744384,
+          "owned_bytes": 5424496
+        },
+        {
+          "rss_before_bytes": 58269696,
+          "rss_after_bytes": 64577536,
+          "rss_delta_bytes": 6307840,
+          "peak_rss_bytes": 73441280,
+          "owned_bytes": 5424496
+        }
+      ],
+      "library_sha256": "c26483de98b13e3468a961d9f7702ea587e8ae3520851fc6c9f2e5c654412be9",
+      "median_incremental_rss_bytes": 6373376.0,
+      "owned_bytes": 5424496
+    }
+  },
+  "raw_processes": [
+    {
+      "sequence": 0,
+      "repeat": 0,
+      "variant": "baseline",
+      "command": [
+        "/usr/local/bin/python",
+        "/bench/native/onnx_memory_probe.py",
+        "--model",
+        "/bench/models/dpdfnet2_48khz_hr.onnx",
+        "--weights",
+        "/bench/models/rework2/weights.f32",
+        "--build",
+        "/bench/build/further2_best_single",
+        "--variant",
+        "selective_int8"
+      ],
+      "started_at": "2026-10-07T11:47:41.803856+00:00",
+      "returncode": 0,
+      "stdout": "{\"rss_before_bytes\": 58572800, \"rss_after_bytes\": 64937984, \"rss_delta_bytes\": 6365184, \"peak_rss_bytes\": 73748480, \"owned_bytes\": 5424496}\n",
+      "stderr": "",
+      "finished_at": "2026-10-07T11:47:42.318865+00:00",
+      "measurement": {
+        "rss_before_bytes": 58572800,
+        "rss_after_bytes": 64937984,
+        "rss_delta_bytes": 6365184,
+        "peak_rss_bytes": 73748480,
+        "owned_bytes": 5424496
+      }
+    },
+    {
+      "sequence": 1,
+      "repeat": 0,
+      "variant": "candidate",
+      "command": [
+        "/usr/local/bin/python",
+        "/bench/native/onnx_memory_probe.py",
+        "--model",
+        "/bench/models/dpdfnet2_48khz_hr.onnx",
+        "--weights",
+        "/bench/models/rework2/weights.f32",
+        "--build",
+        "/bench/build/oct7_2_combo_asm_norm",
+        "--variant",
+        "selective_int8"
+      ],
+      "started_at": "2026-10-07T11:47:42.318980+00:00",
+      "returncode": 0,
+      "stdout": "{\"rss_before_bytes\": 58445824, \"rss_after_bytes\": 64815104, \"rss_delta_bytes\": 6369280, \"peak_rss_bytes\": 73252864, \"owned_bytes\": 5424496}\n",
+      "stderr": "",
+      "finished_at": "2026-10-07T11:47:42.841591+00:00",
+      "measurement": {
+        "rss_before_bytes": 58445824,
+        "rss_after_bytes": 64815104,
+        "rss_delta_bytes": 6369280,
+        "peak_rss_bytes": 73252864,
+        "owned_bytes": 5424496
+      }
+    },
+    {
+      "sequence": 2,
+      "repeat": 1,
+      "variant": "candidate",
+      "command": [
+        "/usr/local/bin/python",
+        "/bench/native/onnx_memory_probe.py",
+        "--model",
+        "/bench/models/dpdfnet2_48khz_hr.onnx",
+        "--weights",
+        "/bench/models/rework2/weights.f32",
+        "--build",
+        "/bench/build/oct7_2_combo_asm_norm",
+        "--variant",
+        "selective_int8"
+      ],
+      "started_at": "2026-10-07T11:47:42.841681+00:00",
+      "returncode": 0,
+      "stdout": "{\"rss_before_bytes\": 58449920, \"rss_after_bytes\": 64868352, \"rss_delta_bytes\": 6418432, \"peak_rss_bytes\": 73605120, \"owned_bytes\": 5424496}\n",
+      "stderr": "",
+      "finished_at": "2026-10-07T11:47:43.356084+00:00",
+      "measurement": {
+        "rss_before_bytes": 58449920,
+        "rss_after_bytes": 64868352,
+        "rss_delta_bytes": 6418432,
+        "peak_rss_bytes": 73605120,
+        "owned_bytes": 5424496
+      }
+    },
+    {
+      "sequence": 3,
+      "repeat": 1,
+      "variant": "baseline",
+      "command": [
+        "/usr/local/bin/python",
+        "/bench/native/onnx_memory_probe.py",
+        "--model",
+        "/bench/models/dpdfnet2_48khz_hr.onnx",
+        "--weights",
+        "/bench/models/rework2/weights.f32",
+        "--build",
+        "/bench/build/further2_best_single",
+        "--variant",
+        "selective_int8"
+      ],
+      "started_at": "2026-10-07T11:47:43.356172+00:00",
+      "returncode": 0,
+      "stdout": "{\"rss_before_bytes\": 58515456, \"rss_after_bytes\": 64950272, \"rss_delta_bytes\": 6434816, \"peak_rss_bytes\": 73465856, \"owned_bytes\": 5424496}\n",
+      "stderr": "",
+      "finished_at": "2026-10-07T11:47:43.893880+00:00",
+      "measurement": {
+        "rss_before_bytes": 58515456,
+        "rss_after_bytes": 64950272,
+        "rss_delta_bytes": 6434816,
+        "peak_rss_bytes": 73465856,
+        "owned_bytes": 5424496
+      }
+    },
+    {
+      "sequence": 4,
+      "repeat": 2,
+      "variant": "baseline",
+      "command": [
+        "/usr/local/bin/python",
+        "/bench/native/onnx_memory_probe.py",
+        "--model",
+        "/bench/models/dpdfnet2_48khz_hr.onnx",
+        "--weights",
+        "/bench/models/rework2/weights.f32",
+        "--build",
+        "/bench/build/further2_best_single",
+        "--variant",
+        "selective_int8"
+      ],
+      "started_at": "2026-10-07T11:47:43.893972+00:00",
+      "returncode": 0,
+      "stdout": "{\"rss_before_bytes\": 58167296, \"rss_after_bytes\": 64602112, \"rss_delta_bytes\": 6434816, \"peak_rss_bytes\": 73449472, \"owned_bytes\": 5424496}\n",
+      "stderr": "",
+      "finished_at": "2026-10-07T11:47:44.417543+00:00",
+      "measurement": {
+        "rss_before_bytes": 58167296,
+        "rss_after_bytes": 64602112,
+        "rss_delta_bytes": 6434816,
+        "peak_rss_bytes": 73449472,
+        "owned_bytes": 5424496
+      }
+    },
+    {
+      "sequence": 5,
+      "repeat": 2,
+      "variant": "candidate",
+      "command": [
+        "/usr/local/bin/python",
+        "/bench/native/onnx_memory_probe.py",
+        "--model",
+        "/bench/models/dpdfnet2_48khz_hr.onnx",
+        "--weights",
+        "/bench/models/rework2/weights.f32",
+        "--build",
+        "/bench/build/oct7_2_combo_asm_norm",
+        "--variant",
+        "selective_int8"
+      ],
+      "started_at": "2026-10-07T11:47:44.417662+00:00",
+      "returncode": 0,
+      "stdout": "{\"rss_before_bytes\": 58613760, \"rss_after_bytes\": 64991232, \"rss_delta_bytes\": 6377472, \"peak_rss_bytes\": 73744384, \"owned_bytes\": 5424496}\n",
+      "stderr": "",
+      "finished_at": "2026-10-07T11:47:44.928595+00:00",
+      "measurement": {
+        "rss_before_bytes": 58613760,
+        "rss_after_bytes": 64991232,
+        "rss_delta_bytes": 6377472,
+        "peak_rss_bytes": 73744384,
+        "owned_bytes": 5424496
+      }
+    },
+    {
+      "sequence": 6,
+      "repeat": 3,
+      "variant": "candidate",
+      "command": [
+        "/usr/local/bin/python",
+        "/bench/native/onnx_memory_probe.py",
+        "--model",
+        "/bench/models/dpdfnet2_48khz_hr.onnx",
+        "--weights",
+        "/bench/models/rework2/weights.f32",
+        "--build",
+        "/bench/build/oct7_2_combo_asm_norm",
+        "--variant",
+        "selective_int8"
+      ],
+      "started_at": "2026-10-07T11:47:44.928687+00:00",
+      "returncode": 0,
+      "stdout": "{\"rss_before_bytes\": 58269696, \"rss_after_bytes\": 64577536, \"rss_delta_bytes\": 6307840, \"peak_rss_bytes\": 73441280, \"owned_bytes\": 5424496}\n",
+      "stderr": "",
+      "finished_at": "2026-10-07T11:47:45.446747+00:00",
+      "measurement": {
+        "rss_before_bytes": 58269696,
+        "rss_after_bytes": 64577536,
+        "rss_delta_bytes": 6307840,
+        "peak_rss_bytes": 73441280,
+        "owned_bytes": 5424496
+      }
+    },
+    {
+      "sequence": 7,
+      "repeat": 3,
+      "variant": "baseline",
+      "command": [
+        "/usr/local/bin/python",
+        "/bench/native/onnx_memory_probe.py",
+        "--model",
+        "/bench/models/dpdfnet2_48khz_hr.onnx",
+        "--weights",
+        "/bench/models/rework2/weights.f32",
+        "--build",
+        "/bench/build/further2_best_single",
+        "--variant",
+        "selective_int8"
+      ],
+      "started_at": "2026-10-07T11:47:45.446834+00:00",
+      "returncode": 0,
+      "stdout": "{\"rss_before_bytes\": 58634240, \"rss_after_bytes\": 65064960, \"rss_delta_bytes\": 6430720, \"peak_rss_bytes\": 73707520, \"owned_bytes\": 5424496}\n",
+      "stderr": "",
+      "finished_at": "2026-10-07T11:47:45.948315+00:00",
+      "measurement": {
+        "rss_before_bytes": 58634240,
+        "rss_after_bytes": 65064960,
+        "rss_delta_bytes": 6430720,
+        "peak_rss_bytes": 73707520,
+        "owned_bytes": 5424496
+      }
+    }
+  ],
+  "completed": true,
+  "finished_at": "2026-10-07T11:47:46.902755+00:00"
+}
