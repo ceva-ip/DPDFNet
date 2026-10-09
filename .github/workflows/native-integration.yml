@@ -1,9 +1,9 @@
 name: Native integration
 on:
   push:
-    paths: ['native_inference/native/**', 'native_inference/artifacts/**', '.github/workflows/native-integration.yml']
+    paths: ['optimized_inference/**', '.github/workflows/native-integration.yml']
   pull_request:
-    paths: ['native_inference/native/**', 'native_inference/artifacts/**', '.github/workflows/native-integration.yml']
+    paths: ['optimized_inference/**', '.github/workflows/native-integration.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -11,17 +11,35 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
-        config:
-          - '-DCMAKE_BUILD_TYPE=Release'
-          - '-DCMAKE_BUILD_TYPE=Release -DDPDF_ENABLE_AVX2=OFF'
-          - '-DCMAKE_BUILD_TYPE=RelWithDebInfo -DDPDF_SANITIZE=ON -DBUILD_SHARED_LIBS=ON'
+        include:
+          - name: Release shared (PGO)
+            pgo: true
+          - name: Release static
+            pgo: false
+            config: '-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF'
+          - name: ASan and UBSan
+            pgo: false
+            config: '-DCMAKE_BUILD_TYPE=RelWithDebInfo -DDPDF_SANITIZE=ON -DBUILD_SHARED_LIBS=ON'
+    name: ${{ matrix.name }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: optimized_inference
     steps:
       - uses: actions/checkout@v4
-      - name: Verify generated sources and weights
-        working-directory: native_inference/artifacts/v1
-        run: sha256sum -c SHA256SUMS
-      - name: Configure without Python or ONNX dependencies
-        run: cmake -S native_inference/native/integration -B build/native ${{ matrix.config }}
-      - run: cmake --build build/native -j 2
-      - run: ctest --test-dir build/native --output-on-failure
+      - name: Verify both model weights
+        run: sha256sum -c models/SHA256SUMS
+      - name: Build recommended PGO release and run contracts
+        if: matrix.pgo
+        run: python3 tools/build.py --build-dir build/ci --jobs 2
+      - name: Configure static or sanitizer build
+        if: '!matrix.pgo'
+        run: cmake -S . -B build/ci ${{ matrix.config }} -DDPDF_PGO_MODE=OFF -DBUILD_TESTING=ON
+      - name: Build
+        if: '!matrix.pgo'
+        run: cmake --build build/ci -j 2
+      - name: Run contracts for both models
+        if: '!matrix.pgo'
+        run: ctest --test-dir build/ci --output-on-failure --parallel 1
