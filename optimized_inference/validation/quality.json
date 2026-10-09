@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "sample_rate": 48000,
+  "quality_clip_count": 6,
+  "quality_ids": [
+    "00033",
+    "00046",
+    "00084",
+    "00133",
+    "00200",
+    "00364"
+  ],
+  "precision": "W7A8, fitted degree-5 DPRNN gates; FP32 state",
+  "rates": {
+    "pesq_wb": 16000,
+    "stoi_internal": 10000,
+    "si_snr": 48000,
+    "sigmos": 48000
+  },
+  "sigmos_model_sha256": "f939dcc1945055a435565b4369e27dafd0f87df3cea4e2ff6eb81225e52cc53b",
+  "evaluator_sha256": "9adbe4ff4c0377a4c9e9c6eb9516953df0e44ad1a2cc13f54dc7639ffc9bf5c3",
+  "study_sha256": {
+    "dpdfnet2_overview_quality.json": "961aae8880af132cc1d9d262a467f2cf7f8688a818f23aa108bf4d739de28611",
+    "w7_followup_pack_fit5_audio.json": "9892fd8d5a9aa579f3cb52a4923ea82bf09f0fb175102eaaf13c5b7097edd9f7"
+  },
+  "means": {
+    "2": {
+      "pesq_wb_16k": 2.4413026372591653,
+      "stoi": 0.9358741571074736,
+      "si_snr_48k_db": 16.084149776422684,
+      "MOS_SIG": 3.863118131955465,
+      "MOS_NOISE": 4.614571889241536,
+      "MOS_OVRL": 3.2812443176905313
+    },
+    "8": {
+      "pesq_wb_16k": 2.5209930737813315,
+      "stoi": 0.9404491749950535,
+      "si_snr_48k_db": 16.644580357496725,
+      "MOS_SIG": 3.8450621366500854,
+      "MOS_NOISE": 4.6364976565043134,
+      "MOS_OVRL": 3.3566293319066367
+    }
+  }
+}

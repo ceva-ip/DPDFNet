@@ -39,3 +39,6 @@ dpdfnet.egg-info/
 
 # Model Zoo
 model_zoo/
+
+# Local preservation of optimization research and developer validation.
+/.local/

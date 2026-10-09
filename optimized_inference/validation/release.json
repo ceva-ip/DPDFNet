@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "library_sha256": "1094614eb0ceb51ffc818fa2b1d4e473b5774b41fd620c7b13736b353ccc9e55",
+  "reference_sha256": "21ad46a8415f741d02345c23f44aaf6b3dbadf664bef17bcff492e260e437aa4",
+  "models": [
+    2,
+    8
+  ],
+  "cases_per_model": 65,
+  "hops_per_model": 134332,
+  "every_spectrum_state_and_pcm_hash_matches": true,
+  "reset_replay_matches": true,
+  "independent_concurrent_contexts_match_serial": true,
+  "elapsed_seconds": 186.60891126299998,
+  "contracts": {
+    "release": {
+      "passed": 19,
+      "total": 19
+    },
+    "asan_ubsan": {
+      "passed": 19,
+      "total": 19
+    },
+    "static": {
+      "passed": 19,
+      "total": 19
+    }
+  },
+  "packaging": {
+    "preprocessing": [
+      {
+        "model": 2,
+        "file": "dpdf_dprnn.c",
+        "preprocessed_c_tokens_identical": true
+      },
+      {
+        "model": 2,
+        "file": "avx2.c",
+        "preprocessed_c_tokens_identical": true
+      },
+      {
+        "model": 2,
+        "file": "int8.c",
+        "preprocessed_c_tokens_identical": true
+      },
+      {
+        "model": 2,
+        "file": "full_ops.c",
+        "preprocessed_c_tokens_identical": true
+      },
+      {
+        "model": 8,
+        "file": "dpdf_dprnn.c",
+        "preprocessed_c_tokens_identical": true
+      },
+      {
+        "model": 8,
+        "file": "avx2.c",
+        "preprocessed_c_tokens_identical": true
+      },
+      {
+        "model": 8,
+        "file": "int8.c",
+        "preprocessed_c_tokens_identical": true
+      },
+      {
+        "model": 8,
+        "file": "full_ops.c",
+        "preprocessed_c_tokens_identical": true
+      }
+    ],
+    "public_exports": [
+      "dpdfnet_cpu_supported",
+      "dpdfnet_create",
+      "dpdfnet_destroy",
+      "dpdfnet_get_model_info",
+      "dpdfnet_init_state",
+      "dpdfnet_owned_bytes",
+      "dpdfnet_process"
+    ],
+    "installed_shared_and_static_consumers_pass": true
+  },
+  "compiler": "GCC 12.2.0",
+  "build": "Linux x86-64, Release, strict floating-point, model-8 PGO trained locally",
+  "source_file_sha256": {
+    "src/backend.h": "f454525befa2822fa7393c9ad0fef4f6eedee6a22257ab5c97dd23e69ebdc940",
+    "src/common/avx2.c": "0b08f3a5f640c5f3261a5dfd0648da89a487fd0a82f4a9e1c76d87a2ffefcf81",
+    "src/common/dpdf_dprnn.c": "54088b65f6844e92453d3b77451aaf8519a0796dc094efb9d713420ed8533b0c",
+    "src/common/extended_ops.c": "9e648587a9decbe1960df44fbe0cc4f4816fc0f85010ffb62847befdec5a56de",
+    "src/common/fp16.c": "edcf6decac7ffb1411cd9f5d9b43a35e7644dae0d2c55de427edb771d50f0887",
+    "src/common/full_ops.c": "cb05a93a38e7f425254f738a5773b25a4953453f8bd178a82bad37fb201aaea0",
+    "src/common/int8.c": "d9b6a71cb2acca888bfe78a61094733b6a8e019f7f6559d73f2daec573f979b7",
+    "src/common/qdot4pair_fixed_avx2.S": "ab6a1f48db29ead4380d87cb2dfc49a88859172ff9c583d2608f96143280930a",
+    "src/common/qdot64_fixed_avx2.S": "0d317938030abada28343467bd0b27f178ffd1cefe00f25ef4ab04498cd62ae6",
+    "src/exports.map": "c1922249b17b358fe192541ecd499dccc90e417651e9739c1fd1dde28aa34962",
+    "src/model_backend.c": "c0c95f411e88f0fa039ff260c4c80b1292fe3ef9002e7d10328f70980c4b2f18",
+    "src/models/dpdfnet2_48khz_hr/generated_model.c": "1c057e7eea38f436e798a8081f3ad4c94ea3642bc2081fa4248f60caf3436f70",
+    "src/models/dpdfnet2_48khz_hr/qaffine256_fused_avx2.S": "11b790b0ada369a49bfc3ab8e03ddfab2bcea5997dcb885d504a874180b1016a",
+    "src/models/dpdfnet2_48khz_hr/qaffine4pair64_fused_avx2.S": "a47fe0ca77ac7a2b8014fb1156f6d54963bafea937b25f6e8d2b82d08400c187",
+    "src/models/dpdfnet2_48khz_hr/qaffine64_fused_avx2.S": "78bf03b929e58864391e8f3930ad654d62c14aec13153c189443a69286dbfe5e",
+    "src/models/dpdfnet8_48khz_hr/generated_model.c": "30386ac12d0a1b8a7766377ae696ad050d4e213d32e45e46f8d7936948779981",
+    "src/models/dpdfnet8_48khz_hr/qaffine64_fused_avx2.S": "87c6298b2e564f097a50c3f6820e235942e769891d48614219c5f21b9514da5c",
+    "src/private/dpdf_dprnn.h": "aa6de6cb058f03116086a58ed4d9346662c09796f69ef70c8c66ae4a110a997b",
+    "src/private/extended_ops.h": "02e2128017f6f8d7a0a36db87c07ead341b08b4a3833213fa635854dcd029696",
+    "src/private/full_model.h": "c09b32215dbb0ce1b1474f270fd7015f40d6a487fd65ebdb20a51b6eb42e6747",
+    "src/private/full_ops.h": "63380491a870274966ae0463a181e1ed6adc6bd75c133a604e5d701835afa06c",
+    "src/private/internal.h": "7e952ddfadd9eef090a1831c2be981bdaa56db0db5936a97dccebfd914495a77",
+    "src/private/namespace2.h": "bff147150f97071b3284f07a33afbc45849651dd7139a9c46a3c806f22a537cf",
+    "src/private/namespace8.h": "7e9b39bb9bbc3134ff7a52ce4d27814a4b2c084c93c2cae3fa1c64fb55eab65f",
+    "src/private/pair_fused_args.h": "1c58c9f381d95027e0baa954a35293b831a9562c6318892115c9928bfff9fba4",
+    "src/runtime.c": "0660e7ab08894d4e4fc8bd0c228129bdc8ec3ab7559abdb322c2e13fb1b026d1",
+    "include/dpdfnet.h": "0961eadc6ed8539607383d8489687c3b1a74674a35547cc5eb387c1e90d0916a",
+    "tools/build.py": "b4c632d488b9d5d1214e32dd58c32c459a2d0376fbb63574c01eb8c06fb3b108",
+    "tools/support.h": "69e665698ad4c6cc7f652c3aabfa11e8a1f7098d2cf87454b30418a179b056ad",
+    "tools/train.c": "0864656e7cbd5bf43e2dc0765bfb442f835b8a0fdc096db7f7f8ac2a486372ea",
+    "tools/verify_audio.py": "523ad02a32351c4d546b353d4a7af1eb4a3fc5181a6c1cd0e5d3e772ab1370a6",
+    "benchmarks/benchmark.c": "2c28f6fc66fa93347591b68338c660ce112fb9a9390ad53f88b62d30cef6cc3c",
+    "tests/conv_helpers_contract.c": "0a41825e7ce957547858387bdcc5d70f7fe6fe3feecb6fc6e6e6fd3728038046",
+    "tests/extended_contract.c": "50bdd852ec1670636dead1e1d087efc2bd2d9821dbaec1e29a2ce0c3626b1ff6",
+    "tests/full_contract.c": "90f5ce6ff4b824b4aa79c5eac3adc9a5b2cd20ab80b4c1b192bb0540a28d1f38",
+    "tests/fused_contract.c": "7311f6f0ade37dbcf2618f4e2cc34457dc50a74c4715f47012ffaa16816dffcc",
+    "tests/generated_gru_contract.c": "1ba166996e265fef7a7ab08611d712d1aa587a5325429b890cb814d4051bfcc7",
+    "tests/int8_contract.c": "5a3b7cb1269fb17b8cfd395aaeba73d9ef0f4b2cf87b96afae30ca165f3812f2",
+    "tests/layout_contract.c": "de23491245aa1860b69a229cb58fb8a5e702086945694b3584110d83308dab76",
+    "tests/pair_contract.c": "ccd80af63d5baf2466694993afeb0ac40516edaef82efc4244cc4010fae2fd0a",
+    "tests/pair_fused_contract.c": "3b8e654a099e3e23cc4468152f28ffc75b08331c9706e242a73c8c3cc0c1ea0f",
+    "tests/public_contract.c": "4eafa7142dde1e199b5064e3cbdad8221a3724e77baada24f1e782251187e64d",
+    "tests/wide_contract.c": "8d0e73d2c4eef616ce711bba2812d45f5f5d5307ae0f595a3653e056bad32dfe",
+    "examples/dpdfnet.py": "5aceec3cbfcd9b209b74a9fe1750ea2867fafd875991a2117c2aacd10e275e42",
+    "examples/enhance_wav.py": "989b80ed938d191159d3404f5c922ee4905c0db4b5b1eceb913d7f71dd87a988",
+    "examples/process_spectrum.c": "767e35585f5ff6e0300744a88eb89506e66d68bd48beb44b3b18108fb04e61dc",
+    "cmake/DPDFNetConfig.cmake.in": "366e9c2407b88c44cfe94013907bd8341f766bb890c0c1fda48ddbad6dd8842d",
+    "CMakeLists.txt": "9ff77cd1047f0f323bf1b71ea95fa8ba2a356dc1c4cc13769c4750121beae34a",
+    "examples/requirements.txt": "393a13588e1b3e57e2e934947364e3afd3d00b59018a8fd096e0a3b3560ffea2",
+    "tools/benchmark.py": "0c4610cb921961342f13936c399bda0f6cc1f77beb49f4c49bca52302a87f9a1"
+  },
+  "audio_dependencies": {
+    "python": "3.11.16",
+    "numpy": "2.4.6",
+    "soundfile": "0.13.1"
+  },
+  "c_cli_and_both_wav_cli_smoke_tests_pass": true,
+  "repeated_latency_evidence_sha256": "9f4c8ed4589d956c8898964c3968e99b56cfd06382604ea4876b20235e08d11f",
+  "repeated_benchmark_summary_matches_independent_calculation": true,
+  "repeated_benchmark_driver_smoke_pass": true
+}

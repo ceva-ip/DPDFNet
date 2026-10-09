@@ -1,4 +1,0 @@
-FROM dpdfnet-native-quality
-RUN pip install --no-cache-dir torch==2.7.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cpu
-RUN pip install --no-cache-dir pyloudnorm==0.1.1 tqdm==4.67.1
-ENV OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMBA_NUM_THREADS=1

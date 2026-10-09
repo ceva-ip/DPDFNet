@@ -1,6 +1,0 @@
-{
-  "sanitizer": "ASan + UBSan",
-  "source": "/bench/scratch/w7_followup/pack32",
-  "all_five_contracts_passed": true,
-  "log": "Internal ctest changing into directory: /bench/build/w7_followup_pack32_asan\nTest project /bench/build/w7_followup_pack32_asan\n    Start 1: int8_contract\n1/5 Test #1: int8_contract ....................   Passed    0.26 sec\n    Start 2: layout_contract\n2/5 Test #2: layout_contract ..................   Passed    0.11 sec\n    Start 3: extended_contract\n3/5 Test #3: extended_contract ................   Passed    5.45 sec\n    Start 4: full_contract\n4/5 Test #4: full_contract ....................   Passed   30.23 sec\n    Start 5: native_contract\n5/5 Test #5: native_contract ..................   Passed   14.76 sec\n\n100% tests passed, 0 tests failed out of 5\n\nTotal Test time (real) =  50.86 sec\n"
-}

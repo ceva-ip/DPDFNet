@@ -1,0 +1,5 @@
+/build*/
+/profiles/
+/validation/local/
+__pycache__/
+*.pyc

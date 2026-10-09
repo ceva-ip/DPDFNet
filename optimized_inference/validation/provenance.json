@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "reference_semantics": "Accepted fitted W7A8 reference, not original FP32 ONNX",
+  "models": {
+    "2": {
+      "reference_library_sha256": "709ec4a699f39bf632e12c9eeb1fa821711fa1acfad7257e18ada4a73dd17864",
+      "reference_audio_report_sha256": "41d32309a40492f3a1111d1145d1692c3c328583505391492dcce5fe51deabdb",
+      "source_onnx_sha256": "7f0575a5cec0ba4ffd8f8bd657e06d007e4ccdd955d76faab922b9d3291dc14b",
+      "weights_sha256": "cb7248b8fccbff7b32f254ec2ed0061e604514b2ccd98d997cd081a876424e7b"
+    },
+    "8": {
+      "reference_library_sha256": "bdfc013b5c42c0a6f454d8c84465a616bb8be910b136423f366d50d018f7986b",
+      "reference_audio_report_sha256": "329d84421ff788f3d043ef333b8cddfd2ff0153e6d630d947b551a448c810662",
+      "source_onnx_sha256": "7b3afbb260a08fe9af3d16e3bda992971be1e7e951d1dee7c2d235f5c43f5631",
+      "weights_sha256": "5a5bb67a8619090c54dc2793536fe813fe38123b236d445f3433aafe3075529d"
+    }
+  },
+  "research_history_base_commit": "b1c629f"
+}

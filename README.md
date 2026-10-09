@@ -55,88 +55,17 @@
 | dpdfnet2_48khz_hr | 2.58 | 2.42 | 11.6 | 10.0 |
 | dpdfnet8_48khz_hr | 3.63 | 7.17 | 18.7 | 14.2 |
 
-### Latest single-thread native W7A8 results
+### Optimized native inference
 
-The accepted exact kernel optimization uses one calling thread, 7-bit weights
-and 8-bit activations in quantized kernels, with FP32 recurrent state. Both
-models preserve their fitted W7A8 reference output byte for byte across the
-same 65 audio fixtures (22.3 minutes and 134,332 hops per model).
+The [optimized C runtime](optimized_inference/README.md) supports
+`dpdfnet2_48khz_hr` and `dpdfnet8_48khz_hr` with the final W7A8 kernels and
+FP32 recurrent state. It includes both model weights, a shared C API,
+assembly kernels, examples, contract tests and build documentation.
 
-| Model | Standalone inference / 10 ms hop | Warmed incremental RSS | Native owned allocations |
-| --- | ---: | ---: | ---: |
-| `dpdfnet8_48khz_hr` | **1.867 ms** | **7.56 MiB** | **6.45 MiB** |
-| `dpdfnet2_48khz_hr` | **0.939 ms** | **6.12 MiB** | **5.17 MiB** |
-
-Measured on Intel i7-8700, Linux Docker/WSL2, using preallocated C calls:
-median of four standalone cadence run means, 100 warmup and 1,000 timed hops
-per run. FFT and audio I/O are excluded; the 50 ms algorithmic delay is unchanged.
-These are isolated research builds; packaged ONNX and distributed integration
-presets remain unchanged. See the [current latency, memory and quality tables](native_inference/README.md)
-and [matched reference comparisons and reproduction](native_inference/native/FURTHER_EXACT_OPTIMIZATION.md).
-
-### Experimental native FP16 / INT8 results
-
-The following tables retain the earlier FP16/INT8 investigation measurements;
-the latest accepted W7A8 results are above.
-
-The final selective native precision configuration has been evaluated on both
-48 kHz HR models. It stores DPRNN, dense/grouped FC, and 1×1 CNN weights in
-FP16 or INT8; other convolutions, accumulation, biases, normalization,
-nonlinearities, recurrent state, and complex filtering remain FP32. These modes
-are explicit experiments and are not selected by the packaged ONNX API.
-
-Intel i7-8700, Linux x86-64 under Docker/WSL2, one inference thread. Values are
-the median of three run means with 100 warmup and 1,000 timed 10 ms hops per
-run. Paced tests submit one hop every 10 ms. Memory is native-owned heap, not
-whole-process RSS.
-
-An architecture-specific `dpdfnet8_48khz_hr` follow-up keeps adjacent DPRNN
-blocks frequency-major, fuses the two intra-GRU INT8 input projections, and
-specializes the single-row recurrent INT8 dot product with 64-output AVX2
-tiles. Preserved and optimized libraries were interleaved on identical streams;
-INT8 uses seven continuous/five paced runs and FP16 uses five/three.
-
-| `dpdfnet8_48khz_hr` mode | Preserved continuous | Optimized continuous | Preserved paced | Optimized paced |
-| --- | ---: | ---: | ---: | ---: |
-| Selective FP16 | 3.196 ms | 3.152 ms (1.4% saved) | 3.243 ms | 3.240 ms (0.1% saved) |
-| Selective INT8 | 2.940 ms | **2.710 ms (7.8% saved)** | 3.053 ms | **2.891 ms (5.3% saved)** |
-
-Both optimized modes were bit-identical to their preserved implementations for
-500 recurrent frames, including the entire state vector. The INT8 median
-per-frame p50 also fell by 8.3% continuously and 5.7% when paced. Therefore the
-existing quality scores and listening WAVs remain valid: this pass changes
-execution only, not model numerics.
-
-| `dpdfnet2_48khz_hr` backend | Continuous mean | Paced mean | Time saved vs ONNX | Owned heap |
-| --- | ---: | ---: | ---: | ---: |
-| Original ONNX FP32 | 2.167 ms | 2.343 ms | — | — |
-| Native FP32 | 1.753 ms | 1.975 ms | 19.1% | 16.79 MB |
-| Selective FP16 | 1.454 ms | 1.703 ms | 32.9% | 11.40 MB |
-| Selective INT8 | **1.319 ms** | **1.499 ms** | **39.1%** | **8.89 MB** |
-
-All native modes recorded zero calls above 10 ms across 3,000 timed continuous
-and 3,000 timed paced hops per mode. FP16 reduces owned heap by 32.1% and INT8
-by 47.1% relative to native FP32. These development-machine measurements are
-not release or real-time deadline guarantees.
-
-On a seven-mixture, one-speaker quality check, FP16 output-to-original PESQ-WB
-was 4.64382–4.64389 and its clean-reference PESQ change was −0.000045 to
-+0.000313. INT8 output-to-original PESQ-WB was 4.61353–4.64191; its
-clean-reference PESQ change was −0.01823 to +0.00236 and STOI change was
-−0.001835 to +0.000102. FP16 is the conservative choice here. INT8 provides
-the best latency and memory result, but the measured quality change means it
-should not be described as lossless.
-
-See the [listening comparison](native_inference/listening_comparison/index.html)
-for noisy, original FP32, FP16, and INT8 audio from both 48 kHz HR models.
-Machine-readable evidence is in the
-[summary](native_inference/results/dpdfnet2_48khz_hr_summary.json),
-[timing and memory results](native_inference/results/dpdfnet2_48khz_hr_final.json),
-[quality results](native_inference/results/dpdfnet2_48khz_hr_quality.json), and
-the `dpdfnet8_48khz_hr` [optimized INT8](native_inference/results/dpdfnet8_int8_optimized.json)
-and [FP16 layout](native_inference/results/dpdfnet8_fp16_layout_optimized.json)
-comparisons. The architecture analysis is in the
-[optimization map](native_inference/native/DPDFNET8_ARCHITECTURE.md).
+The supported target is Linux x86-64 with AVX2/FMA and GCC, including WSL2.
+Inference uses one calling thread and requires no ONNX Runtime.
+See [performance and output quality](optimized_inference/docs/PERFORMANCE.md)
+for measurements and their scope; the 50 ms algorithmic delay is unchanged.
 
 ## Install the PyPI Package
 

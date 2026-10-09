@@ -1,5 +1,0 @@
-Compile:
-
-Execute:
-108 convolution shapes match the original per-tap rounding contract
-Transpose edges/NaN payloads and ordered-double SIMD normalization passed
