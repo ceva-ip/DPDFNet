@@ -24,6 +24,11 @@
   <a href="https://arxiv.org/abs/2512.16420"><strong>Paper</strong></a>
 </p>
 
+<p align="center">
+  <a href="https://paperswithcode.co/api/v1/papers/2512.16420/leaderboard-badge-link?eval=19966"><img src="https://paperswithcode.co/api/v1/papers/2512.16420/leaderboard-badge.svg?eval=19966&amp;live=1" alt="Papers with Code: SOTA on DNS Challenge 2020 blind P.835 (standard)"></a>&nbsp;
+  <a href="https://paperswithcode.co/api/v1/papers/2512.16420/leaderboard-badge-link?eval=19975"><img src="https://paperswithcode.co/api/v1/papers/2512.16420/leaderboard-badge.svg?eval=19975&amp;live=1" alt="Papers with Code: SOTA on DPDFNet multilingual low-SNR"></a>
+</p>
+
 <br>
 
 <p align="center">
