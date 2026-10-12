@@ -115,6 +115,11 @@ static void independent_reference(const unsigned char *a,const int8_t w[2][64*8]
 
 int main(void) {
     __builtin_cpu_init();
+#ifdef DPDF_TEST_AVX_VNNI
+    if (!__builtin_cpu_supports("avxvnni")) {
+        fputs("AVX-VNNI assembly oracle requires AVX-VNNI\n",stderr); return 77;
+    }
+#endif
     if (!__builtin_cpu_supports("avx2") || !__builtin_cpu_supports("fma")) {
         fputs("Fused pair contract requires AVX2/FMA; not tested.\n",stderr);
         return 77;

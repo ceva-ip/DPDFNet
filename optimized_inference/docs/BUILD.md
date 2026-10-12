@@ -104,3 +104,39 @@ python3 tools/verify_audio.py --data /path/to/fixtures --workers 4
 `validation/reference_streams.json` records relative fixture paths and input,
 spectrum, state and PCM checksums. Audio datasets and listening outputs are
 not bundled. Run correctness jobs separately from latency benchmarks.
+
+## Optional AVX-VNNI kernels
+
+`DPDF_ENABLE_AVX_VNNI` defaults to `ON`. CMake checks that GCC supports both
+VEX-encoded AVX-VNNI intrinsics and the CPU feature query. If that check fails,
+the build retains the AVX2 kernels. To explicitly build only AVX2 kernels:
+
+```sh
+cmake -S . -B build/avx2 -DDPDF_ENABLE_AVX_VNNI=OFF -DDPDF_PGO_MODE=OFF
+cmake --build build/avx2
+ctest --test-dir build/avx2 --output-on-failure
+```
+
+The normal binary supports the same AVX2/FMA baseline as before. Each quantized
+matrix selects its implementation during creation, using GCC's CPU feature
+query. The audio callback performs no feature detection or allocation. Only
+`int8_vnni.c` and the corresponding assembly require AVX-VNNI; no global
+`-march=native`, AVX-512, or model format change is needed. Initialization adds
+two private function pointers per quantized matrix (4,016 bytes for model 2 and
+5,552 bytes for model 8 on x86-64). The public ABI is unchanged.
+
+The generated VNNI assembly keeps the addressing, floating-point instruction
+order, and ABI of the AVX2 assembly. Regenerate it after editing those sources:
+
+```sh
+python3 tools/generate_vnni.py
+python3 tools/generate_vnni.py --check
+```
+
+The W7A8 activation range is 0–254 and the weight range is -63–63. Therefore,
+the AVX2 intermediate signed 16-bit pair sums cannot saturate
+(`2 * 254 * 63 = 32004`). Replacing its multiply/add reduction with the
+non-saturating `VPDPBUSD` preserves integer sums, quantization, scaling, and
+floating-point output. `int8_dispatch_contract` checks bitwise equality with
+the AVX2 implementation for both models, including single and paired kernels,
+row tiles and tails, extreme input values, and unaligned buffers.

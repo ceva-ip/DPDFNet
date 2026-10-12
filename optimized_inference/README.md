@@ -2,7 +2,9 @@
 
 A small, single-threaded C runtime for **`dpdfnet2_48khz_hr`** and
 **`dpdfnet8_48khz_hr`**, with bundled weights and optimized AVX2 assembly kernels.
-Both models use the final W7A8 implementation: quantized matrix weights and
+AVX-VNNI kernels are selected automatically on supported CPUs, with AVX2
+fallback in the same binary. Both models use the final W7A8 implementation:
+quantized matrix weights and
 activations, FP32 recurrent state, and fitted GRU gate functions.
 
 The supported target is **Linux x86-64 with AVX2/FMA and GCC**. Windows users can
@@ -54,6 +56,11 @@ build/dpdfnet_benchmark 8 models/dpdfnet8_48khz_hr/weights.f32 1000 paced
 ```
 
 ## Results
+
+The published AVX2 reference measurements below precede runtime dispatch.
+Dispatch adds a small amount of context bookkeeping (see
+[build instructions](docs/BUILD.md#optional-avx-vnni-kernels)); AVX-VNNI
+performance depends on the target CPU.
 
 Intel i7-8700, Linux/WSL2, one thread; mean ± SD over 32 fresh runs/model
 (1,000 timed hops/run at 10 ms cadence).
