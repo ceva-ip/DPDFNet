@@ -46,7 +46,7 @@ if(DPDF_ENABLE_AVX_VNNI)
   cmake_push_check_state(RESET)
   set(CMAKE_REQUIRED_FLAGS "-mavx2 -mfma -mavxvnni")
   check_c_source_compiles("#include <immintrin.h>
-    int main(void) { __m256i x = _mm256_setzero_si256();
+    int main(void) { __m256i x = _mm256_set1_epi32(__builtin_cpu_supports(\"avxvnni\"));
       x = _mm256_dpbusd_avx_epi32(x, x, x);
       return __builtin_cpu_supports(\"avxvnni\") + _mm256_extract_epi32(x, 0); }"
     DPDF_COMPILER_HAS_AVX_VNNI)
@@ -161,7 +161,7 @@ if(BUILD_TESTING)
         target_include_directories(${target} PRIVATE include src src/private)
         target_compile_options(${target} PRIVATE
           -include "${CMAKE_CURRENT_SOURCE_DIR}/src/private/namespace${size}.h"
-          "SHELL:-include ${CMAKE_CURRENT_SOURCE_DIR}/src/private/int8_vnni_aliases.h"
+          "SHELL:-include \"${CMAKE_CURRENT_SOURCE_DIR}/src/private/int8_vnni_aliases.h\""
           -frounding-math -fno-tree-vectorize)
         target_compile_definitions(${target} PRIVATE DPDF_TEST_AVX_VNNI)
         target_link_libraries(${target} PRIVATE m)
