@@ -251,12 +251,49 @@ int dpdf_conv_row_avx2(const float *x,const float *w,const float *bias,float *y,
  * downsamplers. The original sw!=1 path uses separate binary32 multiply/add,
  * so these vectors deliberately do not fuse. Padding and odd-width tails
  * use the original ordered scalar terms; vector loads stay inside input. */
+/* A stride-three vector touches p[0] through p[21]. The final load starts
+ * at p+14, so its last byte is exactly the last gathered element, including
+ * near the input boundary. Keep this specialization separate so stride-two
+ * register allocation is unaffected by the three permutation constants. */
+static __attribute__((noinline)) void depthwise_stride3(const float *x,const float *w,
+        const float *bias,float *y,int ci,int wi,int co,int wo) {
+    const __m256i index0=_mm256_setr_epi32(0,3,6,0,0,0,0,0);
+    const __m256i index1=_mm256_setr_epi32(0,0,0,1,4,7,0,0);
+    const __m256i index2=_mm256_setr_epi32(0,0,0,0,0,0,4,7);
+    int last=(wi-2)/3+1;
+    if(last>wo)last=wo;
+    for(int oc=0;oc<co;++oc){
+        const float *in=x+(oc/(co/ci))*wi,*weight=w+oc*3;
+        float *out=y+oc*wo;float initial=bias?bias[oc]:0;
+        int ow=0;
+        while(ow<wo){
+            if(ow>=1 && ow+7<last){
+                __m256 sum=_mm256_set1_ps(initial);
+                for(int kx=0;kx<3;++kx){
+                    const float *p=in+ow*3+kx-1;
+                    __m256 a=_mm256_permutevar8x32_ps(_mm256_loadu_ps(p),index0);
+                    __m256 b=_mm256_permutevar8x32_ps(_mm256_loadu_ps(p+8),index1);
+                    __m256 c=_mm256_permutevar8x32_ps(_mm256_loadu_ps(p+14),index2);
+                    __m256 values=_mm256_blend_ps(_mm256_blend_ps(a,b,0x38),c,0xc0);
+                    sum=_mm256_add_ps(sum,_mm256_mul_ps(_mm256_set1_ps(weight[kx]),values));
+                }
+                _mm256_storeu_ps(out+ow,sum);ow+=8;
+            }else{
+                float sum=initial;
+                for(int kx=0;kx<3;++kx){int ix=ow*3+kx-1;if(ix>=0&&ix<wi)sum+=weight[kx]*in[ix];}
+                out[ow++]=sum;
+            }
+        }
+    }
+}
+
 int dpdf_depthwise_stride_avx2(const float *x,const float *w,const float *bias,float *y,
         int ci,int hi,int wi,int co,int ho,int wo,int kh,int kw,
         int sh,int sw,int ph,int pw,int group) {
     if (ci<=0 || group<=0 || hi!=1 || ho!=1 || kh!=1 || kw!=3 || sh!=1 || ph!=0 || pw!=1 ||
         group!=ci || co%group || (sw!=2 && sw!=3) || wi<8 ||
         wo!=(wi+2*pw-kw)/sw+1) return 0;
+    if(sw==3){depthwise_stride3(x,w,bias,y,ci,wi,co,wo);return 1;}
     const __m256i offsets=_mm256_setr_epi32(0,sw,2*sw,3*sw,4*sw,5*sw,6*sw,7*sw);
     int last=(wi+pw-kw)/sw+1;
     if (last>wo) last=wo;

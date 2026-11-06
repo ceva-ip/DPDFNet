@@ -57,7 +57,16 @@ build/dpdfnet_benchmark 8 models/dpdfnet8_48khz_hr/weights.f32 1000 paced
 
 ## Results
 
-The published AVX2 reference measurements below precede runtime dispatch.
+The current defaults were selected separately on an i7-7700T. Independent
+confirmation in `performance` mode reduced neural-call time by **4.72% for
+model 2** and **5.18% for model 8** against the original runtime built with the
+same compiler. Every retained factor also had a confirmed conditional benefit.
+The original-power follow-up confirmed model 2's gain; model 8 remained
+inconclusive there. See [the per-model results](docs/PERFORMANCE.md#i7-7700t-final-per-model-selection-2026-10-27)
+and [the exact result record](validation/i7_7700t_final.json).
+
+The published AVX2 reference measurements below are historical: they precede
+both runtime dispatch and the i7-7700T selection.
 Dispatch adds a small amount of context bookkeeping (see
 [build instructions](docs/BUILD.md#optional-avx-vnni-kernels)); AVX-VNNI
 performance depends on the target CPU.
@@ -77,7 +86,10 @@ Quality means on the same six 48 kHz EARS/WHAM mixtures:
 | `dpdfnet2_48khz_hr` | 2.44130 | 0.935874 | 16.0841 | 3.86312 | 4.61457 | 3.28124 |
 | `dpdfnet8_48khz_hr` | 2.52099 | 0.940449 | 16.6446 | 3.84506 | 4.63650 | 3.35663 |
 
-Spectrum, state and PCM regression passes on 65 files per model.
+Historical package spectrum/state/PCM regression covered 65 original files per
+model. Current defaults pass every-hop spectrum/state comparisons on 65
+independent EARS/stress streams per model; the historical corpus was unavailable
+and no new perceptual scores were computed.
 [Measurement methods and quality details](docs/PERFORMANCE.md).
 
 ## Project layout

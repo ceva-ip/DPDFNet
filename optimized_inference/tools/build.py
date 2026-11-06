@@ -20,6 +20,8 @@ def main():
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--no-pgo", action="store_true")
     parser.add_argument("--sanitize", action="store_true")
+    parser.add_argument("--cmake-arg", action="append", default=[],
+                        help="Additional CMake setting, e.g. --cmake-arg=-DDPDF_ENABLE_AVX_VNNI=OFF")
     args = parser.parse_args()
     if args.jobs < 1:
         parser.error("--jobs must be positive")
@@ -31,7 +33,7 @@ def main():
         if digest != metadata["weights_sha256"]:
             raise RuntimeError("Weight checksum mismatch: %s" % folder)
     settings = ["-DCMAKE_BUILD_TYPE=Release", "-DBUILD_SHARED_LIBS=ON",
-                "-DDPDF_SANITIZE=" + ("ON" if args.sanitize else "OFF")]
+                "-DDPDF_SANITIZE=" + ("ON" if args.sanitize else "OFF"), *args.cmake_arg]
     if not args.no_pgo and not args.sanitize:
         # Every training run has a fresh directory; never combine stale profiles.
         profiles = build / "profiles" / uuid.uuid4().hex

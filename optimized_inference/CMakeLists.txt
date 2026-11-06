@@ -14,6 +14,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 option(BUILD_SHARED_LIBS "Build shared runtime" ON)
 option(DPDF_SANITIZE "Enable address and undefined-behavior sanitizers" OFF)
+option(DPDF_BUILD_KERNEL_BENCHMARKS "Build private hot-kernel measurement tools" OFF)
 set(DPDF_PGO_MODE "OFF" CACHE STRING "Model-8 profile mode: OFF, GENERATE, USE")
 set_property(CACHE DPDF_PGO_MODE PROPERTY STRINGS OFF GENERATE USE)
 set(DPDF_PROFILE_DIR "${CMAKE_BINARY_DIR}/profiles" CACHE PATH "GCC profile directory")
@@ -81,11 +82,31 @@ foreach(size IN ITEMS 2 8)
         ${model_dir}/qaffine4pair64_fused_vnni.S)
     endif()
   endif()
+  if(size EQUAL 8)
+    target_sources(backend8 PRIVATE src/models/dpdfnet2_48khz_hr/qaffine4pair64_fused_avx2.S)
+    target_compile_definitions(backend8 PRIVATE DPDF_QBATCH_FUSED64_AVX2)
+  endif()
+  target_compile_options(backend${size} PRIVATE $<$<COMPILE_LANGUAGE:C>:-fno-math-errno>)
+  # Only model 8 had a confirmed incremental branch-alignment benefit.
+  if(size EQUAL 8)
+    target_compile_options(backend${size} PRIVATE -Wa,-mbranches-within-32B-boundaries)
+  endif()
   dpdf_compile(backend${size})
 endforeach()
 set_source_files_properties(src/common/avx2.c src/common/int8.c PROPERTIES COMPILE_OPTIONS "-mavx2;-mfma")
 set_source_files_properties(src/common/int8_vnni.c PROPERTIES COMPILE_OPTIONS "-mavx2;-mfma;-mavxvnni")
 set_source_files_properties(src/common/fp16.c PROPERTIES COMPILE_OPTIONS "-mavx2;-mfma;-mf16c")
+# Preserve the accepted VNNI machine code when aligning the AVX2/common backend.
+# GNU as source options follow target options; boundary=0 cancels only the
+# extra branch-boundary padding, leaving the existing assembly alignment.
+set_property(SOURCE src/common/int8_vnni.c
+  src/common/qdot64_fixed_vnni.S src/common/qdot4pair_fixed_vnni.S
+  src/models/dpdfnet2_48khz_hr/qaffine64_fused_vnni.S
+  src/models/dpdfnet2_48khz_hr/qaffine256_fused_vnni.S
+  src/models/dpdfnet2_48khz_hr/qaffine4pair64_fused_vnni.S
+  src/models/dpdfnet8_48khz_hr/qaffine64_fused_vnni.S
+  APPEND PROPERTY COMPILE_OPTIONS -Wa,-malign-branch-boundary=0)
+
 add_library(dpdfnet src/runtime.c $<TARGET_OBJECTS:backend2> $<TARGET_OBJECTS:backend8>)
 add_library(DPDFNet::dpdfnet ALIAS dpdfnet)
 target_include_directories(dpdfnet PUBLIC
@@ -101,6 +122,11 @@ dpdf_compile(dpdfnet)
 if(DPDF_PGO_MODE STREQUAL "GENERATE")
   target_compile_options(backend8 PRIVATE $<$<COMPILE_LANGUAGE:C>:-fprofile-generate=${DPDF_PROFILE_DIR}>)
   target_link_options(dpdfnet PRIVATE -fprofile-generate=${DPDF_PROFILE_DIR})
+  if(NOT BUILD_SHARED_LIBS)
+    # Static archives do not link themselves: their consumers need libgcov
+    # while generating the profile. The USE/OFF release builds do not inherit it.
+    target_link_options(dpdfnet INTERFACE -fprofile-generate=${DPDF_PROFILE_DIR})
+  endif()
 elseif(DPDF_PGO_MODE STREQUAL "USE")
   target_compile_options(backend8 PRIVATE $<$<COMPILE_LANGUAGE:C>:-fprofile-use=${DPDF_PROFILE_DIR};-Werror=missing-profile;-Werror=coverage-mismatch>)
 endif()
@@ -119,9 +145,20 @@ if(BUILD_TESTING)
   add_test(NAME public_contract COMMAND public_contract
     "${CMAKE_CURRENT_SOURCE_DIR}/models/dpdfnet2_48khz_hr/weights.f32"
     "${CMAKE_CURRENT_SOURCE_DIR}/models/dpdfnet8_48khz_hr/weights.f32")
+  add_executable(cpu_contract tests/cpu_contract.c)
+  target_link_libraries(cpu_contract PRIVATE dpdfnet)
+  dpdf_compile(cpu_contract)
+  add_test(NAME cpu_contract COMMAND cpu_contract 1)
+  find_package(Threads REQUIRED)
+  add_executable(concurrency_contract tests/concurrency_contract.c)
+  target_link_libraries(concurrency_contract PRIVATE dpdfnet m Threads::Threads)
+  dpdf_compile(concurrency_contract)
+  add_test(NAME concurrency_contract COMMAND concurrency_contract
+    "${CMAKE_CURRENT_SOURCE_DIR}/models/dpdfnet2_48khz_hr/weights.f32"
+    "${CMAKE_CURRENT_SOURCE_DIR}/models/dpdfnet8_48khz_hr/weights.f32")
   foreach(size IN ITEMS 2 8)
     foreach(test IN ITEMS full_contract extended_contract layout_contract generated_gru_contract
-        conv_helpers_contract int8_contract int8_dispatch_contract fused_contract pair_contract)
+        conv_helpers_contract depthwise_contract int8_contract int8_dispatch_contract fused_contract pair_contract)
       set(target "model${size}_${test}")
       add_executable(${target} tests/${test}.c $<TARGET_OBJECTS:backend${size}>)
       target_include_directories(${target} PRIVATE include src src/private)
@@ -139,6 +176,30 @@ if(BUILD_TESTING)
       add_test(NAME ${target} COMMAND ${target} "${CMAKE_CURRENT_SOURCE_DIR}/models/dpdfnet${size}_48khz_hr/weights.f32")
     endforeach()
   endforeach()
+  # Scalar reference must retain its ordered multiply/add operations.
+  set_source_files_properties(tests/depthwise_contract.c PROPERTIES COMPILE_OPTIONS "-fno-tree-vectorize")
+  if(BUILD_SHARED_LIBS)
+    add_executable(compare_stream tests/compare_stream.c)
+    target_include_directories(compare_stream PRIVATE include)
+    target_link_libraries(compare_stream PRIVATE ${CMAKE_DL_LIBS} m)
+    dpdf_compile(compare_stream)
+    add_library(stream_fault SHARED tests/stream_fault.c)
+    target_include_directories(stream_fault PRIVATE include)
+    target_link_libraries(stream_fault PRIVATE ${CMAKE_DL_LIBS})
+    dpdf_compile(stream_fault)
+  endif()
+  find_package(Python3 COMPONENTS Interpreter QUIET)
+  if(Python3_Interpreter_FOUND)
+    add_test(NAME benchmark_statistics COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark_statistics_test.py")
+    if(BUILD_SHARED_LIBS)
+      add_test(NAME stream_comparator COMMAND "${Python3_EXECUTABLE}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/stream_comparator_test.py"
+        --runner "$<TARGET_FILE:compare_stream>" --baseline "$<TARGET_FILE:dpdfnet>"
+        --fault "$<TARGET_FILE:stream_fault>"
+        --weights "${CMAKE_CURRENT_SOURCE_DIR}/models/dpdfnet2_48khz_hr/weights.f32")
+    endif()
+  endif()
   foreach(test IN ITEMS wide_contract pair_fused_contract)
     add_executable(model2_${test} tests/${test}.c $<TARGET_OBJECTS:backend2>)
     target_include_directories(model2_${test} PRIVATE include src src/private)
@@ -148,6 +209,19 @@ if(BUILD_TESTING)
     dpdf_compile(model2_${test})
     add_test(NAME model2_${test} COMMAND model2_${test})
   endforeach()
+  get_target_property(backend8_definitions backend8 COMPILE_DEFINITIONS)
+  if("DPDF_QBATCH_FUSED64_AVX2" IN_LIST backend8_definitions)
+    add_executable(model8_pair_fused_contract tests/pair_fused_contract.c $<TARGET_OBJECTS:backend8>)
+    target_include_directories(model8_pair_fused_contract PRIVATE include src src/private)
+    target_compile_options(model8_pair_fused_contract PRIVATE
+      -include "${CMAKE_CURRENT_SOURCE_DIR}/src/private/namespace8.h" -frounding-math -fno-tree-vectorize)
+    target_link_libraries(model8_pair_fused_contract PRIVATE m)
+    if(DPDF_PGO_MODE STREQUAL "GENERATE")
+      target_link_options(model8_pair_fused_contract PRIVATE -fprofile-generate=${DPDF_PROFILE_DIR})
+    endif()
+    dpdf_compile(model8_pair_fused_contract)
+    add_test(NAME model8_pair_fused_contract COMMAND model8_pair_fused_contract)
+  endif()
   # Reuse the guarded scalar assembly oracles for each VNNI specialization.
   if(DPDF_ENABLE_AVX_VNNI AND DPDF_COMPILER_HAS_AVX_VNNI)
     foreach(size IN ITEMS 2 8)
@@ -177,6 +251,20 @@ if(BUILD_TESTING)
   get_property(tests DIRECTORY PROPERTY TESTS)
   set_tests_properties(${tests} PROPERTIES TIMEOUT 120
     ENVIRONMENT "ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:handle_segv=0;UBSAN_OPTIONS=halt_on_error=1")
+endif()
+if(DPDF_BUILD_KERNEL_BENCHMARKS)
+  foreach(size IN ITEMS 2 8)
+    add_executable(kernel_benchmark${size} benchmarks/kernels.c $<TARGET_OBJECTS:backend${size}>)
+    target_include_directories(kernel_benchmark${size} PRIVATE include src/private)
+    target_compile_options(kernel_benchmark${size} PRIVATE
+      -include "${CMAKE_CURRENT_SOURCE_DIR}/src/private/namespace${size}.h")
+    target_compile_definitions(kernel_benchmark${size} PRIVATE DPDF_X86_DISPATCH)
+    target_link_libraries(kernel_benchmark${size} PRIVATE m)
+    if(DPDF_PGO_MODE STREQUAL "GENERATE" AND size EQUAL 8)
+      target_link_options(kernel_benchmark${size} PRIVATE -fprofile-generate=${DPDF_PROFILE_DIR})
+    endif()
+    dpdf_compile(kernel_benchmark${size})
+  endforeach()
 endif()
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)

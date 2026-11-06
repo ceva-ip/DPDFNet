@@ -336,6 +336,10 @@ for (int i=0;i<219;++i) bytes+=dpdf_dense_bytes(m->dense[i]);
 for (int i=0;i<21;++i) bytes+=dpdf_convop_bytes(m->conv[i]);
 return bytes;
 }
+/* Each DPRNN state chunk is consumed by its own block before being replaced.
+ * Write its new state directly; final packing handles the other chunks only
+ * after all old-state reads. This retains supported in-place state updates. */
+__attribute__((target("avx2,fma")))
 int dpdf_model_process(dpdf_model *m,const float *spec,const float *state_in,float *spec_out,float *state_out) {
     if (!m || !spec || !state_in || !spec_out || !state_out) return -1;
 /* 0: Mul /Mul */
@@ -446,28 +450,28 @@ m->transpose((m->arena+17696),(m->arena+76912),40,64);
 for (int i=0;i<2560;++i) (m->arena+74352)[i]=((m->arena+76912)[i]>0?(m->arena+76912)[i]:0.0f);
 /* 57: Slice /model/enc/dprnn_erb/blocks.0/inter_gru/Slice */
 /* 58: DpdfDprnn /model/enc/dprnn_erb/blocks.0/Native */
-if (dpdf_process_layout(m->blocks[0],(m->arena+74352),(state_in+2020),(m->arena+76912),(m->arena+15136),2)) return -1;
+if (dpdf_process_layout(m->blocks[0],(m->arena+74352),(state_in+2020),(m->arena+76912),(state_out+2020),2)) return -1;
 /* 59: Slice /model/enc/dprnn_erb/blocks.1/inter_gru/Slice */
 /* 60: DpdfDprnn /model/enc/dprnn_erb/blocks.1/Native */
-if (dpdf_process_layout(m->blocks[1],(m->arena+76912),(state_in+4580),(m->arena+17696),(m->arena+20256),3)) return -1;
+if (dpdf_process_layout(m->blocks[1],(m->arena+76912),(state_in+4580),(m->arena+17696),(state_out+4580),3)) return -1;
 /* 61: Slice /model/enc/dprnn_erb/blocks.2/inter_gru/Slice */
 /* 62: DpdfDprnn /model/enc/dprnn_erb/blocks.2/Native */
-if (dpdf_process_layout(m->blocks[2],(m->arena+17696),(state_in+7140),(m->arena+76912),(m->arena+22816),3)) return -1;
+if (dpdf_process_layout(m->blocks[2],(m->arena+17696),(state_in+7140),(m->arena+76912),(state_out+7140),3)) return -1;
 /* 63: Slice /model/enc/dprnn_erb/blocks.3/inter_gru/Slice */
 /* 64: DpdfDprnn /model/enc/dprnn_erb/blocks.3/Native */
-if (dpdf_process_layout(m->blocks[3],(m->arena+76912),(state_in+9700),(m->arena+17696),(m->arena+25376),3)) return -1;
+if (dpdf_process_layout(m->blocks[3],(m->arena+76912),(state_in+9700),(m->arena+17696),(state_out+9700),3)) return -1;
 /* 65: Slice /model/enc/dprnn_erb/blocks.4/inter_gru/Slice */
 /* 66: DpdfDprnn /model/enc/dprnn_erb/blocks.4/Native */
-if (dpdf_process_layout(m->blocks[4],(m->arena+17696),(state_in+12260),(m->arena+76912),(m->arena+27936),3)) return -1;
+if (dpdf_process_layout(m->blocks[4],(m->arena+17696),(state_in+12260),(m->arena+76912),(state_out+12260),3)) return -1;
 /* 67: Slice /model/enc/dprnn_erb/blocks.5/inter_gru/Slice */
 /* 68: DpdfDprnn /model/enc/dprnn_erb/blocks.5/Native */
-if (dpdf_process_layout(m->blocks[5],(m->arena+76912),(state_in+14820),(m->arena+17696),(m->arena+30496),3)) return -1;
+if (dpdf_process_layout(m->blocks[5],(m->arena+76912),(state_in+14820),(m->arena+17696),(state_out+14820),3)) return -1;
 /* 69: Slice /model/enc/dprnn_erb/blocks.6/inter_gru/Slice */
 /* 70: DpdfDprnn /model/enc/dprnn_erb/blocks.6/Native */
-if (dpdf_process_layout(m->blocks[6],(m->arena+17696),(state_in+17380),(m->arena+76912),(m->arena+33056),3)) return -1;
+if (dpdf_process_layout(m->blocks[6],(m->arena+17696),(state_in+17380),(m->arena+76912),(state_out+17380),3)) return -1;
 /* 71: Slice /model/enc/dprnn_erb/blocks.7/inter_gru/Slice */
 /* 72: DpdfDprnn /model/enc/dprnn_erb/blocks.7/Native */
-if (dpdf_process_layout(m->blocks[7],(m->arena+76912),(state_in+19940),(m->arena+17696),(m->arena+35616),1)) return -1;
+if (dpdf_process_layout(m->blocks[7],(m->arena+76912),(state_in+19940),(m->arena+17696),(state_out+19940),1)) return -1;
 /* 73: Transpose /model/enc/df_conv0_buffer/Transpose */
 for (int t2=0;t2<2;++t2) for (int t3=0;t3<96;++t3) (m->arena+38176)[t2*96+t3*1]=(m->arena+1568)[t2*1+t3*2];
 /* 74: Slice /model/enc/df_conv0_buffer/Slice */
@@ -505,28 +509,28 @@ m->transpose((m->arena+92272),(m->arena+79984),48,64);
 for (int i=0;i<3072;++i) (m->arena+76912)[i]=((m->arena+79984)[i]>0?(m->arena+79984)[i]:0.0f);
 /* 91: Slice /model/enc/dprnn_df/blocks.0/inter_gru/Slice */
 /* 92: DpdfDprnn /model/enc/dprnn_df/blocks.0/Native */
-if (dpdf_process_layout(m->blocks[8],(m->arena+76912),(state_in+23076),(m->arena+79984),(m->arena+89200),2)) return -1;
+if (dpdf_process_layout(m->blocks[8],(m->arena+76912),(state_in+23076),(m->arena+79984),(state_out+23076),2)) return -1;
 /* 93: Slice /model/enc/dprnn_df/blocks.1/inter_gru/Slice */
 /* 94: DpdfDprnn /model/enc/dprnn_df/blocks.1/Native */
-if (dpdf_process_layout(m->blocks[9],(m->arena+79984),(state_in+26148),(m->arena+76912),(m->arena+92272),3)) return -1;
+if (dpdf_process_layout(m->blocks[9],(m->arena+79984),(state_in+26148),(m->arena+76912),(state_out+26148),3)) return -1;
 /* 95: Slice /model/enc/dprnn_df/blocks.2/inter_gru/Slice */
 /* 96: DpdfDprnn /model/enc/dprnn_df/blocks.2/Native */
-if (dpdf_process_layout(m->blocks[10],(m->arena+76912),(state_in+29220),(m->arena+79984),(m->arena+95344),3)) return -1;
+if (dpdf_process_layout(m->blocks[10],(m->arena+76912),(state_in+29220),(m->arena+79984),(state_out+29220),3)) return -1;
 /* 97: Slice /model/enc/dprnn_df/blocks.3/inter_gru/Slice */
 /* 98: DpdfDprnn /model/enc/dprnn_df/blocks.3/Native */
-if (dpdf_process_layout(m->blocks[11],(m->arena+79984),(state_in+32292),(m->arena+76912),(m->arena+98416),3)) return -1;
+if (dpdf_process_layout(m->blocks[11],(m->arena+79984),(state_in+32292),(m->arena+76912),(state_out+32292),3)) return -1;
 /* 99: Slice /model/enc/dprnn_df/blocks.4/inter_gru/Slice */
 /* 100: DpdfDprnn /model/enc/dprnn_df/blocks.4/Native */
-if (dpdf_process_layout(m->blocks[12],(m->arena+76912),(state_in+35364),(m->arena+79984),(m->arena+104048),3)) return -1;
+if (dpdf_process_layout(m->blocks[12],(m->arena+76912),(state_in+35364),(m->arena+79984),(state_out+35364),3)) return -1;
 /* 101: Slice /model/enc/dprnn_df/blocks.5/inter_gru/Slice */
 /* 102: DpdfDprnn /model/enc/dprnn_df/blocks.5/Native */
-if (dpdf_process_layout(m->blocks[13],(m->arena+79984),(state_in+38436),(m->arena+76912),(m->arena+107120),3)) return -1;
+if (dpdf_process_layout(m->blocks[13],(m->arena+79984),(state_in+38436),(m->arena+76912),(state_out+38436),3)) return -1;
 /* 103: Slice /model/enc/dprnn_df/blocks.6/inter_gru/Slice */
 /* 104: DpdfDprnn /model/enc/dprnn_df/blocks.6/Native */
-if (dpdf_process_layout(m->blocks[14],(m->arena+76912),(state_in+41508),(m->arena+79984),(m->arena+110192),3)) return -1;
+if (dpdf_process_layout(m->blocks[14],(m->arena+76912),(state_in+41508),(m->arena+79984),(state_out+41508),3)) return -1;
 /* 105: Slice /model/enc/dprnn_df/blocks.7/inter_gru/Slice */
 /* 106: DpdfDprnn /model/enc/dprnn_df/blocks.7/Native */
-if (dpdf_process_layout(m->blocks[15],(m->arena+79984),(state_in+44580),(m->arena+76912),(m->arena+113264),1)) return -1;
+if (dpdf_process_layout(m->blocks[15],(m->arena+79984),(state_in+44580),(m->arena+76912),(state_out+44580),1)) return -1;
 /* 107: Transpose /model/enc/Transpose */
 for (int t2=0;t2<48;++t2) for (int t3=0;t3<64;++t3) (m->arena+79984)[t2*64+t3*1]=(m->arena+76912)[t2*1+t3*48];
 /* 108: Flatten /model/enc/Flatten */
@@ -886,38 +890,21 @@ for (int b=0;b<1;++b) memcpy((m->arena+0)+b*962+0,(m->arena+2720)+b*192,192*size
 for (int b=0;b<1;++b) memcpy((m->arena+0)+b*962+192,((m->arena+73968)+2116)+b*770,770*sizeof(float));
 /* 374: Squeeze /model/Squeeze */
 /* 375: Concat /model/Concat */
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+0,(m->arena+2944)+b*481,481*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+481,(m->arena+1472)+b*96,96*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+577,(m->arena+3440)+b*1443,1443*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+2020,(m->arena+15136)+b*2560,2560*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+4580,(m->arena+20256)+b*2560,2560*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+7140,(m->arena+22816)+b*2560,2560*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+9700,(m->arena+25376)+b*2560,2560*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+12260,(m->arena+27936)+b*2560,2560*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+14820,(m->arena+30496)+b*2560,2560*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+17380,(m->arena+33056)+b*2560,2560*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+19940,(m->arena+35616)+b*2560,2560*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+22500,(m->arena+1568)+b*576,576*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+23076,(m->arena+89200)+b*3072,3072*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+26148,(m->arena+92272)+b*3072,3072*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+29220,(m->arena+95344)+b*3072,3072*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+32292,(m->arena+98416)+b*3072,3072*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+35364,(m->arena+104048)+b*3072,3072*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+38436,(m->arena+107120)+b*3072,3072*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+41508,(m->arena+110192)+b*3072,3072*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+44580,(m->arena+113264)+b*3072,3072*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+47652,(m->arena+976)+b*256,256*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+47908,(m->arena+38176)+b*256,256*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+48164,(m->arena+20000)+b*256,256*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+48420,(m->arena+17696)+b*256,256*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+48676,(m->arena+19408)+b*256,256*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+48932,(m->arena+38432)+b*30720,30720*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+79652,(m->arena+5856)+b*2886,2886*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+82538,(m->arena+8752)+b*2880,2880*sizeof(float));
-for (int b=0;b<1;++b) memcpy((m->arena+116336)+b*90228+85418,(m->arena+69152)+b*4810,4810*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+0,(m->arena+2944)+b*481,481*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+481,(m->arena+1472)+b*96,96*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+577,(m->arena+3440)+b*1443,1443*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+22500,(m->arena+1568)+b*576,576*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+47652,(m->arena+976)+b*256,256*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+47908,(m->arena+38176)+b*256,256*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+48164,(m->arena+20000)+b*256,256*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+48420,(m->arena+17696)+b*256,256*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+48676,(m->arena+19408)+b*256,256*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+48932,(m->arena+38432)+b*30720,30720*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+79652,(m->arena+5856)+b*2886,2886*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+82538,(m->arena+8752)+b*2880,2880*sizeof(float));
+for (int b=0;b<1;++b) memcpy(state_out+b*90228+85418,(m->arena+69152)+b*4810,4810*sizeof(float));
 /* 376: Mul /Mul_1 */
 for (int i=0;i<962;++i) (m->arena+206576)[i]=(m->arena+0)[i]*(m->weights+8)[0];
 memcpy(spec_out,(m->arena+206576),962*sizeof(float));
-memcpy(state_out,(m->arena+116336),90228*sizeof(float));
 return 0;
 }

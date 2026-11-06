@@ -55,6 +55,7 @@
 #define dpdf_process_layout dpdfnet8_private_process_layout
 #define dpdf_qaffine dpdfnet8_private_qaffine
 #define dpdf_qaffine64_fused_avx2 dpdfnet8_private_qaffine64_fused_avx2
+#define dpdf_qaffine4pair64_fused_avx2 dpdfnet8_private_qaffine4pair64_fused_avx2
 #define dpdf_qaffine_pair dpdfnet8_private_qaffine_pair
 #define dpdf_qbytes dpdfnet8_private_qbytes
 #define dpdf_qcreate dpdfnet8_private_qcreate

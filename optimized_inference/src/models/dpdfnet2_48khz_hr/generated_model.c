@@ -324,6 +324,7 @@ for (int i=0;i<219;++i) bytes+=dpdf_dense_bytes(m->dense[i]);
 for (int i=0;i<21;++i) bytes+=dpdf_convop_bytes(m->conv[i]);
 return bytes;
 }
+__attribute__((target("avx2,fma")))
 int dpdf_model_process(dpdf_model *m,const float *spec,const float *state_in,float *spec_out,float *state_out) {
     if (!m || !spec || !state_in || !spec_out || !state_out) return -1;
 /* 0: Mul /Mul */

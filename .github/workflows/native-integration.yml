@@ -16,6 +16,10 @@ jobs:
         include:
           - name: Release shared (PGO)
             pgo: true
+            shared: 'ON'
+          - name: Release static (PGO)
+            pgo: true
+            shared: 'OFF'
           - name: Release static
             pgo: false
             config: '-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF'
@@ -36,9 +40,25 @@ jobs:
         run: python3 tools/generate_vnni.py --check
       - name: Verify both model weights
         run: sha256sum -c models/SHA256SUMS
+      - name: Configure PGO generation with all contracts enabled
+        if: matrix.pgo
+        run: >-
+          cmake -S . -B build/ci-generate -DCMAKE_BUILD_TYPE=Release
+          -DBUILD_SHARED_LIBS=${{ matrix.shared }} -DBUILD_TESTING=ON
+          -DDPDF_BUILD_KERNEL_BENCHMARKS=ON
+          -DDPDF_PGO_MODE=GENERATE
+          -DDPDF_PROFILE_DIR="$PWD/build/ci-generate/profiles"
+      - name: Link every PGO generation executable
+        if: matrix.pgo
+        run: cmake --build build/ci-generate --parallel 2
+      - name: Run PGO generation contracts
+        if: matrix.pgo
+        run: ctest --test-dir build/ci-generate --output-on-failure --parallel 1
       - name: Build recommended PGO release and run contracts
         if: matrix.pgo
-        run: python3 tools/build.py --build-dir build/ci --jobs 2
+        run: >-
+          python3 tools/build.py --build-dir build/ci --jobs 2
+          --cmake-arg=-DBUILD_SHARED_LIBS=${{ matrix.shared }}
       - name: Configure static or sanitizer build
         if: '!matrix.pgo'
         run: cmake -S . -B build/ci ${{ matrix.config }} -DDPDF_PGO_MODE=OFF -DBUILD_TESTING=ON
@@ -48,3 +68,14 @@ jobs:
       - name: Run contracts for both models
         if: '!matrix.pgo'
         run: ctest --test-dir build/ci --output-on-failure --parallel 1
+      - name: Preserve configuration and contract logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-contract-logs-${{ strategy.job-index }}
+          path: |
+            optimized_inference/build/ci*/CMakeCache.txt
+            optimized_inference/build/ci*/Testing/Temporary/LastTest.log
+            optimized_inference/build/ci*/Testing/Temporary/LastTestsFailed.log
+          if-no-files-found: ignore
+          retention-days: 14
