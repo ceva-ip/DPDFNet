@@ -351,3 +351,18 @@ the historic 65-file release corpus described above and does not add perceptual
 quality scores. `tools/compare_streams.py` compares multiple library builds on
 every spectrum and complete recurrent state at every hop, including in-place
 buffers and reset replay. Keep these correctness jobs separate from timing.
+
+## Four-row exact quantization follow-up (2026-11-07)
+
+The AVX2 K64 batch and paired paths compute quantization parameters for four independent rows using packed exact division. Zero-range groups retain the previous per-row algorithm. The minimum remains AVX2/FMA; optional VNNI objects are byte-identical to baseline. Weights and ABI are unchanged.
+
+| Model | Baseline ms | Candidate ms | Time reduction | Adjusted interval |
+| --- | ---: | ---: | ---: | ---: |
+| 2 | 0.747387 | 0.737902 | 1.274% | [0.132, 2.403]% |
+| 8 | 1.827997 | 1.807429 | 1.128% | [0.480, 1.772]% |
+
+Independent post-plan confirmation used 36 mirrored randomized blocks, two fresh processes per variant/block, 120 warmup and 500 timed hops, continuous neural calls, GCC14.2 PGO, performance governor/EPP, and an isolated physical i7-7700T core (CPU2 with sibling CPU6 reserved). The original screens did not pass their selection thresholds; the separately fixed follow-up and every screen are retained in the local evidence archive. The intervals use a family-four correction across two confirmations and two original-power guards.
+
+At the original powersave/balance_performance policy with 10ms cadence, model2 improved by 4.338% (adjusted interval [0.464, 8.062]%), while model8 remained inconclusive at 1.081% ([-2.307, 4.357]%). These are scoped local results, not end-to-end audio or cross-CPU speedup claims.
+
+Every spectrum and complete state matched baseline over 65 local EARS/stress streams (147,711 hops/model), including aliases/reset. The new direct quantization oracle covers 16,384 rounding/FTZ/DAZ cases and guard pages. PGO release, ASan/UBSan, AVX2-only, static and CPU-mask checks pass; six native VNNI contracts skip where that ISA is unavailable. No new perceptual quality scores are claimed. See [the portable result record](../validation/i7_7700t_quantize4.json). Complete protocols, raw runs and logs are retained locally under `/home/varyagnord/reports/dpdfnet-opt-2026-11-07`.

@@ -139,6 +139,15 @@ foreach(pair IN ITEMS "dpdfnet_train;tools/train.c" "dpdfnet_benchmark;benchmark
 endforeach()
 include(CTest)
 if(BUILD_TESTING)
+  # Compare batched quantization directly with the ordered per-row algorithm.
+  # Private implementation is included only in this standalone oracle target.
+  add_executable(quantize4_contract tests/quantize4_contract.c)
+  target_include_directories(quantize4_contract PRIVATE include src/private)
+  target_compile_definitions(quantize4_contract PRIVATE DPDF_MODEL_SIZE=2 DPDF_X86_DISPATCH)
+  target_compile_options(quantize4_contract PRIVATE -mavx2 -mfma -frounding-math)
+  target_link_libraries(quantize4_contract PRIVATE m)
+  dpdf_compile(quantize4_contract)
+  add_test(NAME quantize4_contract COMMAND quantize4_contract)
   add_executable(public_contract tests/public_contract.c)
   target_link_libraries(public_contract PRIVATE dpdfnet m)
   dpdf_compile(public_contract)
