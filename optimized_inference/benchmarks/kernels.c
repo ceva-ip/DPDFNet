@@ -26,8 +26,8 @@ int main(int argc,char **argv) {
     if(iterations<100 || iterations>10000000) return 2;
     int kind=-1;
     const char *names[]={"depthwise2","depthwise3","pair40","pair48","batch40","row64",
-                         "gates1","gates40","gates48","norm40","transpose"};
-    for(int i=0;i<11;++i) if(!strcmp(argv[1],names[i])) kind=i;
+                         "gates1","gates40","gates48","norm40","transpose","matrix128"};
+    for(int i=0;i<12;++i) if(!strcmp(argv[1],names[i])) kind=i;
     if(kind<0) return 2;
     const size_t count=64*480;
     float *x=malloc(count*sizeof(float)),*b=malloc(count*sizeof(float));
@@ -35,7 +35,8 @@ int main(int argc,char **argv) {
     if(!x||!b||!w||!y||!z) return 2;
     for(size_t i=0;i<count;++i){x[i]=sample();b[i]=sample();w[i]=sample();y[i]=0;z[i]=0;}
     dpdf_qmatrix *q0=dpdf_qcreate(w,64,192),*q1=dpdf_qcreate(w+64*192,64,192);
-    if(!q0||!q1) return 2;
+    dpdf_qmatrix *q128=dpdf_qcreate(w,128,64);
+    if(!q0||!q1||!q128) return 2;
     int64_t start=0,cpu_start=0,warm_deadline=ns(CLOCK_MONOTONIC)+INT64_C(100000000);
     for(int i=-1000;i<iterations;++i) {
         if(i==0 && ns(CLOCK_MONOTONIC)<warm_deadline) i=-1000;
@@ -53,6 +54,7 @@ int main(int argc,char **argv) {
         case 6: case 7: case 8: dpdf_gates_avx2(x,b,w,y,kind==6?1:kind==7?40:48); break;
         case 9: dpdf_norm_residual_avx2(y,x,b,w,w+64,1e-5f,40); break;
         case 10: dpdf_transpose_avx2(x,y,64,48); break;
+        case 11: dpdf_qaffine(q128,x,b,y,40); break;
         }
     }
     int64_t elapsed=ns(CLOCK_MONOTONIC)-start,cpu=ns(CLOCK_THREAD_CPUTIME_ID)-cpu_start;
@@ -60,6 +62,6 @@ int main(int argc,char **argv) {
     for(size_t i=0;i<count;++i){uint32_t value;memcpy(&value,y+i,4);checksum=checksum*33+value;}
     printf("{\"kernel\":\"%s\",\"iterations\":%d,\"mean_ms\":%.12f,\"cpu_ms\":%.12f,\"checksum\":%u,\"measurement\":\"hot-cache amortized call time, not per-call latency\"}\n",
            names[kind],iterations,(double)elapsed/iterations/1e6,(double)cpu/iterations/1e6,checksum);
-    dpdf_qdestroy(q0);dpdf_qdestroy(q1);free(x);free(b);free(w);free(y);free(z);
+    dpdf_qdestroy(q0);dpdf_qdestroy(q1);dpdf_qdestroy(q128);free(x);free(b);free(w);free(y);free(z);
     return 0;
 }

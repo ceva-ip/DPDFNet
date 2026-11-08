@@ -1,0 +1,479 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-07",
+  "baseline_commit": "98df76589cdf7787553b9e05a112d5820e6c8db6",
+  "minimum_isa": [
+    "AVX2",
+    "FMA"
+  ],
+  "change": "Exact K64 batch/paired quantization parameters for four independent rows; AVX2 only; degenerate range uses original per-row algorithm",
+  "post_plan_followup": true,
+  "selection_history": "Initial five candidates and initial vector4 screen did not meet the selection gate; one separately preregistered independent 36-block follow-up confirmed vector4. All screening outcomes retained.",
+  "results": {
+    "2": {
+      "performance_continuous": {
+        "complete_blocks": 36,
+        "time_reduction_pct": 1.2739780840401616,
+        "time_reduction_ci_pct": [
+          0.1319122428208086,
+          2.402983553172966
+        ],
+        "ci_method": "Student t interval for mean paired block log ratio, df=n-1",
+        "bootstrap_time_reduction_ci_pct": [
+          0.19645032732390488,
+          2.3194283387935277
+        ],
+        "ci_level": 0.9875,
+        "bootstrap_resamples": 20000,
+        "two_sided_sign_randomization_p": 0.0033498325083745812,
+        "randomization_method": "Balanced ABBA/BAAB assignment",
+        "cpu_time_reduction_pct": 1.2618913089120332,
+        "block_log_ratios": [
+          -0.08366783406822104,
+          0.005659946855058115,
+          -0.020957163142139662,
+          -0.028537633826693547,
+          -0.007507966172624118,
+          0.011605602895778203,
+          0.0020172891828108713,
+          -0.02023191931018105,
+          -0.01061689650004974,
+          -0.017407394945514142,
+          -0.01986891966076112,
+          -0.01580033824843226,
+          -0.022929275550506934,
+          -0.04951366770994865,
+          -0.02267344387631986,
+          0.03015543370130892,
+          0.026249904754963912,
+          0.012816097388019644,
+          -0.012605947886161858,
+          -0.03672273402769252,
+          -0.03079368932350535,
+          0.056256541085835325,
+          -0.002001191569310421,
+          -0.045718205037208394,
+          -0.017897951814959824,
+          -0.018060743715972483,
+          -0.025441194153893242,
+          3.726122351889374e-05,
+          -0.042259860547357274,
+          -0.010391610826825862,
+          -0.044770035506090634,
+          0.008189863181372692,
+          -0.0378058027971486,
+          0.010382057476964402,
+          0.014778078977183955,
+          0.004454745129709388
+        ],
+        "statistical_unit": "ABBA/BAAB block; individual hops are correlated",
+        "baseline": {
+          "run_means_ms": {
+            "n": 72,
+            "mean": 0.7473873231666667,
+            "sd": 0.0170065081240917,
+            "median": 0.740960088,
+            "min": 0.728402452,
+            "max": 0.817980452
+          },
+          "run_p99_ms": {
+            "n": 72,
+            "mean": 0.9005065972222223,
+            "sd": 0.039597814278724865,
+            "median": 0.893022,
+            "min": 0.846588,
+            "max": 1.138231
+          },
+          "observed_max_ms": 1.473943,
+          "over_10ms": 0,
+          "late": 0,
+          "involuntary_switches": 804,
+          "major_faults": 0
+        },
+        "candidate": {
+          "run_means_ms": {
+            "n": 72,
+            "mean": 0.7379015513611111,
+            "sd": 0.019764459351198818,
+            "median": 0.730191308,
+            "min": 0.716954588,
+            "max": 0.82834626
+          },
+          "run_p99_ms": {
+            "n": 72,
+            "mean": 0.8847480416666667,
+            "sd": 0.02889078359325068,
+            "median": 0.8837145,
+            "min": 0.833811,
+            "max": 0.982463
+          },
+          "observed_max_ms": 1.083989,
+          "over_10ms": 0,
+          "late": 0,
+          "involuntary_switches": 784,
+          "major_faults": 0
+        },
+        "adjusted_p": 0.013399330033498325
+      },
+      "original_power_paced": {
+        "complete_blocks": 24,
+        "time_reduction_pct": 4.337962155622488,
+        "time_reduction_ci_pct": [
+          0.46350423704677457,
+          8.061606806685106
+        ],
+        "ci_method": "Student t interval for mean paired block log ratio, df=n-1",
+        "bootstrap_time_reduction_ci_pct": [
+          0.7922904379583873,
+          7.639565089471501
+        ],
+        "ci_level": 0.9875,
+        "bootstrap_resamples": 20000,
+        "two_sided_sign_randomization_p": 0.008449577521123944,
+        "randomization_method": "Balanced ABBA/BAAB assignment",
+        "cpu_time_reduction_pct": 4.334038346573433,
+        "block_log_ratios": [
+          -0.09415521587535805,
+          -0.14847025889048004,
+          0.023114254392423258,
+          -0.14817185602420577,
+          0.013433835177892227,
+          -0.08022209910959248,
+          -0.05157785599595366,
+          -0.05364486659243993,
+          0.013771463654870829,
+          -0.06825475143828706,
+          0.11857209743542695,
+          -0.10791023706981308,
+          -0.14423254534242347,
+          0.06419755456807426,
+          -0.1632592509891174,
+          -0.03994755915181783,
+          -0.0647860186608505,
+          -0.003399598963330471,
+          -0.03566209256377617,
+          -0.09917482904945321,
+          0.011732428627190275,
+          8.415393699292168e-05,
+          0.018648596599578928,
+          -0.02505282793501441
+        ],
+        "statistical_unit": "ABBA/BAAB block; individual hops are correlated",
+        "baseline": {
+          "run_means_ms": {
+            "n": 48,
+            "mean": 2.781957026166667,
+            "sd": 0.6113928526145378,
+            "median": 2.910941918,
+            "min": 1.036400068,
+            "max": 3.30955054
+          },
+          "run_p99_ms": {
+            "n": 48,
+            "mean": 3.5908544583333333,
+            "sd": 0.025080225397675914,
+            "median": 3.5926505,
+            "min": 3.539924,
+            "max": 3.653403
+          },
+          "observed_max_ms": 3.868606,
+          "over_10ms": 0,
+          "late": 0,
+          "involuntary_switches": 303,
+          "major_faults": 0
+        },
+        "candidate": {
+          "run_means_ms": {
+            "n": 48,
+            "mean": 2.6688096019166667,
+            "sd": 0.6178383142665996,
+            "median": 2.8370766339999998,
+            "min": 0.917131356,
+            "max": 3.301290672
+          },
+          "run_p99_ms": {
+            "n": 48,
+            "mean": 3.4373382291666665,
+            "sd": 0.5054823865706491,
+            "median": 3.5377625,
+            "min": 1.036001,
+            "max": 3.630897
+          },
+          "observed_max_ms": 3.714525,
+          "over_10ms": 0,
+          "late": 0,
+          "involuntary_switches": 305,
+          "major_faults": 0
+        },
+        "adjusted_p": 0.033798310084495777
+      }
+    },
+    "8": {
+      "performance_continuous": {
+        "complete_blocks": 36,
+        "time_reduction_pct": 1.127869291406447,
+        "time_reduction_ci_pct": [
+          0.47985347984613735,
+          1.7716656106657958
+        ],
+        "ci_method": "Student t interval for mean paired block log ratio, df=n-1",
+        "bootstrap_time_reduction_ci_pct": [
+          0.516306686285628,
+          1.719800464128174
+        ],
+        "ci_level": 0.9875,
+        "bootstrap_resamples": 20000,
+        "two_sided_sign_randomization_p": 9.99950002499875e-05,
+        "randomization_method": "Balanced ABBA/BAAB assignment",
+        "cpu_time_reduction_pct": 1.1215016910141151,
+        "block_log_ratios": [
+          -0.007117292601701181,
+          -0.016539272871974035,
+          -0.03147166825357087,
+          0.021248054241870908,
+          -0.025890135850330835,
+          0.003944022022871708,
+          -0.0150224282029393,
+          -0.007893216678663833,
+          -0.005942268822446996,
+          -0.0041900883730906485,
+          -0.0003315334876666689,
+          0.009352455350345538,
+          -0.01738064689775643,
+          -0.024914848098987287,
+          -0.0218061650967945,
+          0.004726803644017295,
+          -0.037334322693339764,
+          -0.031864224504078956,
+          -0.008853383392240989,
+          -0.013964475577353967,
+          -0.02026600489122191,
+          -0.0061416523891634775,
+          -0.02628581547805851,
+          -0.005457638645606051,
+          -0.030170194122207238,
+          -0.012266410614069204,
+          -0.03363942945587727,
+          -0.014984881956107756,
+          0.018989820503244936,
+          0.008885093531418814,
+          0.007550490739510962,
+          -0.02786819246474206,
+          -0.0007191186127355514,
+          -0.005404879802196421,
+          -0.021109205832910708,
+          -0.008207413689901896
+        ],
+        "statistical_unit": "ABBA/BAAB block; individual hops are correlated",
+        "baseline": {
+          "run_means_ms": {
+            "n": 72,
+            "mean": 1.8279971356666667,
+            "sd": 0.07543283813212505,
+            "median": 1.845777654,
+            "min": 1.728742256,
+            "max": 1.972646352
+          },
+          "run_p99_ms": {
+            "n": 72,
+            "mean": 2.0424875138888887,
+            "sd": 0.0657900052184805,
+            "median": 2.0437450000000004,
+            "min": 1.908372,
+            "max": 2.204246
+          },
+          "observed_max_ms": 3.000169,
+          "over_10ms": 0,
+          "late": 0,
+          "involuntary_switches": 2107,
+          "major_faults": 0
+        },
+        "candidate": {
+          "run_means_ms": {
+            "n": 72,
+            "mean": 1.8074291214722222,
+            "sd": 0.07495823535577933,
+            "median": 1.8252329600000001,
+            "min": 1.708671284,
+            "max": 1.942503242
+          },
+          "run_p99_ms": {
+            "n": 72,
+            "mean": 2.0215210833333335,
+            "sd": 0.06588800004697472,
+            "median": 2.0302295,
+            "min": 1.901128,
+            "max": 2.214303
+          },
+          "observed_max_ms": 2.407568,
+          "over_10ms": 0,
+          "late": 0,
+          "involuntary_switches": 2093,
+          "major_faults": 0
+        },
+        "adjusted_p": 0.00039998000099995
+      },
+      "original_power_paced": {
+        "complete_blocks": 24,
+        "time_reduction_pct": 1.081024181253154,
+        "time_reduction_ci_pct": [
+          -2.306874471186604,
+          4.356732354426185
+        ],
+        "ci_method": "Student t interval for mean paired block log ratio, df=n-1",
+        "bootstrap_time_reduction_ci_pct": [
+          -1.861887023480402,
+          4.042236067092986
+        ],
+        "ci_level": 0.9875,
+        "bootstrap_resamples": 20000,
+        "two_sided_sign_randomization_p": 0.39413029348532574,
+        "randomization_method": "Balanced ABBA/BAAB assignment",
+        "cpu_time_reduction_pct": 1.0908225210136901,
+        "block_log_ratios": [
+          0.07760337119774932,
+          0.001389051177079224,
+          0.08199835419321037,
+          -0.10833346654145494,
+          0.0005767921438997952,
+          -0.03073352815854972,
+          0.05337252181863621,
+          0.02940006177042969,
+          0.05423416138786194,
+          -0.08399201810914501,
+          -0.09914648595318874,
+          -0.09604234990240827,
+          0.043611209685146986,
+          -0.013749819783050716,
+          -0.044722228869433334,
+          -0.07961938751027464,
+          -0.03969674950164564,
+          0.010063225324470147,
+          -0.06392930757438893,
+          0.03862154663064486,
+          0.06622372318938802,
+          -0.01204586156359857,
+          -0.08053487443245888,
+          0.03459373089556893
+        ],
+        "statistical_unit": "ABBA/BAAB block; individual hops are correlated",
+        "baseline": {
+          "run_means_ms": {
+            "n": 48,
+            "mean": 4.538882815,
+            "sd": 0.29263499750513783,
+            "median": 4.52857997,
+            "min": 3.796215516,
+            "max": 5.117551696
+          },
+          "run_p99_ms": {
+            "n": 48,
+            "mean": 7.892459229166667,
+            "sd": 0.04623369398362953,
+            "median": 7.891583000000001,
+            "min": 7.817239,
+            "max": 8.011832
+          },
+          "observed_max_ms": 8.135512,
+          "over_10ms": 0,
+          "late": 0,
+          "involuntary_switches": 1022,
+          "major_faults": 0
+        },
+        "candidate": {
+          "run_means_ms": {
+            "n": 48,
+            "mean": 4.489390179833333,
+            "sd": 0.2947760551144485,
+            "median": 4.519456956,
+            "min": 3.928446028,
+            "max": 5.195565056
+          },
+          "run_p99_ms": {
+            "n": 48,
+            "mean": 7.834038395833334,
+            "sd": 0.045539684557135286,
+            "median": 7.828855000000001,
+            "min": 7.765581,
+            "max": 7.92761
+          },
+          "observed_max_ms": 8.135572,
+          "over_10ms": 0,
+          "late": 0,
+          "involuntary_switches": 1175,
+          "major_faults": 0
+        },
+        "adjusted_p": 1
+      }
+    }
+  },
+  "correctness_hops_per_model": {
+    "2": 147711,
+    "8": 147711
+  },
+  "streams_per_model": 65,
+  "tests": {
+    "final": {
+      "summary": "100% tests passed out of 35",
+      "skipped": 6
+    },
+    "asan": {
+      "summary": "100% tests passed out of 35",
+      "skipped": 6
+    },
+    "avx2-only": {
+      "summary": "100% tests passed out of 29",
+      "skipped": 0
+    },
+    "static": {
+      "summary": "100% tests passed out of 34",
+      "skipped": 6
+    }
+  },
+  "library_sha256": {
+    "baseline": "dddffd31da6a8393a49f1fc7302e97a2ad38f7507afd91bb4b2a092f574c2a05",
+    "vector4": "d70b607914dfb6aabe042169a0d03c8b99a5651167fe0e711250afaf24ab476e",
+    "final": "d70b607914dfb6aabe042169a0d03c8b99a5651167fe0e711250afaf24ab476e"
+  },
+  "final_byte_identical_to_measured": true,
+  "vnni_objects_byte_identical_to_baseline": true,
+  "counters_per_hop": {
+    "2": {
+      "baseline": {
+        "cycles:u": 2653237.793,
+        "instructions:u": 5878959.6892,
+        "arith.divider_active:u": 134012.3238,
+        "fp_assist.any:u": 0.0
+      },
+      "final": {
+        "cycles:u": 2599776.3768,
+        "instructions:u": 5887523.8002,
+        "arith.divider_active:u": 115992.9476,
+        "fp_assist.any:u": 0.0
+      }
+    },
+    "8": {
+      "baseline": {
+        "cycles:u": 6236458.687,
+        "instructions:u": 14102542.5052,
+        "arith.divider_active:u": 378034.8836,
+        "fp_assist.any:u": 0.0
+      },
+      "final": {
+        "cycles:u": 6194283.5654,
+        "instructions:u": 14123862.9046,
+        "arith.divider_active:u": 339440.4986,
+        "fp_assist.any:u": 0.0
+      }
+    }
+  },
+  "limitations": [
+    "One physical i7-7700T; does not establish cross-CPU speedups.",
+    "Performance-policy confirmation used continuous neural-call throughput; excludes FFT, I/O and creation.",
+    "Original-power model8 paced improvement inconclusive.",
+    "VNNI native tests skip on this host.",
+    "Isolated cpuset excludes ordinary work; bound kernel tasks, IRQ/NMI/SMI, shared cache and package power remain.",
+    "No new perceptual quality scores; exact regression compares current W7A8 baseline."
+  ],
+  "artifacts": "Local evidence archive /home/varyagnord/reports/dpdfnet-opt-2026-11-07"
+}

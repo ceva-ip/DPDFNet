@@ -51,6 +51,15 @@ dpdf_dense *dpdf_dense_create(const float *w,const float *bias,int k,int n,int p
 #endif
     return d;
 }
+int dpdf_dense_run_cm64(dpdf_dense *d,const float *x,float *y,int rows) {
+#ifdef DPDF_X86_DISPATCH
+    if(d->precision==8 && d->k==64 && d->n==64)
+        return dpdf_qaffine_cm64(d->q,x,d->bias,y,rows);
+#else
+    (void)d;(void)x;(void)y;(void)rows;
+#endif
+    return 0;
+}
 void dpdf_dense_run(dpdf_dense *d,const float *x,float *y,int rows) {
     for (int start=0;start<rows;start+=48) {
         int m=rows-start; if (m>48) m=48;

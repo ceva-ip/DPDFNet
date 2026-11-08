@@ -7,6 +7,7 @@ typedef struct dpdf_convop dpdf_convop;
  * Dense source is input-major; tiled=64 accepts [N/64,K,64] source packing. */
 dpdf_dense *dpdf_dense_create(const float *,const float *,int,int,int,int);
 void dpdf_dense_destroy(dpdf_dense *);
+int dpdf_dense_run_cm64(dpdf_dense *,const float *,float *,int);
 void dpdf_dense_run(dpdf_dense *,const float *,float *,int);
 size_t dpdf_dense_bytes(const dpdf_dense *);
 dpdf_convop *dpdf_convop_create(const float *,const float *,int,int,int,int,int,int,int,int,int,int,int,int,int,int);
