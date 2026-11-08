@@ -531,4 +531,140 @@ void DPDF_QPAIR_IMPL(const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const float *
     }
 }
 
+#ifndef DPDF_INT8_VNNI
+/* Bit transpose used only for quantized integer lanes. */
+#define CM_TRANSPOSE8(A0,A1,A2,A3,A4,A5,A6,A7) do { \
+ __m256 b0=_mm256_unpacklo_ps(A0,A1),b1=_mm256_unpackhi_ps(A0,A1); \
+ __m256 b2=_mm256_unpacklo_ps(A2,A3),b3=_mm256_unpackhi_ps(A2,A3); \
+ __m256 b4=_mm256_unpacklo_ps(A4,A5),b5=_mm256_unpackhi_ps(A4,A5); \
+ __m256 b6=_mm256_unpacklo_ps(A6,A7),b7=_mm256_unpackhi_ps(A6,A7); \
+ A0=_mm256_shuffle_ps(b0,b2,0x44);A1=_mm256_shuffle_ps(b0,b2,0xee); \
+ A2=_mm256_shuffle_ps(b1,b3,0x44);A3=_mm256_shuffle_ps(b1,b3,0xee); \
+ A4=_mm256_shuffle_ps(b4,b6,0x44);A5=_mm256_shuffle_ps(b4,b6,0xee); \
+ A6=_mm256_shuffle_ps(b5,b7,0x44);A7=_mm256_shuffle_ps(b5,b7,0xee); \
+ __m256 p0=_mm256_permute2f128_ps(A0,A4,0x20),p4=_mm256_permute2f128_ps(A0,A4,0x31); \
+ __m256 p1=_mm256_permute2f128_ps(A1,A5,0x20),p5=_mm256_permute2f128_ps(A1,A5,0x31); \
+ __m256 p2=_mm256_permute2f128_ps(A2,A6,0x20),p6=_mm256_permute2f128_ps(A2,A6,0x31); \
+ __m256 p3=_mm256_permute2f128_ps(A3,A7,0x20),p7=_mm256_permute2f128_ps(A3,A7,0x31); \
+ A0=p0;A1=p1;A2=p2;A3=p3;A4=p4;A5=p5;A6=p6;A7=p7; \
+} while(0)
+static inline __attribute__((always_inline)) void cm_store4(float *y,int rows,int f,int c,__m256 a0,__m256 a1,__m256 a2,__m256 a3) {
+ __m256 b0=_mm256_unpacklo_ps(a0,a1),b1=_mm256_unpackhi_ps(a0,a1);
+ __m256 b2=_mm256_unpacklo_ps(a2,a3),b3=_mm256_unpackhi_ps(a2,a3);
+ __m256 o0=_mm256_shuffle_ps(b0,b2,0x44),o1=_mm256_shuffle_ps(b0,b2,0xee);
+ __m256 o2=_mm256_shuffle_ps(b1,b3,0x44),o3=_mm256_shuffle_ps(b1,b3,0xee);
+#define CM_STORE(I,V) do { _mm_storeu_ps(y+(c+I)*rows+f,_mm256_castps256_ps128(V)); \
+ _mm_storeu_ps(y+(c+I+4)*rows+f,_mm256_extractf128_ps(V,1)); } while(0)
+ CM_STORE(0,o0);CM_STORE(1,o1);CM_STORE(2,o2);CM_STORE(3,o3);
+#undef CM_STORE
+}
+int dpdf_qaffine_cm64(const dpdf_qmatrix *q,const float *x,const float *bias,float *y,int rows) {
+ if(!q || q->k!=64 || q->n!=64 || q->affine!=dpdf_qaffine_avx2 || rows<=0 || rows>480 || rows%8) return 0;
+ size_t bytes=(size_t)rows*64*sizeof(float);uintptr_t a=(uintptr_t)x,b=(uintptr_t)y;
+ if(a<=b ? b-a<bytes : a-b<bytes) return 0;
+ for(int f=0;f<rows;f+=8) {
+  __m256 lows[8],highs[8];const __m256 zero=_mm256_setzero_ps();
+  for(int c=0;c<8;++c) {
+   __m256 lo=zero,hi=zero;
+   for(int g=0;g<8;++g) {__m256 v=_mm256_loadu_ps(x+(g*8+c)*rows+f);lo=_mm256_min_ps(lo,v);hi=_mm256_max_ps(hi,v);}
+   lows[c]=_mm256_min_ps(lo,zero);highs[c]=_mm256_max_ps(hi,zero);
+  }
+  /* Reproduce the original per-row reduction tree, including zero operands. */
+  __m256 lo=_mm256_min_ps(_mm256_min_ps(_mm256_min_ps(lows[0],lows[4]),_mm256_min_ps(lows[2],lows[6])),_mm256_min_ps(_mm256_min_ps(lows[1],lows[5]),_mm256_min_ps(lows[3],lows[7])));
+  __m256 hi=_mm256_max_ps(_mm256_max_ps(_mm256_max_ps(highs[0],highs[4]),_mm256_max_ps(highs[2],highs[6])),_mm256_max_ps(_mm256_max_ps(highs[1],highs[5]),_mm256_max_ps(highs[3],highs[7])));
+  __m256 empty=_mm256_cmp_ps(lo,hi,_CMP_EQ_OQ);
+  __m256 scale=_mm256_blendv_ps(_mm256_div_ps(_mm256_sub_ps(hi,lo),_mm256_set1_ps(254.0f)),_mm256_set1_ps(1.0f),empty);
+  __m256i zp=_mm256_cvtps_epi32(_mm256_div_ps(_mm256_sub_ps(zero,lo),scale));
+  zp=_mm256_min_epi32(_mm256_set1_epi32(254),_mm256_max_epi32(_mm256_setzero_si256(),zp));
+  __m256 inv=_mm256_div_ps(_mm256_set1_ps(1),scale),z=_mm256_cvtepi32_ps(zp);
+  float scales[8];int points[8];_mm256_storeu_ps(scales,scale);_mm256_storeu_si256((__m256i *)points,zp);
+  int8_t activation[8*64];
+  for(int c=0;c<64;c+=8) {
+   __m256 t0=_mm256_castsi256_ps(_mm256_andnot_si256(_mm256_castps_si256(empty),_mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(_mm256_loadu_ps(x+(c+0)*rows+f),inv),z))));
+   __m256 t1=_mm256_castsi256_ps(_mm256_andnot_si256(_mm256_castps_si256(empty),_mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(_mm256_loadu_ps(x+(c+1)*rows+f),inv),z))));
+   __m256 t2=_mm256_castsi256_ps(_mm256_andnot_si256(_mm256_castps_si256(empty),_mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(_mm256_loadu_ps(x+(c+2)*rows+f),inv),z))));
+   __m256 t3=_mm256_castsi256_ps(_mm256_andnot_si256(_mm256_castps_si256(empty),_mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(_mm256_loadu_ps(x+(c+3)*rows+f),inv),z))));
+   __m256 t4=_mm256_castsi256_ps(_mm256_andnot_si256(_mm256_castps_si256(empty),_mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(_mm256_loadu_ps(x+(c+4)*rows+f),inv),z))));
+   __m256 t5=_mm256_castsi256_ps(_mm256_andnot_si256(_mm256_castps_si256(empty),_mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(_mm256_loadu_ps(x+(c+5)*rows+f),inv),z))));
+   __m256 t6=_mm256_castsi256_ps(_mm256_andnot_si256(_mm256_castps_si256(empty),_mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(_mm256_loadu_ps(x+(c+6)*rows+f),inv),z))));
+   __m256 t7=_mm256_castsi256_ps(_mm256_andnot_si256(_mm256_castps_si256(empty),_mm256_cvtps_epi32(_mm256_add_ps(_mm256_mul_ps(_mm256_loadu_ps(x+(c+7)*rows+f),inv),z))));
+   CM_TRANSPOSE8(t0,t1,t2,t3,t4,t5,t6,t7);
+   {__m256i qi=_mm256_castps_si256(t0);__m128i p=_mm_packs_epi32(_mm256_castsi256_si128(qi),_mm256_extracti128_si256(qi,1));p=_mm_packus_epi16(p,p);p=_mm_min_epu8(p,_mm_set1_epi8((char)254));_mm_storel_epi64((__m128i *)(activation+0*64+c),p);}
+   {__m256i qi=_mm256_castps_si256(t1);__m128i p=_mm_packs_epi32(_mm256_castsi256_si128(qi),_mm256_extracti128_si256(qi,1));p=_mm_packus_epi16(p,p);p=_mm_min_epu8(p,_mm_set1_epi8((char)254));_mm_storel_epi64((__m128i *)(activation+1*64+c),p);}
+   {__m256i qi=_mm256_castps_si256(t2);__m128i p=_mm_packs_epi32(_mm256_castsi256_si128(qi),_mm256_extracti128_si256(qi,1));p=_mm_packus_epi16(p,p);p=_mm_min_epu8(p,_mm_set1_epi8((char)254));_mm_storel_epi64((__m128i *)(activation+2*64+c),p);}
+   {__m256i qi=_mm256_castps_si256(t3);__m128i p=_mm_packs_epi32(_mm256_castsi256_si128(qi),_mm256_extracti128_si256(qi,1));p=_mm_packus_epi16(p,p);p=_mm_min_epu8(p,_mm_set1_epi8((char)254));_mm_storel_epi64((__m128i *)(activation+3*64+c),p);}
+   {__m256i qi=_mm256_castps_si256(t4);__m128i p=_mm_packs_epi32(_mm256_castsi256_si128(qi),_mm256_extracti128_si256(qi,1));p=_mm_packus_epi16(p,p);p=_mm_min_epu8(p,_mm_set1_epi8((char)254));_mm_storel_epi64((__m128i *)(activation+4*64+c),p);}
+   {__m256i qi=_mm256_castps_si256(t5);__m128i p=_mm_packs_epi32(_mm256_castsi256_si128(qi),_mm256_extracti128_si256(qi,1));p=_mm_packus_epi16(p,p);p=_mm_min_epu8(p,_mm_set1_epi8((char)254));_mm_storel_epi64((__m128i *)(activation+5*64+c),p);}
+   {__m256i qi=_mm256_castps_si256(t6);__m128i p=_mm_packs_epi32(_mm256_castsi256_si128(qi),_mm256_extracti128_si256(qi,1));p=_mm_packus_epi16(p,p);p=_mm_min_epu8(p,_mm_set1_epi8((char)254));_mm_storel_epi64((__m128i *)(activation+6*64+c),p);}
+   {__m256i qi=_mm256_castps_si256(t7);__m128i p=_mm_packs_epi32(_mm256_castsi256_si128(qi),_mm256_extracti128_si256(qi,1));p=_mm_packus_epi16(p,p);p=_mm_min_epu8(p,_mm_set1_epi8((char)254));_mm_storel_epi64((__m128i *)(activation+7*64+c),p);}
+  }
+  for(int r=0;r<8;r+=4) for(int c=0;c<64;c+=16) {
+   __m256i s0=_mm256_setzero_si256(),s1=s0,s2=s0,s3=s0,t0=s0,t1=s0,t2=s0,t3=s0;
+   for(int j=0;j<64;j+=4) {
+    __m256i w0=_mm256_loadu_si256((const __m256i *)(q->packed+c*64+j*8));
+    __m256i w1=_mm256_loadu_si256((const __m256i *)(q->packed+(c+8)*64+j*8));
+    /* Keep eight accumulators resident; GCC otherwise schedules all eight
+     * maddubs temporaries together and spills two sums every K step.
+     * Two scratch registers bound live temporaries. Memory clobber orders
+     * quantized activation writes before these explicit loads. */
+    const int8_t *a=activation+r*64+j;
+    const __m256i ones=_mm256_set1_epi16(1);
+    __asm__ volatile (
+      "vpbroadcastd 0(%[a]), %%ymm14\n\t"
+      "vpmaddubsw %[w0], %%ymm14, %%ymm15\n\t"
+      "vpmaddwd %[one], %%ymm15, %%ymm15\n\t"
+      "vpaddd %%ymm15, %[s0], %[s0]\n\t"
+      "vpmaddubsw %[w1], %%ymm14, %%ymm15\n\t"
+      "vpmaddwd %[one], %%ymm15, %%ymm15\n\t"
+      "vpaddd %%ymm15, %[t0], %[t0]\n\t"
+      "vpbroadcastd 64(%[a]), %%ymm14\n\t"
+      "vpmaddubsw %[w0], %%ymm14, %%ymm15\n\t"
+      "vpmaddwd %[one], %%ymm15, %%ymm15\n\t"
+      "vpaddd %%ymm15, %[s1], %[s1]\n\t"
+      "vpmaddubsw %[w1], %%ymm14, %%ymm15\n\t"
+      "vpmaddwd %[one], %%ymm15, %%ymm15\n\t"
+      "vpaddd %%ymm15, %[t1], %[t1]\n\t"
+      "vpbroadcastd 128(%[a]), %%ymm14\n\t"
+      "vpmaddubsw %[w0], %%ymm14, %%ymm15\n\t"
+      "vpmaddwd %[one], %%ymm15, %%ymm15\n\t"
+      "vpaddd %%ymm15, %[s2], %[s2]\n\t"
+      "vpmaddubsw %[w1], %%ymm14, %%ymm15\n\t"
+      "vpmaddwd %[one], %%ymm15, %%ymm15\n\t"
+      "vpaddd %%ymm15, %[t2], %[t2]\n\t"
+      "vpbroadcastd 192(%[a]), %%ymm14\n\t"
+      "vpmaddubsw %[w0], %%ymm14, %%ymm15\n\t"
+      "vpmaddwd %[one], %%ymm15, %%ymm15\n\t"
+      "vpaddd %%ymm15, %[s3], %[s3]\n\t"
+      "vpmaddubsw %[w1], %%ymm14, %%ymm15\n\t"
+      "vpmaddwd %[one], %%ymm15, %%ymm15\n\t"
+      "vpaddd %%ymm15, %[t3], %[t3]\n\t"
+      : [s0] "+&x"(s0), [s1] "+&x"(s1), [s2] "+&x"(s2), [s3] "+&x"(s3), [t0] "+&x"(t0), [t1] "+&x"(t1), [t2] "+&x"(t2), [t3] "+&x"(t3)
+      : [a] "r"(a),[w0] "x"(w0),[w1] "x"(w1),[one] "x"(ones)
+      : "ymm14","ymm15","memory");
+   }
+   {
+    __m256i weight_sum=_mm256_loadu_si256((const __m256i *)(q->sum+c+0));
+    __m256 weight_scale=_mm256_loadu_ps(q->scale+c+0),bias8=_mm256_loadu_ps(bias+c+0);
+    __m256 v0=_mm256_fmadd_ps(_mm256_cvtepi32_ps(_mm256_add_epi32(s0,_mm256_mullo_epi32(weight_sum,_mm256_set1_epi32(-points[r+0])))),_mm256_mul_ps(_mm256_set1_ps(scales[r+0]),weight_scale),bias8);
+    __m256 v1=_mm256_fmadd_ps(_mm256_cvtepi32_ps(_mm256_add_epi32(s1,_mm256_mullo_epi32(weight_sum,_mm256_set1_epi32(-points[r+1])))),_mm256_mul_ps(_mm256_set1_ps(scales[r+1]),weight_scale),bias8);
+    __m256 v2=_mm256_fmadd_ps(_mm256_cvtepi32_ps(_mm256_add_epi32(s2,_mm256_mullo_epi32(weight_sum,_mm256_set1_epi32(-points[r+2])))),_mm256_mul_ps(_mm256_set1_ps(scales[r+2]),weight_scale),bias8);
+    __m256 v3=_mm256_fmadd_ps(_mm256_cvtepi32_ps(_mm256_add_epi32(s3,_mm256_mullo_epi32(weight_sum,_mm256_set1_epi32(-points[r+3])))),_mm256_mul_ps(_mm256_set1_ps(scales[r+3]),weight_scale),bias8);
+    cm_store4(y,rows,f+r,c+0,v0,v1,v2,v3);
+   }
+   {
+    __m256i weight_sum=_mm256_loadu_si256((const __m256i *)(q->sum+c+8));
+    __m256 weight_scale=_mm256_loadu_ps(q->scale+c+8),bias8=_mm256_loadu_ps(bias+c+8);
+    __m256 v0=_mm256_fmadd_ps(_mm256_cvtepi32_ps(_mm256_add_epi32(t0,_mm256_mullo_epi32(weight_sum,_mm256_set1_epi32(-points[r+0])))),_mm256_mul_ps(_mm256_set1_ps(scales[r+0]),weight_scale),bias8);
+    __m256 v1=_mm256_fmadd_ps(_mm256_cvtepi32_ps(_mm256_add_epi32(t1,_mm256_mullo_epi32(weight_sum,_mm256_set1_epi32(-points[r+1])))),_mm256_mul_ps(_mm256_set1_ps(scales[r+1]),weight_scale),bias8);
+    __m256 v2=_mm256_fmadd_ps(_mm256_cvtepi32_ps(_mm256_add_epi32(t2,_mm256_mullo_epi32(weight_sum,_mm256_set1_epi32(-points[r+2])))),_mm256_mul_ps(_mm256_set1_ps(scales[r+2]),weight_scale),bias8);
+    __m256 v3=_mm256_fmadd_ps(_mm256_cvtepi32_ps(_mm256_add_epi32(t3,_mm256_mullo_epi32(weight_sum,_mm256_set1_epi32(-points[r+3])))),_mm256_mul_ps(_mm256_set1_ps(scales[r+3]),weight_scale),bias8);
+    cm_store4(y,rows,f+r,c+8,v0,v1,v2,v3);
+   }
+  }
+ }
+ return 1;
+}
+#undef CM_TRANSPOSE8
+#endif
+
 #undef DPDF_DOT4

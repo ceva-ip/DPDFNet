@@ -1,5 +1,7 @@
 # Performance, memory and output quality
 
+Latest verification (2026-11-08): [channel-major pointwise inference](#channel-major-pointwise-follow-up-2026-11-08) confirms continuous/performance-policy time reductions of 5.823% / 3.209% for models 2 / 8. The independent 288-block original-power CM model-8 result remains inconclusive at +0.793% (adjusted interval [-0.453, +2.023]%). The separate [quantize4 precision repeat](#model-8-original-power-precision-repeat-2026-11-08) also remains inconclusive in that power/cadence mode. [Portable evidence](../validation/i7_7700t_deep.json).
+
 The current defaults were selected separately for models 2 and 8 on an
 Intel Core i7-7700T. The older i7-8700 latency/quality records below describe
 the historical package baseline; they were not remeasured for these defaults.
@@ -366,3 +368,61 @@ Independent post-plan confirmation used 36 mirrored randomized blocks, two fresh
 At the original powersave/balance_performance policy with 10ms cadence, model2 improved by 4.338% (adjusted interval [0.464, 8.062]%), while model8 remained inconclusive at 1.081% ([-2.307, 4.357]%). These are scoped local results, not end-to-end audio or cross-CPU speedup claims.
 
 Every spectrum and complete state matched baseline over 65 local EARS/stress streams (147,711 hops/model), including aliases/reset. The new direct quantization oracle covers 16,384 rounding/FTZ/DAZ cases and guard pages. PGO release, ASan/UBSan, AVX2-only, static and CPU-mask checks pass; six native VNNI contracts skip where that ISA is unavailable. No new perceptual quality scores are claimed. See [the portable result record](../validation/i7_7700t_quantize4.json). Complete protocols, raw runs and logs are retained locally under `/home/varyagnord/reports/dpdfnet-opt-2026-11-07`.
+
+
+## Model-8 original-power precision repeat (2026-11-08)
+
+The exact `98df765`/`26c7a9c` binaries were compared again at the original
+powersave/balance_performance policy and 10 ms cadence. The fixed design uses
+288 balanced randomized ABBA/BAAB blocks, 1,152 fresh processes, 120 warmup and
+250 timed hops per process: 288,000 timed hops, twelve times the earlier guard.
+Frame indices and recurrent history match that guard. The stopped 96×750
+workload-design pilot is archived separately and excluded; neither historical
+data nor the pilot is pooled into the new estimate. No observations are removed.
+
+| Model | Time reduction | Primary 95% interval | Paired log-ratio SD | SE of mean log ratio |
+| --- | ---: | ---: | ---: | ---: |
+| 8 | +0.4627% | [-0.3447, +1.2636]% | 0.06965684 | 0.00410457 |
+
+The gain remains inconclusive in this power/cadence regime. Run means are
+4.411520 ms (SD 0.387506) before and 4.393384 ms (SD 0.415042) after the change.
+The paired arithmetic difference is 0.018136 ms, with SD 0.300840 ms, SE
+0.017727 ms and 95% interval [-0.016756, +0.053027] ms. Pooled individual-hop SD
+is 1.602747/1.604627 ms; this describes latency variation and is not the SE of
+the mean effect. Complete blocks, rather than hops, are the statistical units.
+Whole-block bootstrap, HAC lag 3 and moving-block bootstrap lengths 4/8 all retain
+zero in their 95% intervals; balanced randomization p=0.26094. The old guard's
+interval recomputed at the same 95% level is [-1.4950,+3.5917]%; the new interval
+is 3.163 times narrower. Its historical family-four interval used 98.75%, so
+comparing those different confidence levels directly would overstate precision.
+
+All slow runs remain. Calls above 10 ms were 0/1 and late completions 0/3, before/
+after; these few events do not establish a change in deadline-miss probability.
+CPU 2 and sibling CPU 6 were reserved together as before. Ordinary work was
+excluded from both; residual kernel/interrupt/package effects remain. Sampled
+policy settings never changed, and CPU 6 user/nice counters did not advance.
+Diagnostic monitoring began after the initial blocks. All isolation and power
+settings were restored. See the [portable precision record](../validation/i7_7700t_precision.json)
+and local raw evidence under `/home/varyagnord/reports/dpdfnet-deep-2026-11-08`.
+
+## Channel-major pointwise follow-up (2026-11-08)
+
+The exact AVX2 K64×N64 pointwise path quantizes eight frequency positions directly from channel-major input and writes channel-major output with a register 4×8 transpose. It bypasses sixteen full float transposes per graph. Original min/max reduction, exact divisions, integer dot, correction/scaling/FMA and weights are retained. Other precision/shape/overlap/VNNI cases use the original chain. No new mandatory ISA is introduced.
+
+| Model | Baseline mean ± run SD, ms | Final mean ± run SD, ms | Time reduction | Adjusted interval |
+| --- | ---: | ---: | ---: | ---: |
+| 2 | 0.724998 ± 0.009977 | 0.682770 ± 0.007971 | 5.823% | [5.222, 6.421]% |
+| 8 | 1.716139 ± 0.015128 | 1.661071 ± 0.014034 | 3.209% | [2.709, 3.707]% |
+
+Independent confirmation: 36 mirrored randomized blocks, 120 warmup and 750 timed hops per fresh process, continuous calls, performance governor/EPP, unchanged 800–3800 MHz bounds, GCC 14.2 PGO, physical CPU 2+6 reserved and workers only CPU 2. Family-eight intervals include confirmation/guards and reserved final-integration checks; discovery uses family twenty. All runs and negative outcomes remain. These percentages compare with `26c7a9c`; do not add historical gains.
+
+| Model | Original-power paced time reduction | Adjusted interval | Confirmed |
+| --- | ---: | ---: | --- |
+| 2 | 5.482% | [1.077, 9.690]% | yes |
+| 8 | 0.793% | [-0.453, 2.023]% | no |
+
+The initial power guards use 24 blocks, 250 timed hops and 10 ms cadence. A separately fixed independent 288-block original-power model-8 repeat uses the final library; it is not pooled with its initial guard and replaces one reserved final guard within the unchanged family-eight budget. The larger model-8 quantize4 precision repeat above concerns a different code contrast. Neither power regime establishes cross-CPU or whole-audio-chain speedups.
+
+Other screened layout/K128/depth-specialization candidates did not establish a gain; two profile-motivated entry-prefetch variants regressed both models. The first layout-in prototype failed the decoder-skip regression before timing. The initial CM intrinsics prototype had two accumulator spills per K step; a fixed AVX2 register schedule removes those hot-loop accesses, with all correctness checks repeated before screening. None of these untimed refinements is presented as an independently timed component gain.
+
+Every spectrum and complete state matched on 65 local streams / 147,711 hops per model. Final contracts include 2,688 direct CM cases per model, scalar INT8 oracle with read-only guarded packing over 16 rounding/FTZ/DAZ modes, and byte-for-byte full graph parity across FP32/FP16/INT8 × all 16 masks × eight frames. Release/ASan-UBSan/AVX2-only/static and CPU-mask checks pass. Ten VNNI objects match baseline byte-for-byte; native VNNI execution/speed remains unavailable here. Seven public exports, libc/libm-only release dependencies, state ABI and owned heap are preserved. Measured/final identity or separate final confirmation is recorded. All isolation settings are restored. See the [portable deep result](../validation/i7_7700t_deep.json) and the local evidence archive `/home/varyagnord/reports/dpdfnet-deep-2026-11-08`.
