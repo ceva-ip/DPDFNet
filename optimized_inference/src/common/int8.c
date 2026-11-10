@@ -64,3 +64,12 @@ void dpdf_qaffine_pair(const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const float
 #define DPDF_QAFFINE_IMPL dpdf_qaffine_avx2
 #define DPDF_QPAIR_IMPL dpdf_qaffine_pair_avx2
 #include "int8_kernels.inc"
+
+/* Reuse the matrix's existing ISA selection; never probe inside the kernel. */
+int dpdf_qaffine_cm64(const dpdf_qmatrix *q,const float *x,const float *bias,float *y,int rows) {
+#ifdef DPDF_HAS_AVX_VNNI
+    if (q && q->affine==dpdf_qaffine_vnni)
+        return dpdf_qaffine_cm64_vnni(q,x,bias,y,rows);
+#endif
+    return qaffine_cm64_avx2(q,x,bias,y,rows);
+}
