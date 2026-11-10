@@ -14,6 +14,9 @@ static uint32_t seed=841009;
 static float sample(void){seed=seed*1664525u+1013904223u;return ((int)(seed>>16)-32768)/8192.0f;}
 int main(void) {
  if(!dpdf_has_avx2()){puts("CM AVX2/FMA unavailable; skipped");return 77;}
+#ifdef DPDF_TEST_AVX_VNNI
+ if(!dpdf_has_avx_vnni()){puts("CM AVX-VNNI unavailable; skipped");return 77;}
+#endif
  unsigned saved=_mm_getcsr(),rounds[]={_MM_ROUND_NEAREST,_MM_ROUND_DOWN,_MM_ROUND_UP,_MM_ROUND_TOWARD_ZERO};
  const int widths[]={8,40,48,80,96,160,480};size_t page=(size_t)sysconf(_SC_PAGESIZE),capacity=480*64*sizeof(float),span=(capacity+page-1)/page*page+page;
  char *xm=mmap(0,span+page,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0),*ym=mmap(0,span+page,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);REQUIRE(xm!=MAP_FAILED && ym!=MAP_FAILED);REQUIRE(!mprotect(xm+span,page,PROT_NONE) && !mprotect(ym+span,page,PROT_NONE));
@@ -22,10 +25,11 @@ int main(void) {
   _mm_setcsr((saved&~(0x6000|0x8040))|rounds[mode]|((denorm&1)?0x8000:0)|((denorm&2)?0x40:0));
   float w[64*64],bias[64];for(int i=0;i<64*64;++i)w[i]=sample();for(int i=0;i<64;++i)bias[i]=sample();
   dpdf_qmatrix *q=dpdf_qcreate(w,64,64);REQUIRE(q);
-#ifdef DPDF_HAS_AVX_VNNI
-  q->affine=dpdf_qaffine_vnni;REQUIRE(dpdf_qaffine_cm64(q,xr,bias,expected,8)==0);
-#endif
+#ifdef DPDF_TEST_AVX_VNNI
+  q->affine=dpdf_qaffine_vnni;
+#else
   q->affine=dpdf_qaffine_avx2;
+#endif
   REQUIRE(dpdf_qaffine_cm64(NULL,xr,bias,expected,8)==0);
   const int invalid_rows[]={-8,0,7,9,488};
   memset(expected,0xa5,32);
@@ -33,6 +37,7 @@ int main(void) {
    REQUIRE(dpdf_qaffine_cm64(q,xr,bias,expected,invalid_rows[i])==0);
   dpdf_qmatrix wrong=*q;wrong.k=128;REQUIRE(dpdf_qaffine_cm64(&wrong,xr,bias,expected,8)==0);
   wrong=*q;wrong.n=72;REQUIRE(dpdf_qaffine_cm64(&wrong,xr,bias,expected,8)==0);
+  wrong=*q;wrong.affine=NULL;REQUIRE(dpdf_qaffine_cm64(&wrong,xr,bias,expected,8)==0);
   for(int i=0;i<32;++i)REQUIRE(((unsigned char *)expected)[i]==0xa5);
 
   size_t packed_span=(4096+page-1)/page*page;void *packed_map=mmap(0,packed_span+page,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);REQUIRE(packed_map!=MAP_FAILED);REQUIRE(!mprotect((char *)packed_map+packed_span,page,PROT_NONE));int8_t *packed_end=(int8_t *)packed_map+packed_span-4096;memcpy(packed_end,q->packed,4096);REQUIRE(!mprotect(packed_map,packed_span,PROT_READ));int8_t *old=q->packed;q->packed=packed_end;

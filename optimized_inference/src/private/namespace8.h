@@ -88,4 +88,5 @@
 #define dpdf_qaffine4pair64_fused_vnni dpdfnet8_private_qaffine4pair64_fused_vnni
 
 #define dpdf_qaffine_cm64 dpdfnet8_private_qaffine_cm64
+#define dpdf_qaffine_cm64_vnni dpdfnet8_private_qaffine_cm64_vnni
 #define dpdf_dense_run_cm64 dpdfnet8_private_dense_run_cm64

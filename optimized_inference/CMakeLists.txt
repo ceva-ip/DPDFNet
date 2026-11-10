@@ -237,7 +237,7 @@ if(BUILD_TESTING)
   # Reuse the guarded scalar assembly oracles for each VNNI specialization.
   if(DPDF_ENABLE_AVX_VNNI AND DPDF_COMPILER_HAS_AVX_VNNI)
     foreach(size IN ITEMS 2 8)
-      set(vnni_contracts fused_contract pair_contract)
+      set(vnni_contracts fused_contract pair_contract cm_contract)
       if(size EQUAL 2)
         list(APPEND vnni_contracts wide_contract pair_fused_contract)
       endif()
@@ -250,6 +250,9 @@ if(BUILD_TESTING)
           "SHELL:-include \"${CMAKE_CURRENT_SOURCE_DIR}/src/private/int8_vnni_aliases.h\""
           -frounding-math -fno-tree-vectorize)
         target_compile_definitions(${target} PRIVATE DPDF_TEST_AVX_VNNI)
+        if(test STREQUAL "cm_contract")
+          target_compile_definitions(${target} PRIVATE DPDF_X86_DISPATCH DPDF_HAS_AVX_VNNI)
+        endif()
         target_link_libraries(${target} PRIVATE m)
         if(DPDF_PGO_MODE STREQUAL "GENERATE" AND size EQUAL 8)
           target_link_options(${target} PRIVATE -fprofile-generate=${DPDF_PROFILE_DIR})
@@ -259,6 +262,12 @@ if(BUILD_TESTING)
         set_tests_properties(${target} PROPERTIES SKIP_RETURN_CODE 77)
       endforeach()
     endforeach()
+  endif()
+  if(DPDF_ENABLE_AVX_VNNI AND DPDF_COMPILER_HAS_AVX_VNNI AND Python3_Interpreter_FOUND)
+    add_test(NAME vnni_isa_contract COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/vnni_isa_contract.py" "${CMAKE_OBJDUMP}"
+      $<TARGET_OBJECTS:backend2> $<TARGET_OBJECTS:backend8>
+      COMMAND_EXPAND_LISTS)
   endif()
   get_property(tests DIRECTORY PROPERTY TESTS)
   set_tests_properties(${tests} PROPERTIES TIMEOUT 120

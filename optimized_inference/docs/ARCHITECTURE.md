@@ -21,6 +21,15 @@ projections, a 256-input assembly projection, and AVX2 arithmetic surrounding
 unchanged scalar libm calls in its generated GRU cells. Model 8 uses its
 accepted fixed-row kernels and compiler profile.
 
+The K64N64 channel-major pointwise path supports both AVX2 and AVX-VNNI.
+It reads and writes frequency positions directly, avoiding the eight eligible
+projections' input/output float transposes in each graph. The wrapper reuses
+the matrix's existing affine implementation selection; dimensions, bounded
+row counts and non-overlapping buffers remain explicit eligibility checks.
+The shared quantization and 4x8 output stores preserve floating-point order.
+VNNI dot products use VEX-encoded instructions and eight resident integer
+accumulators, without requiring AVX-512 or adding per-context state.
+
 Model-specific choices in shared C sources are selected by the private
 `DPDF_MODEL_SIZE` compile definition. These branches preserve the accepted
 operation order of each graph. Do not replace explicit operations with FMA

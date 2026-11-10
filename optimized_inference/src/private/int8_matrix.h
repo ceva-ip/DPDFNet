@@ -21,6 +21,7 @@ void dpdf_qaffine_avx2(const dpdf_qmatrix *,const float *,const float *,float *,
 void dpdf_qaffine_pair_avx2(const dpdf_qmatrix *,const dpdf_qmatrix *,const float *,
                           const float *,const float *,float *,float *,int);
 #ifdef DPDF_HAS_AVX_VNNI
+int dpdf_qaffine_cm64_vnni(const dpdf_qmatrix *,const float *,const float *,float *,int);
 void dpdf_qaffine_vnni(const dpdf_qmatrix *,const float *,const float *,float *,int);
 void dpdf_qaffine_pair_vnni(const dpdf_qmatrix *,const dpdf_qmatrix *,const float *,
                           const float *,const float *,float *,float *,int);

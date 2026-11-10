@@ -154,6 +154,18 @@ query. The audio callback performs no feature detection or allocation. Only
 two private function pointers per quantized matrix (4,016 bytes for model 2 and
 5,552 bytes for model 8 on x86-64). The public ABI is unchanged.
 
+The K64N64 channel-major path also follows the matrix's selected ISA.
+`model2_cm_contract_vnni` and `model8_cm_contract_vnni` exercise the VNNI
+path against row-major projection, including floating-point control modes,
+guard pages, nonfinite/subnormal inputs and overlap rejection. They skip
+with status 77 when AVX-VNNI is unavailable.
+
+With Python available, `vnni_isa_contract` additionally disassembles both
+backend object sets using the GCC toolchain's `objdump`. It rejects EVEX
+instructions and verifies VEX `VPDPBUSD` encoding. This catches accidental
+AVX-512 requirements that numerical tests on an AVX-512-capable CPU would
+otherwise miss. Inline dot products must explicitly preserve this encoding.
+
 The generated VNNI assembly keeps the addressing, floating-point instruction
 order, and ABI of the AVX2 assembly. Regenerate it after editing those sources:
 

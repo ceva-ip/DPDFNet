@@ -531,7 +531,6 @@ void DPDF_QPAIR_IMPL(const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const float *
     }
 }
 
-#ifndef DPDF_INT8_VNNI
 /* Bit transpose used only for quantized integer lanes. */
 #define CM_TRANSPOSE8(A0,A1,A2,A3,A4,A5,A6,A7) do { \
  __m256 b0=_mm256_unpacklo_ps(A0,A1),b1=_mm256_unpackhi_ps(A0,A1); \
@@ -558,8 +557,13 @@ static inline __attribute__((always_inline)) void cm_store4(float *y,int rows,in
  CM_STORE(0,o0);CM_STORE(1,o1);CM_STORE(2,o2);CM_STORE(3,o3);
 #undef CM_STORE
 }
-int dpdf_qaffine_cm64(const dpdf_qmatrix *q,const float *x,const float *bias,float *y,int rows) {
- if(!q || q->k!=64 || q->n!=64 || q->affine!=dpdf_qaffine_avx2 || rows<=0 || rows>480 || rows%8) return 0;
+#ifdef DPDF_INT8_VNNI
+int dpdf_qaffine_cm64_vnni(const dpdf_qmatrix *q,const float *x,const float *bias,float *y,int rows)
+#else
+static int qaffine_cm64_avx2(const dpdf_qmatrix *q,const float *x,const float *bias,float *y,int rows)
+#endif
+{
+ if(!q || q->k!=64 || q->n!=64 || q->affine!=DPDF_QAFFINE_IMPL || rows<=0 || rows>480 || rows%8) return 0;
  size_t bytes=(size_t)rows*64*sizeof(float);uintptr_t a=(uintptr_t)x,b=(uintptr_t)y;
  if(a<=b ? b-a<bytes : a-b<bytes) return 0;
  for(int f=0;f<rows;f+=8) {
@@ -603,11 +607,30 @@ int dpdf_qaffine_cm64(const dpdf_qmatrix *q,const float *x,const float *bias,flo
    for(int j=0;j<64;j+=4) {
     __m256i w0=_mm256_loadu_si256((const __m256i *)(q->packed+c*64+j*8));
     __m256i w1=_mm256_loadu_si256((const __m256i *)(q->packed+(c+8)*64+j*8));
-    /* Keep eight accumulators resident; GCC otherwise schedules all eight
-     * maddubs temporaries together and spills two sums every K step.
-     * Two scratch registers bound live temporaries. Memory clobber orders
-     * quantized activation writes before these explicit loads. */
+    /* Bound scratch lifetimes to keep eight integer sums resident.
+     * The memory clobber orders activation writes before explicit loads. */
     const int8_t *a=activation+r*64+j;
+#ifdef DPDF_INT8_VNNI
+    /* Eight resident sums, two weight vectors and one activation scratch.
+     * VPDPBUSD preserves the exact bounded integer reduction. */
+    __asm__ volatile (
+      "vpbroadcastd 0(%[a]), %%ymm14\n\t"
+      "%{vex%} vpdpbusd %[w0], %%ymm14, %[s0]\n\t"
+      "%{vex%} vpdpbusd %[w1], %%ymm14, %[t0]\n\t"
+      "vpbroadcastd 64(%[a]), %%ymm14\n\t"
+      "%{vex%} vpdpbusd %[w0], %%ymm14, %[s1]\n\t"
+      "%{vex%} vpdpbusd %[w1], %%ymm14, %[t1]\n\t"
+      "vpbroadcastd 128(%[a]), %%ymm14\n\t"
+      "%{vex%} vpdpbusd %[w0], %%ymm14, %[s2]\n\t"
+      "%{vex%} vpdpbusd %[w1], %%ymm14, %[t2]\n\t"
+      "vpbroadcastd 192(%[a]), %%ymm14\n\t"
+      "%{vex%} vpdpbusd %[w0], %%ymm14, %[s3]\n\t"
+      "%{vex%} vpdpbusd %[w1], %%ymm14, %[t3]\n\t"
+      : [s0] "+&x"(s0), [s1] "+&x"(s1), [s2] "+&x"(s2), [s3] "+&x"(s3),
+        [t0] "+&x"(t0), [t1] "+&x"(t1), [t2] "+&x"(t2), [t3] "+&x"(t3)
+      : [a] "r"(a), [w0] "x"(w0), [w1] "x"(w1)
+      : "ymm14","memory");
+#else
     const __m256i ones=_mm256_set1_epi16(1);
     __asm__ volatile (
       "vpbroadcastd 0(%[a]), %%ymm14\n\t"
@@ -641,6 +664,7 @@ int dpdf_qaffine_cm64(const dpdf_qmatrix *q,const float *x,const float *bias,flo
       : [s0] "+&x"(s0), [s1] "+&x"(s1), [s2] "+&x"(s2), [s3] "+&x"(s3), [t0] "+&x"(t0), [t1] "+&x"(t1), [t2] "+&x"(t2), [t3] "+&x"(t3)
       : [a] "r"(a),[w0] "x"(w0),[w1] "x"(w1),[one] "x"(ones)
       : "ymm14","ymm15","memory");
+#endif
    }
    {
     __m256i weight_sum=_mm256_loadu_si256((const __m256i *)(q->sum+c+0));
@@ -665,6 +689,5 @@ int dpdf_qaffine_cm64(const dpdf_qmatrix *q,const float *x,const float *bias,flo
  return 1;
 }
 #undef CM_TRANSPOSE8
-#endif
 
 #undef DPDF_DOT4
