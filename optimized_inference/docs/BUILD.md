@@ -9,6 +9,11 @@ the hand-written assembly uses the Linux System V ABI.
 
 ## Recommended release build
 
+For performance studies, use the repository-root [benchmark laboratory](BENCHMARK_LAB.md)
+and `just bench-session MANIFEST OUTPUT` after the numerical build gates. Its
+prepare/readiness/restore recipes are mandatory for new performance claims;
+plain benchmark affinity alone does not establish a quiet environment.
+
 ```sh
 python3 tools/build.py --jobs 2
 ```
@@ -181,3 +186,123 @@ non-saturating `VPDPBUSD` preserves integer sums, quantization, scaling, and
 floating-point output. `int8_dispatch_contract` checks bitwise equality with
 the AVX2 implementation for both models, including single and paired kernels,
 row tiles and tails, extreme input values, and unaligned buffers.
+
+## Ryzen factorial performance recheck
+
+The [2026-11-10 recheck](../validation/ryzen_vnni_retest_20261110.json)
+compares baseline, CM-only, quantize4-only and their combination with separate
+fresh model-8 PGO profiles. The benchmark source, compiler flags and weights
+are identical across the four variants; model 2 remains non-PGO.
+
+CPU 3 was reserved through an isolated cpuset, its SMT sibling 15 was temporarily
+offline, and movable IRQ/workqueue activity was redirected. Restoration was
+verified after every phase. This excludes ordinary foreign userspace from the
+worker, not all per-CPU kernel work, interrupts or shared-cache interference.
+
+The unprofiled experiment retains 576 fresh-process records and all 633,600
+individual call durations. Two randomized batches include balanced four-arm
+blocks, two inputs, continuous and 10 ms paced execution, and A/A controls.
+Report sample SD of process means separately from pooled per-call SD and SEM.
+Use paired blocks, not individual calls, for effect intervals; preserve slow
+observations and the preregistered multiplicity and A/A acceptance guards.
+
+Hardware counting/sampling is a separate phase. FIFO control starts counters
+after warmup; its timings must not be used as unprofiled latency evidence.
+The record includes 144 PMU jobs with fully scheduled event groups and 512
+exploratory microbench processes, including zero-row fallback and unchanged
+row-path controls. Original raw artifacts and scripts are local under
+`.local/retest-20261110/` at the repository root and are not bundled.
+
+CM's continuous call-time reduction was confirmed on this high-frequency
+Ryzen core: 3.637% for model 2 and 1.609% for model 8. Neither the sub-percent
+quantize4 increment nor its addition to CM passed the predeclared A/A guard.
+No gain was confirmed at a 10 ms cadence. These measurements do not replace
+the earlier study, establish a WCET bound, or imply compact-core/other-CPU gains.
+## Exact quantize4 refinement experiment (2026-11-10)
+
+The range-reuse implementation is available for AVX2 and optional native VNNI.
+Both experimental options default OFF: later studies confirm conditional gains,
+but not global acceptance across models and workloads. See the [design and selection](QUANTIZE4_DESIGN.md)
+and [aggregate evidence](../validation/quantize4_refinement_20261110.json).
+
+From the repository root, configure an AVX2-only experimental build:
+
+```sh
+cmake -S optimized_inference -B build-q4-avx2 \
+  -DCMAKE_BUILD_TYPE=Release -DDPDF_ENABLE_AVX_VNNI=OFF \
+  -DDPDF_ENABLE_QUANTIZE4_REFINEMENT=ON
+```
+
+For the native experiment, use a separate directory and additionally enable
+VNNI quantize4:
+
+```sh
+cmake -S optimized_inference -B build-q4-native \
+  -DCMAKE_BUILD_TYPE=Release -DDPDF_ENABLE_QUANTIZE4_REFINEMENT=ON \
+  -DDPDF_ENABLE_VNNI_QUANTIZE4=ON
+```
+
+Build and run CTest normally. Recreate model-8 PGO for each configuration;
+do not reuse a profile from another option combination. The independent
+`quantize4_refined_contract` and `quantize4_contract_vnni` check the candidate
+even when the default library retains legacy quantization.
+
+The short study used eight paired blocks per ISA/model/cadence, two A/A pairs,
+160 fresh processes / 56,000 calls and 40 separate hardware jobs. It retained
+all call durations, call/run-mean SD, tails and adjusted paired intervals.
+Every graph interval included zero. Helper-only active/all-empty means improved
+12.198%/22.431%, which is not a full-model speedup. CPU 3 isolation and parked
+SMT sibling 15 were fully restored. A reduced 16-fixture/32-model-job stream
+check passed; the full 65-fixture suite was not repeated in this short study.
+
+The subsequent [isolated-L3 laboratory study](../validation/quantize4_lab_20261110.json)
+used the common dlopen worker, Boost off, verified nominal frequency and worker
+deep-idle restriction. It retained 200 unprofiled processes / 60,800 calls plus
+40 separate hardware jobs. Only native model-8 batch passed the planned A/A and
+effect gates: +0.832% time reduction, adjusted interval [0.580,1.084]%. This is
+a controlled non-boost result; ordinary-power and paced acceptance remains
+outstanding, and both experimental options still default OFF.
+
+The [extended cadence/power matrix](../validation/quantize4_regimes_20261110.json)
+then covers 48 conditions with family size48, eight A/A and eight comparative
+pairs each: 1,536 unprofiled processes, 442,368 calls and 192 separate counter
+jobs. It confirms model-8 VNNI steady batch16/batch64/paced10 and isolated-Boost
+continuous, with time reductions 0.971%/0.769%/0.835%/0.739%. Boost-paced
+acceptance remains unconfirmed; ordinary full-audio deployment is not measured.
+All settings are restored after each profile. See BENCHMARK_LAB.md for custom
+conditions, power profiles and recovery of a fully collected A/A journal.
+
+## Final ready-binary qualification (2026-11-10)
+
+The [final qualification](../validation/final_qualification_20261110.json)
+covers both models on fast and compact Ryzen cores, steady and isolated Boost,
+continuous spectral calls, paced10 spectral calls and a complete NumPy
+FFT/inference/IFFT callback. One fixed plan retains 72 contrasts, 3,456 processes,
+811,008 unprofiled calls, call/process SD, adjusted intervals, input/order splits
+and 288 separate warmed PMU jobs. No slow observations were removed or sample
+counts extended after inspecting results. Earlier layout/power cohorts were
+not pooled.
+
+CM remains selected for both models. On fast/steady continuous calls its time
+reductions are 3.127% for model 2 and 1.429% for model 8; model 8 also passes
+paced10 (1.472%) and complete audio (1.448%). Native quantize4 adds 0.810%
+[0.683,0.937]% continuous and 0.863% [0.513,1.213]% paced10 for model 8 in that
+environment. No quantize4 model-2, AVX2 or complete-audio condition passes every
+superiority gate. Compact/Boost native model-8 continuous passes practical
+noninferiority at the 0.5% loss margin, not useful superiority. Both options
+remain OFF.
+
+The complete regenerated 65-fixture numerical corpus passes 130 spectral/state
+jobs and 130 PCM jobs on the PC; red passes 130 AVX2 portability jobs. All 130
+cross-host diagnostic digests match. The unavailable historical reference
+corpus is not covered. Red has no VNNI or separate housekeeping L3, so it is
+not a strict isolated speed test; its eight service health checks remain 200.
+Production device/audio-server/service-load latency is not measured.
+
+Observed maximum call time is 2.787454 ms with zero 10 ms deadline misses and
+zero major faults. Independent restoration verifies all CPUs online, original
+power/idle/IRQ/workqueue/watchdog settings and irqbalance restored, no temporary
+cgroup or workers, and global ASLR unchanged. Ready candidates additionally
+pass 42 native and 32 AVX2 CTests; all 17 laboratory behavioral contracts pass.
+Raw evidence/report/figures are in `.local/final-qualification-20261110/`.
+No runtime default, commit, push or deployment is performed by this study.
