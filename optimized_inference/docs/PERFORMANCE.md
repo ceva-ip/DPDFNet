@@ -460,3 +460,98 @@ CPU 2 and its HT sibling CPU 6 were reserved together as a cgroup v2 isolated pa
 These intervals concern repeated measurements on this CPU and six fixed inputs. The conditions differ in cadence, power policy and timed length, so their difference is not solely a governor effect. They do not establish cross-CPU performance or whole audio-pipeline acceleration. FFT, synthesis, I/O and model creation are excluded. AVX2+FMA remains the minimum; optional VNNI execution/speed is unavailable on this host.
 
 See [portable results and integrity](../validation/i7_7700t_total.json), [all paired block observations](../validation/i7_7700t_total_blocks.json), and the complete local evidence at `/home/varyagnord/reports/dpdfnet-total-2026-11-08` (protocol, scripts, raw per-hop samples, journals, loader proofs, traces and Russian report).
+
+## Selected AVX2/VNNI defaults and final qualification (2026-11-10)
+
+Eligible INT8 K64N64 pointwise projections execute directly in channel-major
+layout in both models. AVX2 retains its existing exact four-row quantizer;
+VNNI uses the accepted CM kernel and ordinary row quantization elsewhere.
+Disabling the four-row VNNI experiment does not disable model quantization.
+
+| Selected default, both models | AVX2 | AVX-VNNI |
+| --- | --- | --- |
+| Channel-major K64N64 projections | enabled | enabled |
+| Legacy row-major four-row quantization | enabled | disabled |
+| New range-reuse / empty-row refinement | disabled | disabled |
+
+`DPDF_ENABLE_AVX_VNNI=ON` builds optional runtime dispatch when the compiler
+supports it; AVX2/FMA remains the fallback. Both experimental controls,
+`DPDF_ENABLE_QUANTIZE4_REFINEMENT` and `DPDF_ENABLE_VNNI_QUANTIZE4`, default OFF.
+The latter requires the former. No new public ABI, weight layout, persistent
+cache, approximate reciprocal or implicit FMA is introduced.
+
+The [final qualification](../validation/final_qualification_20261110.json)
+compares pre-CM with CM native, refined quantize4 with CM-only native, and
+refined with legacy AVX2. Both models are tested on fast/compact Ryzen cores,
+with steady nominal frequency and isolated Boost, in continuous spectral,
+paced10 spectral and complete NumPy FFT/inference/IFFT workloads. One fixed
+family contains 72 primary contrasts. Each uses eight A/A and sixteen A/B
+fresh-process pairs, balanced within two held-out timing inputs and both
+orders. The inference units are process pairs, not serial calls. Every slow
+call is retained; earlier randomized-layout studies are not pooled with this
+fixed-layout cohort and sample counts are not extended after seeing results.
+
+The six conditions below meet all preregistered A/A, useful-effect and
+operational gates. All are on the fast Ryzen core in the steady profile;
+percentages are reductions in time, with family-adjusted paired-log intervals.
+
+| Contrast | Model | Workload | Time reduction | Adjusted interval |
+| --- | ---: | --- | ---: | ---: |
+| pre-CM -> CM | 2 | continuous | 3.127% | [2.887, 3.366]% |
+| pre-CM -> CM | 8 | continuous | 1.429% | [1.307, 1.550]% |
+| pre-CM -> CM | 8 | paced10 | 1.472% | [1.255, 1.687]% |
+| pre-CM -> CM | 8 | full audio, 10 ms | 1.448% | [1.136, 1.758]% |
+| CM -> CM + refined quantize4 | 8 | continuous | 0.810% | [0.683, 0.937]% |
+| CM -> CM + refined quantize4 | 8 | paced10 | 0.863% | [0.513, 1.213]% |
+
+Only 10/72 A/A cells meet the planned 0.5% precision limit. A failed control
+remains inconclusive even when its A/B interval is positive. Practical
+noninferiority uses a separate predeclared 0.5% loss margin; it does not prove
+zero loss or useful acceleration. Compact/Boost native model-8 continuous
+passes that noninferiority gate, but not useful superiority. No model-2,
+AVX2 or full-audio quantize4 condition passes every superiority gate. These
+results support retaining CM and preserving quantize4 as an opt-in experiment,
+not globally enabling the refinement on either model. Do not add component
+percentages; the secondary direct cumulative analysis is explicitly exploratory
+and reconstructs nonadjacent observations from the existing scheduled blocks.
+
+The plan retains 3,456 unprofiled processes / 811,008 calls and 288 separate
+warmed PMU jobs. It reports individual-call and process-mean sample SD, tails,
+deadline misses, measured CPPC frequency, subgroup descriptions and normalized
+counter mean/SD. Observed maximum call time is 2.787454 ms, with no late
+completions, calls at or above 10 ms, or major faults. This is not a WCET bound.
+The complete callback excludes device I/O, resampling, codecs, audio-server
+scheduling and service concurrency. No general speedup claim for every CPU or
+Boost policy is made.
+
+All 65 regenerated public/stress fixtures (147,711 hops per model) pass
+130 full spectrum/state/reset/four-alias jobs across five ready libraries on
+Ryzen. Another 130 complete PCM jobs verify exact FFT-input reproduction and
+bitwise equal synthesized PCM. Red i7-7700T passes 130 stream jobs across four
+libraries; all 130 cross-host diagnostic digests match. Red has one shared L3
+and lacks VNNI, so its run verifies AVX2 numerical portability only. All eight
+service health endpoints remain healthy and no service is reconfigured or
+restarted. The unavailable historical reference corpus is not certified by
+these regenerated fixtures.
+
+[Portable paired blocks](../validation/final_qualification_blocks_20261110.json)
+contain all 1,728 A/A and A/B pairs, their input/order, process means, call SD,
+log ratios and raw-sample hashes. All 144 reported intervals were independently
+reconstructed from this export before publication. Raw per-call arrays and
+complete infrastructure journals remain in the local evidence archive; they
+are not bundled. The original measurement source hashes describe the frozen
+study, including pre-publication header whitespace. A later error-path fix
+preserves controller failure/rollback JSON; it does not alter normal timing.
+
+Publication verification performs a fresh default PGO build: all 43 CTests
+pass, including the 17 laboratory behavioral contracts. Its shared library is
+byte-identical to the measured selected CM artifact, SHA-256
+`26efac06d424e8907a680cbda0ce61ac30a18a557b11cdb3f27f29466288c7ae`.
+Ready refined candidates separately passed 42 native and 32 AVX2 contracts;
+unchanged-source sanitizer/static/ISA gates are retained in the linked records.
+All four laboratory sessions restored their settings, and independent final
+readback verifies CPU online state, power/idle/IRQ/workqueue/watchdog policy,
+irqbalance, absent temporary cgroup/workers, an inactive restoration timer and
+unchanged global ASLR.
+See [BENCHMARK_LAB.md](BENCHMARK_LAB.md) for the mandatory reproducible workflow
+and [QUANTIZE4_DESIGN.md](QUANTIZE4_DESIGN.md) for exact refinement details.
