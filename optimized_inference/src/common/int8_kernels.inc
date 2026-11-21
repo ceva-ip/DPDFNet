@@ -10,8 +10,14 @@
     _mm256_maddubs_epi16(a,w),_mm256_set1_epi16(1)))
 #endif
 
-#if defined(DPDF_QPAIR_FUSED64) || (defined(DPDF_QBATCH_FUSED64_AVX2) && !defined(DPDF_INT8_VNNI))
+#if defined(DPDF_QPAIR_FUSED64) || (defined(DPDF_QBATCH_FUSED64_AVX2) && !defined(DPDF_INT8_VNNI)) || (defined(DPDF_MODEL8_VNNI_FUSION) && defined(DPDF_INT8_VNNI))
+#define DPDF_USE_QBATCH_FUSED64
+#endif
+#if defined(DPDF_QPAIR_FUSED64) || (defined(DPDF_MODEL8_VNNI_FUSION) && defined(DPDF_INT8_VNNI))
 #define DPDF_USE_QPAIR_FUSED64
+#endif
+#if defined(DPDF_USE_QBATCH_FUSED64) || defined(DPDF_USE_QPAIR_FUSED64)
+#define DPDF_USE_FUSED4
 #endif
 
 static void quantize(const float *x,int8_t *out,int k,float *scale,int *zp) {
@@ -256,9 +262,9 @@ static __attribute__((noinline)) void qdot4pair(const int8_t *activation,
     qdot4pair_generic(activation,packed0,packed1,k,out);
 }
 
-#if DPDF_MODEL_SIZE == 2 || defined(DPDF_USE_QPAIR_FUSED64)
+#if DPDF_MODEL_SIZE == 2 || defined(DPDF_USE_FUSED4)
 
-#ifdef DPDF_USE_QPAIR_FUSED64
+#ifdef DPDF_USE_FUSED4
 #include "pair_fused_args.h"
 static inline __attribute__((always_inline)) void qpair_fused4(
         const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const int8_t *activation,
@@ -289,7 +295,7 @@ static void qaffine_batch_tiled(const dpdf_qmatrix *q,const float *x,const float
 #else
     for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
 #endif
-#ifdef DPDF_USE_QPAIR_FUSED64
+#ifdef DPDF_USE_QBATCH_FUSED64
     if (k==64) {
         for (int r=0;r<m;r+=4) for (int c=0;c<n;c+=16)
             qpair_fused4(q,q,activation+r*64,scales+r,zp+r,bias,bias,
@@ -433,7 +439,7 @@ void DPDF_QPAIR_IMPL(const dpdf_qmatrix *q0,const dpdf_qmatrix *q1,const float *
 #else
     for (int r=0;r<m;++r) quantize(x+r*k,activation+r*k,k,scales+r,zp+r);
 #endif
-#ifdef DPDF_QPAIR_FUSED64
+#ifdef DPDF_USE_QPAIR_FUSED64
     if (k==64) {
         for (int r=0;r<m;r+=4) for (int c=0;c<n;c+=8)
             qpair_fused4(q0,q1,activation+r*64,scales+r,zp+r,bias0,bias1,

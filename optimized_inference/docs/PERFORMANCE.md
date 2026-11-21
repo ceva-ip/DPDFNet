@@ -4,6 +4,21 @@ The current defaults were selected separately for models 2 and 8 on an
 Intel Core i7-7700T. The older i7-8700 latency/quality records below describe
 the historical package baseline; they were not remeasured for these defaults.
 
+## Model 8 AVX-VNNI fused K64 projections
+
+On CPUs selected by the existing AVX-VNNI dispatch, model 8 reuses the
+four-row fused kernel for eligible K64 batch and paired projections. It
+combines the packed integer dot products with the existing floating-point
+scale and bias. The existing shape guards, quantization arithmetic, and
+model weights and public ABI are preserved. Model 2 and the AVX2 path keep
+their existing kernel selection.
+
+In the [paired Ryzen qualification on the channel-major baseline](https://github.com/varyagnord/DPDFNet/blob/bd4138752e2c100ced0a59ecf78e4b203b4901f3/optimized_inference/docs/MODEL8_VNNI_EXPERIMENTS.md),
+six model-8 workloads passed the useful-gain, precision, and operational
+gates, with 0.80–1.21% lower inference or callback time in those conditions.
+This range describes that measured configuration. Other conditions were
+inconclusive, including the full-audio Boost runs.
+
 ## i7-7700T final per-model selection (2026-10-27)
 
 G replaces depthwise gather with bounded loads/permutations; V combines an
