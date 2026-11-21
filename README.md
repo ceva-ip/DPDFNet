@@ -263,6 +263,9 @@ Enhanced files are written as:
 <original_stem>_<model_name>.wav
 ```
 
+An [optional XDNA2 WAV preview](examples/xdna2/README.md) supports 48 kHz mono
+audio with a separately supplied PCM provider.
+
 ## Audio Samples & Demo
 
 - Project page with examples: https://ceva-ip.github.io/DPDFNet/
