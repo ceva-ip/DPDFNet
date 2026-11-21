@@ -135,9 +135,9 @@ int main(void) {
     CHECK(fegetenv(&saved)==0);
     unsigned original_mxcsr=_mm_getcsr();
     int calls=0,outputs=0;
-    for (int rounding=0;rounding<4;++rounding) for (int denorm=0;denorm<2;++denorm) {
+    for (int rounding=0;rounding<4;++rounding) for (int denorm=0;denorm<4;++denorm) {
         CHECK(fesetround(modes[rounding])==0);
-        _mm_setcsr((_mm_getcsr()&~0x8040u)|(denorm?0x8040u:0u));
+        _mm_setcsr((_mm_getcsr()&~0x8040u)|((denorm&1)?0x8000u:0u)|((denorm&2)?0x40u:0u));
         unsigned controls=_mm_getcsr()&0xffc0u;
         for (int stride_index=0;stride_index<3;++stride_index) {
             int stride=strides[stride_index];
@@ -212,7 +212,7 @@ int main(void) {
     }
     CHECK(fesetenv(&saved)==0); _mm_setcsr(original_mxcsr);
     printf("{\"passed\":true,\"k\":64,\"rows\":4,\"tiles\":2,\"calls_checked\":%d,\"float_outputs_checked\":%d,"
-           "\"rounding_modes\":4,\"ftz_daz_modes\":2,\"output_strides\":[8,16,192],"
+           "\"rounding_modes\":4,\"ftz_daz_modes\":4,\"output_strides\":[8,16,192],"
            "\"independent_and_adjacent_outputs\":true,\"guarded_placements\":3,\"patterns\":32,"
            "\"input_and_argument_pages_read_only\":true,\"padding_canaries\":true,"
            "\"caller_controls_preserved\":true,\"separate_fp32_scale_product\":true}\n",calls,outputs);
