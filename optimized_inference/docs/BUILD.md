@@ -189,7 +189,7 @@ row tiles and tails, extreme input values, and unaligned buffers.
 
 ## Ryzen factorial performance recheck
 
-The [2026-11-10 recheck](../validation/ryzen_vnni_retest_20261110.json)
+The [2026-11-10 recheck](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/ryzen_vnni_retest_20261110.json)
 compares baseline, CM-only, quantize4-only and their combination with separate
 fresh model-8 PGO profiles. The benchmark source, compiler flags and weights
 are identical across the four variants; model 2 remains non-PGO.
@@ -223,7 +223,7 @@ the earlier study, establish a WCET bound, or imply compact-core/other-CPU gains
 The range-reuse implementation is available for AVX2 and optional native VNNI.
 Both experimental options default OFF: later studies confirm conditional gains,
 but not global acceptance across models and workloads. See the [design and selection](QUANTIZE4_DESIGN.md)
-and [aggregate evidence](../validation/quantize4_refinement_20261110.json).
+and [aggregate evidence](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/quantize4_refinement_20261110.json).
 
 From the repository root, configure an AVX2-only experimental build:
 
@@ -255,7 +255,7 @@ Every graph interval included zero. Helper-only active/all-empty means improved
 SMT sibling 15 were fully restored. A reduced 16-fixture/32-model-job stream
 check passed; the full 65-fixture suite was not repeated in this short study.
 
-The subsequent [isolated-L3 laboratory study](../validation/quantize4_lab_20261110.json)
+The subsequent [isolated-L3 laboratory study](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/quantize4_lab_20261110.json)
 used the common dlopen worker, Boost off, verified nominal frequency and worker
 deep-idle restriction. It retained 200 unprofiled processes / 60,800 calls plus
 40 separate hardware jobs. Only native model-8 batch passed the planned A/A and
@@ -263,7 +263,7 @@ effect gates: +0.832% time reduction, adjusted interval [0.580,1.084]%. This is
 a controlled non-boost result; ordinary-power and paced acceptance remains
 outstanding, and both experimental options still default OFF.
 
-The [extended cadence/power matrix](../validation/quantize4_regimes_20261110.json)
+The [extended cadence/power matrix](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/quantize4_regimes_20261110.json)
 then covers 48 conditions with family size48, eight A/A and eight comparative
 pairs each: 1,536 unprofiled processes, 442,368 calls and 192 separate counter
 jobs. It confirms model-8 VNNI steady batch16/batch64/paced10 and isolated-Boost
@@ -274,7 +274,7 @@ conditions, power profiles and recovery of a fully collected A/A journal.
 
 ## Final ready-binary qualification (2026-11-10)
 
-The [final qualification](../validation/final_qualification_20261110.json)
+The [final qualification](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/final_qualification_20261110.json)
 covers both models on fast and compact Ryzen cores, steady and isolated Boost,
 continuous spectral calls, paced10 spectral calls and a complete NumPy
 FFT/inference/IFFT callback. One fixed plan retains 72 contrasts, 3,456 processes,

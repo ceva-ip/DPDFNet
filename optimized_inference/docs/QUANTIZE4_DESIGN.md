@@ -7,7 +7,7 @@ equivalence and red AVX2 portability passed for both models. The final
 Ryzen core at steady frequency: continuous +0.810%, paced10 +0.863%. Global
 model-2/AVX2/full-audio/Boost-paced superiority remains unqualified. The selected
 native path remains CM-only (`8ad669a`). See the
-[final qualification](../validation/final_qualification_20261110.json).
+[final qualification](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/final_qualification_20261110.json).
 The earlier native quantize4 experiment is `1e2cb70`.
 
 ## Implementation and selection
@@ -25,7 +25,7 @@ enable `DPDF_ENABLE_VNNI_QUANTIZE4=ON` to apply it to native row-major VNNI
 calls. The latter requires the former. Keep a fresh model-8 PGO profile per
 configuration. These are experimental build controls, not performance presets.
 
-The [short refinement study](../validation/quantize4_refinement_20261110.json)
+The [short refinement study](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/quantize4_refinement_20261110.json)
 contains 160 unprofiled processes / 56,000 calls, 16 helper discovery processes
 covering all masks, and 40 separate hardware profiling jobs. CPU 3 was isolated
 and sibling 15 parked; settings were restored. The helper's active/all-empty
@@ -38,14 +38,14 @@ paced improvements were also unconfirmed. Therefore neither default changes.
 The final gated libraries are byte-identical to the measured candidate when
 enabled, and to the original selected baseline when disabled, for both ISAs.
 
-The [isolated-L3 follow-up](../validation/quantize4_lab_20261110.json) uses the
+The [isolated-L3 follow-up](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/quantize4_lab_20261110.json) uses the
 mandatory [benchmark laboratory](BENCHMARK_LAB.md). Native model-8 batch meets
 its predeclared gate: +0.832%, adjusted interval [0.580,1.084]%, with matching
 A/A precision qualified. No other condition meets all criteria. Do not combine
 this verified non-boost result with earlier Boost-enabled percentages or promote
 a global VNNI switch from one model/cadence under a different power policy.
 
-The [extended 48-condition matrix](../validation/quantize4_regimes_20261110.json)
+The [extended 48-condition matrix](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/quantize4_regimes_20261110.json)
 tests continuous calls, groups16/64 and 5/10/20 ms cadence under both registered
 power profiles, with eight A/A pairs and eight comparison pairs per condition.
 One family of 48 contrasts is used. Model-8 VNNI passes all gates for steady
@@ -66,7 +66,7 @@ Remove repeated range scans when one or more K64 rows are degenerate, while
 sharing range and byte-packing code with the existing quantizer. Preserve exact
 floating-point divisions, quantized bytes, scale bits and zero points.
 
-The completed [factorial recheck](../validation/ryzen_vnni_retest_20261110.json)
+The completed [factorial recheck](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/ryzen_vnni_retest_20261110.json)
 found a useful diagnostic: ordinary batch40 improved with the old native
 quantize4 experiment, but all-zero batch40 regressed by about 1.408%/3.146%
 for models 2/8. These are kernel observations, not predicted improvements
@@ -75,7 +75,7 @@ unconfirmed.
 
 ## Final ready-binary qualification
 
-The [final record](../validation/final_qualification_20261110.json) retains
+The [final record](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/final_qualification_20261110.json) retains
 72 preregistered contrasts: CM versus pre-CM, refined quantize4 versus CM-only
 native, and refined versus legacy AVX2; two models, three workloads, two Ryzen
 core groups and two power profiles. Counts were fixed at eight A/A pairs and

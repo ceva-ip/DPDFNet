@@ -98,7 +98,7 @@ byte for byte. No callback dispatch, persistent cache or ABI was introduced.
 Do not add public presets, per-context state, or a vendor-specific dispatcher
 on the basis of one CPU's microbenchmark.
 
-The [Ryzen recheck](../validation/ryzen_vnni_retest_20261110.json) supports
+The [Ryzen recheck](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/ryzen_vnni_retest_20261110.json) supports
 retaining the selected CM-only VNNI branch. It found no SIMD stack spills in
 the CM integer K loop of either the CM-only or combined fresh PGO libraries.
 The combined variant beat the baseline in continuous mode, but its increment
@@ -107,14 +107,14 @@ numerically validated experiment; lower source-level division counts alone do
 not establish a full-graph benefit.
 
 New performance claims must use the [reproducible benchmark laboratory](BENCHMARK_LAB.md).
-The [isolated-L3 non-boost follow-up](../validation/quantize4_lab_20261110.json)
+The [isolated-L3 non-boost follow-up](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/quantize4_lab_20261110.json)
 supports a conditional model-8 VNNI batch benefit (+0.832%, adjusted interval
 [0.580,1.084]%) with matching A/A precision qualified. Ordinary-power and paced
 acceptance remain outstanding, so this does not change the global defaults.
 The common dlopen measurement worker keeps CPU-time syscalls outside measured
 series and distinguishes amortized groups from individual-call latency.
 
-The subsequent [48-condition matrix](../validation/quantize4_regimes_20261110.json)
+The subsequent [48-condition matrix](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/quantize4_regimes_20261110.json)
 confirms model-8 VNNI gains in steady batch16/batch64/paced10 and isolated-Boost
 continuous calls, under the planned A/A/effect gates and family correction.
 Boost-paced results remain too noisy for acceptance. Model-2 and AVX2 conditions
@@ -122,7 +122,7 @@ do not pass all gates. This is no basis for a global dispatch/default change:
 the two models retain distinct eligible quantization work after CM, and actual
 clock/wakeup behavior changes across cadences despite a performance governor.
 
-The [final ready-binary qualification](../validation/final_qualification_20261110.json)
+The [final ready-binary qualification](https://github.com/varyagnord/DPDFNet/blob/6a078955909c29d857d8ad2bf02bdc01c9aa0a57/optimized_inference/validation/final_qualification_20261110.json)
 adds full regenerated 65-fixture spectral/state/PCM equivalence for both models,
 red AVX2 portability and a 72-condition independent fixed-layout timing matrix.
 It retains 3,456 processes / 811,008 calls and 288 separate PMU windows, spanning
