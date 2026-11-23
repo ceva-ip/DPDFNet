@@ -13,6 +13,7 @@ typedef struct dpdf_qmatrix dpdf_qmatrix;
 dpdf_qmatrix *dpdf_qcreate(const float *, int, int);
 void dpdf_qdestroy(dpdf_qmatrix *);
 size_t dpdf_qbytes(const dpdf_qmatrix *);
+int dpdf_qaffine_cm64(const dpdf_qmatrix *,const float *,const float *,float *,int);
 void dpdf_qaffine(const dpdf_qmatrix *, const float *, const float *, float *, int);
 void dpdf_qaffine_pair(const dpdf_qmatrix *, const dpdf_qmatrix *, const float *,
                        const float *, const float *, float *, float *, int);

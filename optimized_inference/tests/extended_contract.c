@@ -9,14 +9,14 @@ int main(int argc,char **argv) {
     float *w=malloc(n*4),*a=malloc(state_size*4),*b=malloc(state_size*4);CHECK(w&&a&&b);
     FILE *f=fopen(argv[1],"rb");CHECK(f);CHECK(fread(w,4,n,f)==n);fclose(f);
     CHECK(!dpdf_model_create_config(w,n,0,7,0));CHECK(!dpdf_model_create_config(w,n,0,0,16));
-    int precisions[]={0,16,8},masks[]={0,1,2,4,8,7,15};
+    int precisions[]={0,16,8};
     for (int p=0;p<3;++p) {
         int precision=precisions[p];
         if (precision==16 && !dpdf_has_fp16()) {CHECK(!dpdf_model_create_config(w,n,0,16,15));continue;}
         if (precision==8 && !dpdf_has_avx2()) {CHECK(!dpdf_model_create_config(w,n,0,8,15));continue;}
-        for (int c=0;c<7;++c) {
+        for (int c=0;c<16;++c) {
             int tier=precision==16?3:precision==8?4:0;
-            dpdf_model *m=dpdf_model_create_config(w,n,tier,precision,masks[c]);CHECK(m);
+            dpdf_model *m=dpdf_model_create_config(w,n,tier,precision,c);CHECK(m);
             CHECK(dpdf_model_owned_bytes(m)>0);CHECK(!dpdf_model_init_state(a));CHECK(!dpdf_model_init_state(b));
             float x[962],y[962],z[962];
             for (int frame=0;frame<4;++frame) {
@@ -30,5 +30,5 @@ int main(int argc,char **argv) {
             dpdf_model_destroy(m);
         }
     }
-    free(w);free(a);free(b);puts("All extended precision/family masks, aliasing and finite-state contracts passed");return 0;
+    free(w);free(a);free(b);puts("All 16 extended precision/family masks, aliasing and finite-state contracts passed");return 0;
 }
