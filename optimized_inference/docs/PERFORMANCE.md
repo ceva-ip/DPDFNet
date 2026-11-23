@@ -1,6 +1,6 @@
 # Performance, memory and output quality
 
-Latest verification (2026-11-08): a direct cumulative comparison from `afa8292` (before the three i7 optimization stages) to `cf16ba6` measures the combined result without adding historical component percentages. Continuous/performance time reductions are 11.948% / 9.019% for models 2 / 8; throughput increases are 13.569% / 9.913%. See [the direct cumulative study](#direct-cumulative-comparison-2026-11-08) for original-power results, SD/SE and adjusted intervals, and [portable evidence](../validation/i7_7700t_total.json). Earlier incremental component measurements remain below.
+Latest verification (2026-11-08): a direct cumulative comparison from `afa8292` (before the three i7 optimization stages) to `cf16ba6` measures the combined result without adding historical component percentages. Continuous/performance time reductions are 11.948% / 9.019% for models 2 / 8; throughput increases are 13.569% / 9.913%. See [the direct cumulative study](#direct-cumulative-comparison-2026-11-08) for original-power results, SD/SE and adjusted intervals, and [portable evidence](https://github.com/varyagnord/DPDFNet/blob/41d0aa8f94fbd725f11b24a9b7482c17979d50e6/optimized_inference/validation/i7_7700t_total.json). Earlier incremental component measurements remain below.
 
 The current defaults were selected separately for models 2 and 8 on an
 Intel Core i7-7700T. The older i7-8700 latency/quality records below describe
@@ -367,7 +367,7 @@ Independent post-plan confirmation used 36 mirrored randomized blocks, two fresh
 
 At the original powersave/balance_performance policy with 10ms cadence, model2 improved by 4.338% (adjusted interval [0.464, 8.062]%), while model8 remained inconclusive at 1.081% ([-2.307, 4.357]%). These are scoped local results, not end-to-end audio or cross-CPU speedup claims.
 
-Every spectrum and complete state matched baseline over 65 local EARS/stress streams (147,711 hops/model), including aliases/reset. The new direct quantization oracle covers 16,384 rounding/FTZ/DAZ cases and guard pages. PGO release, ASan/UBSan, AVX2-only, static and CPU-mask checks pass; six native VNNI contracts skip where that ISA is unavailable. No new perceptual quality scores are claimed. See [the portable result record](../validation/i7_7700t_quantize4.json). Complete protocols, raw runs and logs are retained locally under `/home/varyagnord/reports/dpdfnet-opt-2026-11-07`.
+Every spectrum and complete state matched baseline over 65 local EARS/stress streams (147,711 hops/model), including aliases/reset. The new direct quantization oracle covers 16,384 rounding/FTZ/DAZ cases and guard pages. PGO release, ASan/UBSan, AVX2-only, static and CPU-mask checks pass; six native VNNI contracts skip where that ISA is unavailable. No new perceptual quality scores are claimed. See [the portable result record](https://github.com/varyagnord/DPDFNet/blob/41d0aa8f94fbd725f11b24a9b7482c17979d50e6/optimized_inference/validation/i7_7700t_quantize4.json). Complete protocols, raw runs and logs are retained locally under `/home/varyagnord/reports/dpdfnet-opt-2026-11-07`.
 
 
 ## Model-8 original-power precision repeat (2026-11-08)
@@ -402,7 +402,7 @@ CPU 2 and sibling CPU 6 were reserved together as before. Ordinary work was
 excluded from both; residual kernel/interrupt/package effects remain. Sampled
 policy settings never changed, and CPU 6 user/nice counters did not advance.
 Diagnostic monitoring began after the initial blocks. All isolation and power
-settings were restored. See the [portable precision record](../validation/i7_7700t_precision.json)
+settings were restored. See the [portable precision record](https://github.com/varyagnord/DPDFNet/blob/41d0aa8f94fbd725f11b24a9b7482c17979d50e6/optimized_inference/validation/i7_7700t_precision.json)
 and local raw evidence under `/home/varyagnord/reports/dpdfnet-deep-2026-11-08`.
 
 ## Channel-major pointwise follow-up (2026-11-08)
@@ -425,7 +425,7 @@ The initial power guards use 24 blocks, 250 timed hops and 10 ms cadence. A sepa
 
 Other screened layout/K128/depth-specialization candidates did not establish a gain; two profile-motivated entry-prefetch variants regressed both models. The first layout-in prototype failed the decoder-skip regression before timing. The initial CM intrinsics prototype had two accumulator spills per K step; a fixed AVX2 register schedule removes those hot-loop accesses, with all correctness checks repeated before screening. None of these untimed refinements is presented as an independently timed component gain.
 
-Every spectrum and complete state matched on 65 local streams / 147,711 hops per model. Final contracts include 2,688 direct CM cases per model, scalar INT8 oracle with read-only guarded packing over 16 rounding/FTZ/DAZ modes, and byte-for-byte full graph parity across FP32/FP16/INT8 × all 16 masks × eight frames. Release/ASan-UBSan/AVX2-only/static and CPU-mask checks pass. Ten VNNI objects match baseline byte-for-byte; native VNNI execution/speed remains unavailable here. Seven public exports, libc/libm-only release dependencies, state ABI and owned heap are preserved. Measured/final identity or separate final confirmation is recorded. All isolation settings are restored. See the [portable deep result](../validation/i7_7700t_deep.json) and the local evidence archive `/home/varyagnord/reports/dpdfnet-deep-2026-11-08`.
+Every spectrum and complete state matched on 65 local streams / 147,711 hops per model. Final contracts include 2,688 direct CM cases per model, scalar INT8 oracle with read-only guarded packing over 16 rounding/FTZ/DAZ modes, and byte-for-byte full graph parity across FP32/FP16/INT8 × all 16 masks × eight frames. Release/ASan-UBSan/AVX2-only/static and CPU-mask checks pass. Ten VNNI objects match baseline byte-for-byte; native VNNI execution/speed remains unavailable here. Seven public exports, libc/libm-only release dependencies, state ABI and owned heap are preserved. Measured/final identity or separate final confirmation is recorded. All isolation settings are restored. See the [portable deep result](https://github.com/varyagnord/DPDFNet/blob/41d0aa8f94fbd725f11b24a9b7482c17979d50e6/optimized_inference/validation/i7_7700t_deep.json).
 
 ## Direct cumulative comparison (2026-11-08)
 
@@ -459,4 +459,4 @@ CPU 2 and its HT sibling CPU 6 were reserved together as a cgroup v2 isolated pa
 
 These intervals concern repeated measurements on this CPU and six fixed inputs. The conditions differ in cadence, power policy and timed length, so their difference is not solely a governor effect. They do not establish cross-CPU performance or whole audio-pipeline acceleration. FFT, synthesis, I/O and model creation are excluded. AVX2+FMA remains the minimum; optional VNNI execution/speed is unavailable on this host.
 
-See [portable results and integrity](../validation/i7_7700t_total.json), [all paired block observations](../validation/i7_7700t_total_blocks.json), and the complete local evidence at `/home/varyagnord/reports/dpdfnet-total-2026-11-08` (protocol, scripts, raw per-hop samples, journals, loader proofs, traces and Russian report).
+See [portable results and integrity](https://github.com/varyagnord/DPDFNet/blob/41d0aa8f94fbd725f11b24a9b7482c17979d50e6/optimized_inference/validation/i7_7700t_total.json), [all paired block observations](https://github.com/varyagnord/DPDFNet/blob/41d0aa8f94fbd725f11b24a9b7482c17979d50e6/optimized_inference/validation/i7_7700t_total_blocks.json).
